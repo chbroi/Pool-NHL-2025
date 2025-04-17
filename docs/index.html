@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pool des Séries NHL</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f4f4f4; }
+    h1 { text-align: center; }
+    .section { background: white; padding: 20px; margin-bottom: 20px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .matchup { margin-bottom: 10px; }
+    select { margin-left: 10px; }
+    label { font-weight: bold; }
+    .results { margin-top: 20px; }
+    button { padding: 10px 20px; font-size: 16px; margin-top: 20px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>🏒 Pool des séries éliminatoires de la LNH</h1>
+  <form id="predictionForm">
+    <!-- Ronde 1 -->
+    <div class="section" id="round1">
+      <h2>Ronde 1 - Association Est</h2>
+      <div class="matchup">
+        <label>TOR vs OTT</label>
+        <select name="R1_EST_1_team" id="R1_EST_1_team">
+          <option value="TOR">Toronto</option>
+          <option value="OTT">Ottawa</option>
+        </select>
+        <label>en</label>
+        <select name="R1_EST_1_games">
+          <option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option>
+        </select> matchs
+      </div>
+      <!-- Autres matchs de la Ronde 1... -->
+    </div>
+
+    <!-- Ronde 2 (initialement masquée) -->
+    <div class="section" id="round2" style="display: none;">
+      <h2>Ronde 2 - Association Est</h2>
+      <div class="matchup">
+        <label>TOR/OTT vs TBL/FLA</label>
+        <select name="R2_EST_1_team">
+          <option value="TOR">Toronto</option>
+          <option value="OTT">Ottawa</option>
+          <option value="TBL">Tampa Bay</option>
+          <option value="FLA">Floride</option>
+        </select>
+        <label>en</label>
+        <select name="R2_EST_1_games">
+          <option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option>
+        </select> matchs
+      </div>
+      <!-- Autres matchs de la Ronde 2... -->
+    </div>
+
+    <!-- Ronde 3 (initialement masquée) -->
+    <div class="section" id="round3" style="display: none;">
+      <h2>Ronde 3 - Association Est</h2>
+      <div class="matchup">
+        <label>Gagnant de Ronde 2 vs Gagnant de Ronde 2</label>
+        <select name="R3_EST_1_team">
+          <option value="team1">Team 1</option>
+          <option value="team2">Team 2</option>
+        </select>
+        <label>en</label>
+        <select name="R3_EST_1_games">
+          <option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option>
+        </select> matchs
+      </div>
+    </div>
+
+    <!-- Ronde 4 (initialement masquée) -->
+    <div class="section" id="round4" style="display: none;">
+      <h2>Ronde 4 - Finale</h2>
+      <div class="matchup">
+        <label>Gagnant de Ronde 3 vs Gagnant de Ronde 3</label>
+        <select name="R4_EST_1_team">
+          <option value="team1">Team 1</option>
+          <option value="team2">Team 2</option>
+        </select>
+        <label>en</label>
+        <select name="R4_EST_1_games">
+          <option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option>
+        </select> matchs
+      </div>
+    </div>
+
+    <div class="section">
+      <button type="submit">Soumettre mes prédictions</button>
+      <div class="results" id="results"></div>
+    </div>
+  </form>
+
+  <script>
+    document.getElementById("predictionForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      let resultHTML = "<h3>Vos prédictions :</h3><ul>";
+      formData.forEach((value, key) => {
+        resultHTML += `<li><strong>${key}</strong>: ${value}</li>`;
+      });
+      resultHTML += "</ul>";
+      document.getElementById("results").innerHTML = resultHTML;
+    });
+
+    // Fonction pour activer les rondes suivantes
+    function updateRounds() {
+      // Ronde 2
+      let R1_EST_1_team = document.querySelector("select[name='R1_EST_1_team']").value;
+      if (R1_EST_1_team !== "") {
+        document.getElementById("round2").style.display = "block";
+      }
+
+      // Ronde 3 et 4 peuvent être affichées de manière similaire, en fonction des résultats des rondes précédentes
+      // Ajoute la logique pour gérer les sélections suivantes
+    }
+
+    // Appel de la fonction lors de la modification des sélections de la Ronde 1
+    document.querySelectorAll("select").forEach(select => {
+      select.addEventListener("change", updateRounds);
+    });
+  </script>
+</body>
+</html>
