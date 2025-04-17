@@ -50,7 +50,7 @@
       <h2>Ronde 2 - Association Est</h2>
       <div class="matchup">
         <label id="R2_EST_1_label">Match 1</label>
-        <select name="R2_EST_1_team"></select>
+        <select name="R2_EST_1_team" id="R2_EST_1_team"></select>
         <label>en</label>
         <select name="R2_EST_1_games">
           <option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option>
@@ -75,15 +75,17 @@
 
     function updateRounds() {
       const get = id => document.getElementById(id).value;
-      const setOptions = (selectName, options) => {
-        const select = document.querySelector(`select[name='${selectName}']`);
+      const setOptions = (selectId, options) => {
+        const select = document.getElementById(selectId);
         select.innerHTML = options.map(o => `<option value="${o}">${o}</option>`).join("");
       };
 
       document.getElementById("round2").style.display = "block";
 
-      setOptions("R2_EST_1_team", [get("R1_EST_1_team"), get("R1_EST_2_team")]);
-      document.getElementById("R2_EST_1_label").textContent = `${get("R1_EST_1_team")} vs ${get("R1_EST_2_team")}`;
+      const team1 = get("R1_EST_1_team");
+      const team2 = get("R1_EST_2_team");
+      setOptions("R2_EST_1_team", [team1, team2]);
+      document.getElementById("R2_EST_1_label").textContent = `${team1} vs ${team2}`;
     }
 
     document.getElementById("predictionForm").addEventListener("submit", function(e) {
