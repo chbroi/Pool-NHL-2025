@@ -32,7 +32,17 @@
           <option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option>
         </select> matchs
       </div>
-      <!-- autres matchs ici -->
+      <div class="matchup">
+        <label>MTL vs BOS</label>
+        <select name="R1_EST_2_team" id="R1_EST_2_team">
+          <option value="MTL">Montréal</option>
+          <option value="BOS">Boston</option>
+        </select>
+        <label>en</label>
+        <select name="R1_EST_2_games">
+          <option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option>
+        </select> matchs
+      </div>
     </div>
 
     <!-- Ronde 2 -->
@@ -46,7 +56,6 @@
           <option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option>
         </select> matchs
       </div>
-      <!-- autres matchs ici -->
     </div>
 
     <div class="section">
@@ -57,8 +66,7 @@
 
   <script>
     const round1TeamIds = [
-      "R1_EST_1_team", "R1_EST_2_team", "R1_EST_3_team", "R1_EST_4_team",
-      "R1_WST_1_team", "R1_WST_2_team", "R1_WST_3_team", "R1_WST_4_team"
+      "R1_EST_1_team", "R1_EST_2_team"
     ];
 
     round1TeamIds.forEach(id => {
@@ -76,15 +84,6 @@
 
       setOptions("R2_EST_1_team", [get("R1_EST_1_team"), get("R1_EST_2_team")]);
       document.getElementById("R2_EST_1_label").textContent = `${get("R1_EST_1_team")} vs ${get("R1_EST_2_team")}`;
-
-      setOptions("R2_EST_2_team", [get("R1_EST_3_team"), get("R1_EST_4_team")]);
-      document.getElementById("R2_EST_2_label").textContent = `${get("R1_EST_3_team")} vs ${get("R1_EST_4_team")}`;
-
-      setOptions("R2_WST_1_team", [get("R1_WST_1_team"), get("R1_WST_2_team")]);
-      document.getElementById("R2_WST_1_label").textContent = `${get("R1_WST_1_team")} vs ${get("R1_WST_2_team")}`;
-
-      setOptions("R2_WST_2_team", [get("R1_WST_3_team"), get("R1_WST_4_team")]);
-      document.getElementById("R2_WST_2_label").textContent = `${get("R1_WST_3_team")} vs ${get("R1_WST_4_team")}`;
     }
 
     document.getElementById("predictionForm").addEventListener("submit", function(e) {
@@ -100,4 +99,3 @@
   </script>
 </body>
 </html>
-
