@@ -15,6 +15,56 @@
     button { padding: 10px 20px; font-size: 16px; margin-top: 20px; cursor: pointer; }
   </style>
 </head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+  document.getElementById('predictionForm').insertAdjacentHTML("beforeend", `
+    <div class="section">
+      <button type="button" onclick="submitPredictions()">Soumettre les prédictions</button>
+    </div>
+  `);
+
+  function getAllSelectValues() {
+    const selects = document.querySelectorAll('select');
+    const data = [];
+    selects.forEach(select => {
+      const label = select.previousElementSibling ? select.previousElementSibling.textContent : select.name;
+      data.push({
+        Matchup: label.trim(),
+        Choix: select.value || "Non choisi"
+      });
+    });
+    return data;
+  }
+
+  function submitPredictions() {
+    const selects = document.querySelectorAll('select');
+    let allSelected = true;
+
+    selects.forEach(select => {
+      if (!select.value) {
+        allSelected = false;
+        select.style.border = "2px solid red";
+      } else {
+        select.style.border = "";
+      }
+    });
+
+    if (!allSelected) {
+      alert("Veuillez compléter toutes les sélections avant de soumettre.");
+      return;
+    }
+
+    const data = getAllSelectValues();
+
+    // Créer une feuille Excel
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Prédictions");
+
+    // Télécharger le fichier
+    XLSX.writeFile(workbook, "predictions_nhl.xlsx");
+  }
+</script>
 <body>
   <h1>🏒 Pool des séries éliminatoires de la LNH</h1>
   <form id="predictionForm">
@@ -181,6 +231,7 @@
         </select>
         <label>en</label>
         <select name="R3_EST_1_games">
+          <option value="Choisir">Choisir</option>
           <option value="4">4</option>
           <option value="5">5</option>
           <option value="6">6</option>
@@ -194,6 +245,7 @@
         </select>
         <label>en</label>
         <select name="R3_WEST_1_games">
+          <option value="Choisir">Choisir</option>
           <option value="4">4</option>
           <option value="5">5</option>
           <option value="6">6</option>
@@ -212,6 +264,7 @@
         </select>
         <label>en</label>
         <select name="R4_final_games">
+          <option value="4">Choisir</option>
           <option value="4">4</option>
           <option value="5">5</option>
           <option value="6">6</option>
