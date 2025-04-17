@@ -16,84 +16,81 @@
   </style>
 </head>
 <body>
-  <h1>🏒 Pool des séries éliminatoires de la LNH</h1>
+  <h1>🏂 Pool des séries éliminatoires de la LNH</h1>
   <form id="predictionForm">
-    <!-- Ronde 1 -->
+
+    <!-- Ronde 1 - Est -->
     <div class="section" id="round1">
       <h2>Ronde 1 - Association Est</h2>
       <div class="matchup">
         <label>TOR vs OTT</label>
-        <select name="R1_EST_D1_team" id="R1_EST_WC1_team">
-          <option value="TOR">Toronto</option>
-          <option value="OTT">Ottawa</option>
-        </select>
+        <select name="R1_EST_1_team" class="r1-est"><option value="">--Choisir--</option><option value="TOR">Toronto</option><option value="OTT">Ottawa</option></select>
         <label>en</label>
-        <select name="R1_EST_1_games">
-          <option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option>
-        </select> matchs
+        <select name="R1_EST_1_games"><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option></select> matchs
       </div>
-       <div class="matchup">
+      <div class="matchup">
         <label>TBL vs FLA</label>
-        <select name="R1_EST_3_team" id="R1_EST_1_team">
-          <option value="TBL">Tampa Bay</option>
-          <option value="FLA">Floride</option>
-        </select>
+        <select name="R1_EST_2_team" class="r1-est"><option value="">--Choisir--</option><option value="TBL">Tampa Bay</option><option value="FLA">Floride</option></select>
         <label>en</label>
-        <select name="R1_EST_1_games">
-          <option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option>
-        </select> matchs
+        <select name="R1_EST_2_games"><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option></select> matchs
       </div>
-      <!-- Autres matchs de la Ronde 1... -->
+      <div class="matchup">
+        <label>WSH vs MTL</label>
+        <select name="R1_EST_3_team" class="r1-est"><option value="">--Choisir--</option><option value="WSH">Washington</option><option value="MTL">Montréal</option></select>
+        <label>en</label>
+        <select name="R1_EST_3_games"><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option></select> matchs
+      </div>
+      <div class="matchup">
+        <label>CAR vs NJD</label>
+        <select name="R1_EST_4_team" class="r1-est"><option value="">--Choisir--</option><option value="CAR">Caroline</option><option value="NJD">New Jersey</option></select>
+        <label>en</label>
+        <select name="R1_EST_4_games"><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option></select> matchs
+      </div>
     </div>
 
-    <!-- Ronde 2 (initialement masquée) -->
+    <!-- Ronde 1 - Ouest -->
+    <div class="section" id="round1-ouest">
+      <h2>Ronde 1 - Association Ouest</h2>
+      <div class="matchup">
+        <label>WPG vs STL</label>
+        <select name="R1_WST_1_team" class="r1-wst"><option value="">--Choisir--</option><option value="WPG">Winnipeg</option><option value="STL">St. Louis</option></select>
+        <label>en</label>
+        <select name="R1_WST_1_games"><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option></select> matchs
+      </div>
+      <div class="matchup">
+        <label>DAL vs COL</label>
+        <select name="R1_WST_2_team" class="r1-wst"><option value="">--Choisir--</option><option value="DAL">Dallas</option><option value="COL">Colorado</option></select>
+        <label>en</label>
+        <select name="R1_WST_2_games"><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option></select> matchs
+      </div>
+      <div class="matchup">
+        <label>VGK vs MIN</label>
+        <select name="R1_WST_3_team" class="r1-wst"><option value="">--Choisir--</option><option value="VGK">Vegas</option><option value="MIN">Minnesota</option></select>
+        <label>en</label>
+        <select name="R1_WST_3_games"><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option></select> matchs
+      </div>
+      <div class="matchup">
+        <label>LAK vs EDM</label>
+        <select name="R1_WST_4_team" class="r1-wst"><option value="">--Choisir--</option><option value="LAK">Los Angeles</option><option value="EDM">Edmonton</option></select>
+        <label>en</label>
+        <select name="R1_WST_4_games"><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option></select> matchs
+      </div>
+    </div>
+
+    <!-- Ronde 2 -->
     <div class="section" id="round2" style="display: none;">
-      <h2>Ronde 2 - Association Est</h2>
+      <h2>Ronde 2</h2>
       <div class="matchup">
-        <label>TOR/OTT vs TBL/FLA</label>
-        <select name="R2_EST_1_team">
-          <option value="TOR">Toronto</option>
-          <option value="OTT">Ottawa</option>
-          <option value="TBL">Tampa Bay</option>
-          <option value="FLA">Floride</option>
-        </select>
-        <label>en</label>
-        <select name="R2_EST_1_games">
-          <option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option>
-        </select> matchs
+        <label>Match 1</label>
+        <select name="R2_1_team1"></select>
+        <label>vs</label>
+        <select name="R2_1_team2"></select>
       </div>
-      <!-- Autres matchs de la Ronde 2... -->
-    </div>
-
-    <!-- Ronde 3 (initialement masquée) -->
-    <div class="section" id="round3" style="display: none;">
-      <h2>Ronde 3 - Association Est</h2>
       <div class="matchup">
-        <label>Gagnant de Ronde 2 vs Gagnant de Ronde 2</label>
-        <select name="R3_EST_1_team">
-          <option value="team1">Team 1</option>
-          <option value="team2">Team 2</option>
-        </select>
-        <label>en</label>
-        <select name="R3_EST_1_games">
-          <option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option>
-        </select> matchs
-      </div>
-    </div>
-
-    <!-- Ronde 4 (initialement masquée) -->
-    <div class="section" id="round4" style="display: none;">
-      <h2>Ronde 4 - Finale</h2>
-      <div class="matchup">
-        <label>Gagnant de Ronde 3 vs Gagnant de Ronde 3</label>
-        <select name="R4_EST_1_team">
-          <option value="team1">Team 1</option>
-          <option value="team2">Team 2</option>
-        </select>
-        <label>en</label>
-        <select name="R4_EST_1_games">
-          <option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option>
-        </select> matchs
+        <label>Match 2</label>
+        <select name="R2_2_team1"></select>
+        <label>vs</label>
+        <select name="R2_2_team2"></select>
       </div>
     </div>
 
@@ -104,6 +101,37 @@
   </form>
 
   <script>
+    function updateRounds() {
+      const est = Array.from(document.querySelectorAll(".r1-est"))
+        .map(s => s.value).filter(v => v);
+      const wst = Array.from(document.querySelectorAll(".r1-wst"))
+        .map(s => s.value).filter(v => v);
+
+      if (est.length === 4 && wst.length === 4) {
+        document.getElementById("round2").style.display = "block";
+        const r2Matchups = [
+          ["R2_1_team1", "R2_1_team2", est],
+          ["R2_2_team1", "R2_2_team2", wst]
+        ];
+        r2Matchups.forEach(([id1, id2, teams]) => {
+          const select1 = document.querySelector(`select[name='${id1}']`);
+          const select2 = document.querySelector(`select[name='${id2}']`);
+          select1.innerHTML = "";
+          select2.innerHTML = "";
+          teams.forEach(t => {
+            const opt1 = new Option(t, t);
+            const opt2 = new Option(t, t);
+            select1.add(opt1.cloneNode(true));
+            select2.add(opt2.cloneNode(true));
+          });
+        });
+      }
+    }
+
+    document.querySelectorAll("select").forEach(select => {
+      select.addEventListener("change", updateRounds);
+    });
+
     document.getElementById("predictionForm").addEventListener("submit", function(e) {
       e.preventDefault();
       const formData = new FormData(e.target);
@@ -113,23 +141,6 @@
       });
       resultHTML += "</ul>";
       document.getElementById("results").innerHTML = resultHTML;
-    });
-
-    // Fonction pour activer les rondes suivantes
-    function updateRounds() {
-      // Ronde 2
-      let R1_EST_1_team = document.querySelector("select[name='R1_EST_1_team']").value;
-      if (R1_EST_1_team !== "") {
-        document.getElementById("round2").style.display = "block";
-      }
-
-      // Ronde 3 et 4 peuvent être affichées de manière similaire, en fonction des résultats des rondes précédentes
-      // Ajoute la logique pour gérer les sélections suivantes
-    }
-
-    // Appel de la fonction lors de la modification des sélections de la Ronde 1
-    document.querySelectorAll("select").forEach(select => {
-      select.addEventListener("change", updateRounds);
     });
   </script>
 </body>
