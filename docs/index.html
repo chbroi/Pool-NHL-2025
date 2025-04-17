@@ -255,7 +255,6 @@
         const label = document.getElementById(labelId);
 
         label.textContent = `${team1} vs ${team2}`;
-
         select.innerHTML = `<option value="">Choisir</option>
                             <option value="${team1}">${team1}</option>
                             <option value="${team2}">${team2}</option>`;
@@ -264,8 +263,67 @@
       document.getElementById('round2').style.display = 'block';
     }
 
+    function createRound3Matchups() {
+      const r3Matchups = [
+        ['R2_EST_1_team', 'R2_EST_2_team', 'R3_EST_1_team', 'R3_EST_1_label'],
+        ['R2_WEST_1_team', 'R2_WEST_2_team', 'R3_WEST_1_team', 'R3_WEST_1_label']
+      ];
+
+      let allFilled = true;
+      for (const [id1, id2] of r3Matchups) {
+        if (!document.getElementById(id1).value || !document.getElementById(id2).value) {
+          allFilled = false;
+        }
+      }
+
+      if (!allFilled) return;
+
+      r3Matchups.forEach(([id1, id2, selectId, labelId]) => {
+        const team1 = document.getElementById(id1).value;
+        const team2 = document.getElementById(id2).value;
+        const select = document.getElementById(selectId);
+        const label = document.getElementById(labelId);
+
+        label.textContent = `${team1} vs ${team2}`;
+        select.innerHTML = `<option value="">Choisir</option>
+                            <option value="${team1}">${team1}</option>
+                            <option value="${team2}">${team2}</option>`;
+      });
+
+      document.getElementById('round3').style.display = 'block';
+    }
+
+    function createRound4Matchup() {
+      const team1 = document.getElementById('R3_EST_1_team').value;
+      const team2 = document.getElementById('R3_WEST_1_team').value;
+
+      if (!team1 || !team2) return;
+
+      const select = document.getElementById('R4_final_team');
+      const label = document.getElementById('R4_final_label');
+
+      label.textContent = `${team1} vs ${team2}`;
+      select.innerHTML = `<option value="">Choisir</option>
+                          <option value="${team1}">${team1}</option>
+                          <option value="${team2}">${team2}</option>`;
+
+      document.getElementById('round4').style.display = 'block';
+    }
+
     round1Ids.forEach(id => {
       document.getElementById(id).addEventListener('change', createRound2Matchups);
+    });
+
+    [
+      'R2_EST_1_team', 'R2_EST_2_team', 'R2_WEST_1_team', 'R2_WEST_2_team'
+    ].forEach(id => {
+      document.getElementById(id).addEventListener('change', createRound3Matchups);
+    });
+
+    [
+      'R3_EST_1_team', 'R3_WEST_1_team'
+    ].forEach(id => {
+      document.getElementById(id).addEventListener('change', createRound4Matchup);
     });
   </script>
 </body>
