@@ -171,7 +171,54 @@
       </div>
     </div>
 
-    <!-- À suivre : Ronde 3 et 4 -->
+    <!-- Ronde 3 -->
+    <div class="section" id="round3" style="display:none;">
+      <h2>Ronde 3 - Finales d'association</h2>
+      <div class="matchup">
+        <label id="R3_EST_1_label">Équipe Est 1 vs Équipe Est 2</label>
+        <select id="R3_EST_1_team" name="R3_EST_1_team">
+          <option value="">Choisir</option>
+        </select>
+        <label>en</label>
+        <select name="R3_EST_1_games">
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+        </select> matchs
+      </div>
+      <div class="matchup">
+        <label id="R3_WEST_1_label">Équipe Ouest 1 vs Équipe Ouest 2</label>
+        <select id="R3_WEST_1_team" name="R3_WEST_1_team">
+          <option value="">Choisir</option>
+        </select>
+        <label>en</label>
+        <select name="R3_WEST_1_games">
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+        </select> matchs
+      </div>
+    </div>
+
+    <!-- Ronde 4 -->
+    <div class="section" id="round4" style="display:none;">
+      <h2>Ronde 4 - Finale de la Coupe Stanley</h2>
+      <div class="matchup">
+        <label id="R4_final_label">Champion Est vs Champion Ouest</label>
+        <select id="R4_final_team" name="R4_final_team">
+          <option value="">Choisir</option>
+        </select>
+        <label>en</label>
+        <select name="R4_final_games">
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+        </select> matchs
+      </div>
+    </div>
 
     <div class="section">
       <button type="submit">Soumettre mes prédictions</button>
@@ -180,7 +227,46 @@
   </form>
 
   <script>
-    // Script JS à venir avec logique dynamique complète pour les rondes 2 à 4
+    const round1Ids = [
+      'R1_EST_1_team', 'R1_EST_2_team', 'R1_EST_3_team', 'R1_EST_4_team',
+      'R1_WEST_1_team', 'R1_WEST_2_team', 'R1_WEST_3_team', 'R1_WEST_4_team'
+    ];
+
+    function createRound2Matchups() {
+      const r2Matchups = [
+        ['R1_EST_1_team', 'R1_EST_2_team', 'R2_EST_1_team', 'R2_EST_1_label'],
+        ['R1_EST_3_team', 'R1_EST_4_team', 'R2_EST_2_team', 'R2_EST_2_label'],
+        ['R1_WEST_1_team', 'R1_WEST_2_team', 'R2_WEST_1_team', 'R2_WEST_1_label'],
+        ['R1_WEST_3_team', 'R1_WEST_4_team', 'R2_WEST_2_team', 'R2_WEST_2_label']
+      ];
+
+      let allFilled = true;
+      round1Ids.forEach(id => {
+        const value = document.getElementById(id).value;
+        if (!value) allFilled = false;
+      });
+
+      if (!allFilled) return;
+
+      r2Matchups.forEach(([id1, id2, selectId, labelId]) => {
+        const team1 = document.getElementById(id1).value;
+        const team2 = document.getElementById(id2).value;
+        const select = document.getElementById(selectId);
+        const label = document.getElementById(labelId);
+
+        label.textContent = `${team1} vs ${team2}`;
+
+        select.innerHTML = `<option value="">Choisir</option>
+                            <option value="${team1}">${team1}</option>
+                            <option value="${team2}">${team2}</option>`;
+      });
+
+      document.getElementById('round2').style.display = 'block';
+    }
+
+    round1Ids.forEach(id => {
+      document.getElementById(id).addEventListener('change', createRound2Matchups);
+    });
   </script>
 </body>
 </html>
