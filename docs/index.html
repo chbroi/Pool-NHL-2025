@@ -441,42 +441,56 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 function submitPredictions() {
-  const form = document.getElementById('predictionForm');
-  const data = {};
-  
-  // Champs à extraire
-  const fields = [
-    "Nom","Prenom",
-    "R1_EST_1_team", "R1_EST_1_games", "R1_EST_2_team", "R1_EST_2_games",
-    "R1_EST_3_team", "R1_EST_3_games", "R1_EST_4_team", "R1_EST_4_games",
-    "R1_WEST_1_team", "R1_WEST_1_games", "R1_WEST_2_team", "R1_WEST_2_games",
-    "R1_WEST_3_team", "R1_WEST_3_games", "R1_WEST_4_team", "R1_WEST_4_games",
-    "R2_EST_1_team", "R2_EST_1_games", "R2_EST_2_team", "R2_EST_2_games",
-    "R2_WEST_1_team", "R2_WEST_1_games", "R2_WEST_2_team", "R2_WEST_2_games",
-    "R3_EST_1_team", "R3_EST_1_games", "R3_WEST_1_team", "R3_WEST_1_games",
-    "R4_final_team", "R4_final_games", "Conn_Smythe"
-  ];
-  
-  fields.forEach(id => {
-    const el = document.getElementById(id);
-    data[id] = el ? el.value : "";
-  });
+   const form = document.getElementById('predictionForm');
+    const formData = new FormData();
 
-  // Appel Google Script
-  fetch('https://script.google.com/macros/s/AKfycbwFB171VDdzyxOkYU0ki66eCcAX3e5f5h_2vlIhtb9FiYUEiIlXAK-Gy9PvJsKxkXZ_/exec', {
-    method: 'POST',
-    body: JSON.stringify(data),
-    headers: { 'Content-Type': 'application/json' }
-  })
-  .then(response => response.json())
-  .then(result => {
-    alert("Prédictions enregistrées avec succès!");
-    form.reset();
-  })
-  .catch(error => {
-    alert("Erreur lors de l'enregistrement : " + error);
-  });
-}
+    // Remplace les 'entry.xxxxxxxx' par les identifiants réels obtenus précédemment
+    formData.append("entry.1586829865", document.getElementById("Nom").value);
+    formData.append("entry.1446877815", document.getElementById("Prénom").value);
+    formData.append("entry.2142784836", document.getElementById("R1_EST_1_team").value);
+    formData.append("entry.1090734653", document.getElementById("R1_EST_1_games").value);
+    formData.append("entry.1731109932", document.getElementById("R1_EST_2_team").value);
+    formData.append("entry.467878274", document.getElementById("R1_EST_2_games").value);
+    formData.append("entry.900846335", document.getElementById("R1_EST_3_team").value);
+    formData.append("entry.1797586642", document.getElementById("R1_EST_3_games").value);
+    formData.append("entry.2074070795", document.getElementById("R1_EST_4_team").value);
+    formData.append("entry.105816612", document.getElementById("R1_EST_4_games").value);
+    formData.append("entry.91564178", document.getElementById("R1_WEST_1_team").value);
+    formData.append("entry.1116171179", document.getElementById("R1_WEST_1_games").value);
+    formData.append("entry.1051346535", document.getElementById("R1_WEST_2_team").value);
+    formData.append("entry.740435741", document.getElementById("R1_WEST_2_games").value);
+    formData.append("entry.958645268", document.getElementById("R1_WEST_3_team").value);
+    formData.append("entry.1441468757", document.getElementById("R1_WEST_3_games").value);
+    formData.append("entry.170728910", document.getElementById("R1_WEST_4_team").value);
+    formData.append("entry.2035847893", document.getElementById("R1_WEST_4_games").value);
+    formData.append("entry.1804333091", document.getElementById("R2_EST_1_team").value);
+    formData.append("entry.2129168333", document.getElementById("R2_EST_1_games").value);
+    formData.append("entry.1037380863", document.getElementById("R2_EST_2_team").value);
+    formData.append("entry.1814358330", document.getElementById("R2_EST_2_games").value);
+    formData.append("entry.1951571898", document.getElementById("R2_WEST_1_team").value);
+    formData.append("entry.876342170", document.getElementById("R2_WEST_1_games").value);
+    formData.append("entry.1781185380", document.getElementById("R2_WEST_2_team").value);
+    formData.append("entry.905786510", document.getElementById("R2_WEST_2_games").value);
+    formData.append("entry.1599267830", document.getElementById("R3_EST_1_team").value);
+    formData.append("entry.1609680051", document.getElementById("R3_EST_1_games").value);
+    formData.append("entry.1249368087", document.getElementById("R3_WEST_1_team").value);
+    formData.append("entry.151599893", document.getElementById("R3_WEST_1_games").value);
+    formData.append("entry.996298335", document.getElementById("R3_final_team").value);
+    formData.append("entry.1227057837", document.getElementById("R3_final_games").value);
+    formData.append("entry.entry.2005586951", document.getElementById("Conn_Smythe").value);
+    // Ajoute d'autres champs ici
+
+    fetch("https://docs.google.com/forms/d/e/1FAIpQLSfuNE6r30XIL0uoIKlXlOafEZxw5B5AUxWvq9LFiknXEADmSg/formResponse", {
+      method: "POST",
+      mode: "no-cors",
+      body: formData
+    }).then(() => {
+      alert("Prédictions envoyées !");
+      form.reset();
+    }).catch((err) => {
+      alert("Erreur : " + err);
+    });
+  }
 
 </script>
 </body>
