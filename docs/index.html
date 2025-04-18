@@ -121,8 +121,8 @@
     <!-- Champ pour le nom -->
     <label for="nom">Nom :</label>
     <input type="text" id="nom" name="nom" required>
-    <label for="prénom">Prénom :</label>
-    <input type="text" id="prénom" name="prénom" required>
+    <label for="prenom">Prenom :</label>
+    <input type="text" id="prenom" name="prenom" required>
     <!-- Ronde 1 -->
     <div class="section" id="round1">
       <h2>Ronde 1 - Association Est</h2>
@@ -446,7 +446,7 @@ function submitPredictions() {
   
   // Champs à extraire
   const fields = [
-    "Nom","Prénom"
+    "Nom","Prenom",
     "R1_EST_1_team", "R1_EST_1_games", "R1_EST_2_team", "R1_EST_2_games",
     "R1_EST_3_team", "R1_EST_3_games", "R1_EST_4_team", "R1_EST_4_games",
     "R1_WEST_1_team", "R1_WEST_1_games", "R1_WEST_2_team", "R1_WEST_2_games",
@@ -463,7 +463,7 @@ function submitPredictions() {
   });
 
   // Appel Google Script
-  fetch('https://script.google.com/macros/s/AKfycbywq4OS8gJiClFCNBhOgD7GaIRXNHmUP5psIq-MSa0bhhNphgx5IXT2YSg4r-Lr7YH3/exec', {
+  fetch('https://script.google.com/macros/s/AKfycbwFB171VDdzyxOkYU0ki66eCcAX3e5f5h_2vlIhtb9FiYUEiIlXAK-Gy9PvJsKxkXZ_/exec', {
     method: 'POST',
     body: JSON.stringify(data),
     headers: { 'Content-Type': 'application/json' }
