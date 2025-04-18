@@ -300,9 +300,10 @@
       </div>
     </div>
     <!-- Liste dynamique des joueurs pour le Conn Smythe -->
-    <label for="conn-smythe">Gagnant du Conn Smythe :</label>
-    <input list="conn-options" name="Conn_Smythe" id="Conn_Smythe" disabled>
-    <datalist id="Conn_options"></datalist>
+    <label for="Conn_Smythe">Gagnant du Conn Smythe :</label>
+    <select name="Conn_Smythe" id="Conn_Smythe" disabled required>
+      <option value="">-- Choisissez un joueur --</option>
+    </select>
     
     <div class="section">
       <button id="submitBtn" type="button" onclick="submitPredictions()" disabled>Soumettre les prédictions</button>
@@ -352,28 +353,61 @@ document.addEventListener("DOMContentLoaded", () => {
 ],
         "COL": ["Nathan MacKinnon", "Cale Makar", "Mikko Rantanen", "Artturi Lehkonen", "Devon Toews", "Jonathan Drouin", "Valeri Nichushkin", "Casey Mittelstadt", "Ross Colton", "Martin Necas", "Samuel Girard", "Joel Kiviranta", "Logan O'Connor", "Parker Kelly", "Josh Manson", "Sam Malinski", "Charlie Coyle", "Brock Nelson", "Jack Drury", "Nikolai Kovalenko", "Miles Wood", "Ivan Ivan", "Calvin de Haan", "Juuso Parssinen", "Oliver Kylington", "Ryan Lindgren", "John Ludvig", "Jimmy Vesey", "Erik Johnson", "Keaton Middleton", "Wyatt Aamodt", "Calum Ritchie", "T.J. Tynan", "Chris Wagner", "Jack Ahcan", "Chase Bradley", "Oskar Olausson", "Jason Polin", "Tye Felhaber", "Givani Smith", "Matt Stienburg", "Nikita Prishchepov", "Jere Innala"
 ],
-        "Rangers": ["Shesterkin", "Zibanejad", "Panarin"],
-        "Panthers": ["Barkov", "Tkachuk", "Bobrovsky"],
-        "Avalanche": ["MacKinnon", "Rantanen", "Makar"],
-        "Oilers": ["McDavid", "Draisaitl", "Skinner"]
-        // Ajoute d'autres équipes ici si nécessaire
+        "DAL": ["Matt Duchene", "Jason Robertson", "Wyatt Johnston", "Roope Hintz", "Thomas Harley", "Jamie Benn", "Mason Marchment", "Evgenii Dadonov", "Logan Stankoven", "Esa Lindell", "Miro Heiskanen", "Mavrik Bourque", "Sam Steel", "Tyler Seguin", "Mikael Granlund", "Mikko Rantanen", "Colin Blackwell", "Oskar Bäck", "Ilya Lyubushkin", "Mathew Dumba", "Cody Ceci", "Lian Bichsel", "Brendan Smith", "Nils Lundkvist", "Justin Hryckowian", "Arttu Hyry", "Matěj  Blümel", "Kyle Capobianco", "Alexander Petrovic"
+],
+        "EDM": ["Leon Draisaitl", "Connor McDavid", "Evan Bouchard", "Ryan Nugent-Hopkins", "Zach Hyman", "Mattias Ekholm", "Darnell Nurse", "Corey Perry", "Connor Brown", "Jeff Skinner", "Viktor Arvidsson", "Adam Henrique", "Brett Kulak", "Vasily Podkolzin", "Mattias Janmark", "Kasperi Kapanen", "Ty Emberson", "Jake Walman", "Troy Stecher", "Derek Ryan", "John Klingberg", "Noah Philp", "Max Jones", "Matt Savoie", "Drake Caggiula", "Joshua Brown", "Trent Frederic", "Quinn Hutson", "Cam Dineen", "Travis Dermott"
+],
+        "FLA": ["Sam Reinhart", "Aleksander Barkov", "Matthew Tkachuk", "Carter Verhaeghe", "Sam Bennett", "Anton Lundell", "Aaron Ekblad", "Evan Rodrigues", "Mackie Samoskevich", "Gustav Forsling", "Eetu Luostarinen", "Jesper Boqvist", "Niko Mikkola", "Nate Schmidt", "Uvis Balinskis", "A.J. Greer", "Dmitry Kulikov", "Seth Jones", "Tomas Nosek", "Adam Boqvist", "Brad Marchand", "Jonah Gadjovich", "Justin Sourdif", "Matt Kiersted", "Jesse Puljujarvi", "Nico Sturm", "Rasmus Asplund", "Jaycob Megna", "Patrick Giles", "Tobias Bjornfot"
+],
+        "LAK": ["Adrian Kempe", "Anze Kopitar", "Kevin Fiala", "Quinton Byfield", "Warren Foegele", "Phillip Danault", "Alex Laferriere", "Trevor Moore", "Brandt Clarke", "Vladislav Gavrikov", "Jordan Spence", "Alex Turcotte", "Mikey Anderson", "Joel Edmundson", "Andrei Kuzmenko", "Drew Doughty", "Tanner Jeannot", "Trevor Lewis", "Jacob Moverare", "Samuel Helenius", "Andre Lee", "Akil Thomas", "Kyle Burroughs", "Taylor Ward", "Andreas Englund", "Jeff Malott", "Caleb Jones"
+],
+        "MIN": ["Marco Rossi", "Kirill Kaprizov", "Mats Zuccarello", "Frederick Gaudreau", "Marcus Johansson", "Jared Spurgeon", "Joel Eriksson Ek", "Marcus Foligno", "Brock Faber", "Ryan Hartman", "Jake Middleton", "Jonas Brodin", "Zach Bogosian", "Yakov Trenin", "Declan Chisholm", "Vincent Hinostroza", "Gustav Nyquist", "Marat Khusnutdinov", "Jakub Lauko", "Jon Merrill", "Liam Ohgren", "Devin Shore", "David Jiricek", "Justin Brazeau", "Brendan Gaunce", "Cameron Crotty", "Daemon Hunt", "Michael Milne", "Travis Boyd", "Reese Johnson", "Travis Dermott", "Ben Jones"
+],
+        "MTL": ["Nick Suzuki", "Cole Caufield", "Lane Hutson", "Juraj Slafkovský", "Brendan Gallagher", "Jake Evans", "Patrik Laine", "Christian Dvorak", "Mike Matheson", "Joel Armia", "Josh Anderson", "Alex Newhook", "Kirby Dach", "Alexandre Carrier", "Kaiden Guhle", "Emil Heineman", "David Savard", "Jayden Struble", "Arber Xhekaj", "Logan Mailloux", "Ivan Demidov", "Joshua Roy", "Oliver Kapanen", "Lucas Condotta", "Owen Beck", "Justin Barron", "Rafael Harvey-Pinard", "Alex Barré-Boulet", "Michael Pezzetta"
+],
+        "NJD": ["Jesper Bratt", "Jack Hughes", "Nico Hischier", "Timo Meier", "Luke Hughes", "Stefan Noesen", "Dougie Hamilton", "Dawson Mercer", "Ondrej Palat", "Paul Cotter", "Erik Haula", "Brett Pesce", "Tomas Tatar", "Johnathan Kovacevic", "Brenden Dillon", "Nathan Bastian", "Jonas Siegenthaler", "Seamus Casey", "Cody Glass", "Justin Dowling", "Brian Dumoulin", "Curtis Lazar", "Simon Nemec", "Daniel Sprong", "Mike Hardman", "Marc McLaughlin", "Nolan Foote", "Daniil Misyul", "Brian Halonen", "Nathan Légaré", "Shane Bowers", "Dennis Cholowski", "Kurtis MacDermid"
+],
+        "OTT": ["Tim Stützle", "Drake Batherson", "Jake Sanderson", "Brady Tkachuk", "Claude Giroux", "Thomas Chabot", "Shane Pinto", "Ridly Greig", "Joshua Norris", "Michael Amadio", "Adam Gaudette", "Nick Jensen", "Dylan Cozens", "David Perron", "Nick Cousins", "Artem Zub", "Tyler Kleven", "Travis Hamonic", "Noah Gregor", "Matthew Highmore", "Fabian Zetterlund", "Jacob Bernard-Docker", "Nikolas Matinpalo", "Zack Ostapchuk", "Zack MacEwen", "Cole Reinhardt", "Dennis Gilbert", "Angus Crookshank", "Hayden Hodgson", "Jan Jenik", "Donovan Sebrango"
+],
+        "STL": ["Robert Thomas", "Jordan Kyrou", "Dylan Holloway", "Pavel Buchnevich", "Brayden Schenn", "Jake Neighbours", "Cam Fowler", "Colton Parayko", "Zack Bolduc", "Justin Faulk", "Philip Broberg", "Oskar Sundqvist", "Alexey Toropchenko", "Brandon Saad", "Nathan Walker", "Radek Faksa", "Ryan Suter", "Mathieu Joseph", "Alexandre Texier", "Tyler Tucker", "Scott Perunovich", "Nick Leddy", "Jimmy Snuggerud", "Matthew Kessel", "P.O Joseph", "Kasperi Kapanen", "Dalibor Dvorsky", "Corey Schueneman"
+],
+        "TBL": ["Nikita Kucherov", "Brandon Hagel", "Brayden Point", "Jake Guentzel", "Victor Hedman", "Anthony Cirelli", "Nick Paul", "Darren Raddysh", "Ryan McDonagh", "Erik Cernak", "Gage Goncalves", "Nick Perbix", "Emil Lilleberg", "Mitchell Chaffee", "Yanni Gourde", "Conor Geekie", "J.J. Moser", "Mikey Eyssimont", "Oliver Bjorkstrand", "Cam Atkinson", "Luke Glendening", "Zemgus Girgensons", "Dylan Duke", "Declan Carlile", "Steven Santini", "Jack Finley", "Conor Sheary", "Maxwell Crozier"
+],
+        "TOR": ["Mitch Marner", "William Nylander", "Auston Matthews", "John Tavares", "Matthew Knies", "Morgan Rielly", "Bobby McMann", "Max Domi", "Oliver Ekman-Larsson", "Jake McCabe", "Nicholas Robertson", "Pontus Holmberg", "Steven Lorentz", "Chris Tanev", "Max Pacioretty", "David Kampf", "Simon Benoit", "Conor Timmins", "Calle Jarnkrok", "Philippe Myers", "Fraser Minten", "Scott Laughton", "Brandon Carlo", "Connor Dewar", "Alex Steeves", "Ryan Reaves", "Dakota Mermis", "Timothy Liljegren", "Jacob Quillan", "Jani Hakanpää", "Alexander Nylander", "Nikita Grebenkin"
+],
+        "VGK": ["Jack Eichel", "Mark Stone", "Tomas Hertl", "Shea Theodore", "Pavel Dorofeyev", "Ivan Barbashev", "Brett Howden", "Noah Hanifin", "Alex Pietrangelo", "Nicolas Roy", "Keegan Kolesar", "William Karlsson", "Victor Olofsson", "Tanner Pearson", "Brayden McNabb", "Brandon Saad", "Zach Whitecloud", "Alexander Holtz", "Nicolas Hague", "Reilly Smith", "Kaedan Korczak", "Cole Schwindt", "Ben Hutton", "Callahan Burke", "Tanner Laczynski", "Grigori Denisenko", "Mason Morelli", "Robert Hagg", "Raphael Lavoie", "Brendan Brisson", "Jonas Rondbjerg"
+],
+        "WSH": ["Dylan Strome", "Alex Ovechkin", "Aliaksei Protas", "Pierre-Luc Dubois", "Tom Wilson", "Connor McMichael", "John Carlson", "Jakob Chychrun", "Rasmus Sandin", "Andrew Mangiapane", "Taylor Raddysh", "Nic Dowd", "Martin Fehérváry", "Matt Roy", "Trevor van Riemsdyk", "Brandon Duhaime", "Lars Eller", "Jakub Vrana", "Hendrix Lapierre", "Ethen Frank", "Anthony Beauvillier", "Ivan Miroshnichenko", "Michael Sgarbossa", "Dylan McIlrath", "Ryan Leonard", "Sonny Milano", "Alex Alexeyev"
+],
+        "WPG": ["Kyle Connor", "Mark Scheifele", "Nikolaj Ehlers", "Josh Morrissey", "Gabriel Vilardi", "Cole Perfetti", "Neal Pionk", "Vladislav Namestnikov", "Nino Niederreiter", "Adam Lowry", "Alex Iafallo", "Mason Appleton", "Dylan Samberg", "Dylan DeMelo", "Colin Miller", "Morgan Barron", "Logan Stanley", "Rasmus Kupari", "Haydn Fleury", "David Gustafsson", "Brandon Tanev", "Nikita Chibrikov", "Luke Schenn", "Parker Ford", "Brad Lambert", "Jaret Anderson-Dolan", "Ville Heinola", "Dominic Toninato", "Dylan Coghlan"
+],
     };
 
     // Met à jour dynamiquement la liste des joueurs disponibles pour le Conn Smythe
     function updateConnSmytheList(team1, team2) {
-        const list = [...(playersByTeam[team1] || []), ...(playersByTeam[team2] || [])];
-        const connSmytheInput = document.getElementById('Conn_Smythe');
-        const dataList = document.getElementById('Conn_options');
+      const list = [...(playersByTeam[team1] || []), ...(playersByTeam[team2] || [])];
+      const connSmytheSelect = document.getElementById('Conn_Smythe');
+    
+      // Réinitialise les options
+      connSmytheSelect.innerHTML = "";
+      
+      // Option par défaut
+      const defaultOption = document.createElement("option");
+      defaultOption.textContent = "-- Choisissez un joueur --";
+      defaultOption.value = "";
+      connSmytheSelect.appendChild(defaultOption);
+    
+      // Remplit avec les joueurs autorisés
+      list.forEach(player => {
+        const option = document.createElement("option");
+        option.value = player;
+        option.textContent = player;
+        connSmytheSelect.appendChild(option);
+      });
 
-        dataList.innerHTML = "";
-        list.forEach(player => {
-            const option = document.createElement("option");
-            option.value = player;
-            dataList.appendChild(option);
-        });
-
-        connSmytheInput.disabled = false;
-    }
+  // Active le champ
+  connSmytheSelect.disabled = list.length === 0;
+}
 
     // Sur changement d'une des deux équipes finalistes
     function updateConnSmytheField() {
