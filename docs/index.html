@@ -15,71 +15,6 @@
     button { padding: 10px 20px; font-size: 16px; margin-top: 20px; cursor: pointer; }
   </style>
 </head>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll("#predictionForm select, #predictionForm input").forEach(el => {
-    el.addEventListener("change", checkIfReadyToSubmit);
-  });
-});
-  function getAllSelectValues() {
-    const selects = document.querySelectorAll('select');
-    const data = [];
-    selects.forEach(select => {
-      const label = select.previousElementSibling ? select.previousElementSibling.textContent : select.name;
-      data.push({
-        Matchup: label.trim(),
-        Choix: select.value || "Non choisi"
-      });
-    });
-    return data;
-  }
-    const allPredictions = [];
-
-    // Liste des joueurs par équipe
-    const playersByTeam = {
-        "CAR": ["Sebastian Aho", "Seth Jarvis", "Martin Necas", "Andrei Svechnikov", "Shayne Gostisbehere", "Jack Roslovic", "Jordan Staal", "Jordan Martinook", "Jackson Blake", "Jesperi Kotkaniemi", "Eric Robinson", "Brent Burns", "Dmitry Orlov", "Jaccob Slavin", "Taylor Hall", "Jalen Chatfield", "Sean Walker", "William Carrier", "Logan Stankoven", "Tyson Jost", "Jack Drury", "Mark Jankowski", "Mikko Rantanen", "Scott Morrow", "Juha Jaaska", "Justin Robidas", "Ty Smith", "Skyler Brind'Amour", "Bradly Nadeau", "Domenick Fensore", "Ryan Suzuki", "Riley Stillman"
-],
-        "COL": ["Nathan MacKinnon", "Cale Makar", "Mikko Rantanen", "Artturi Lehkonen", "Devon Toews", "Jonathan Drouin", "Valeri Nichushkin", "Casey Mittelstadt", "Ross Colton", "Martin Necas", "Samuel Girard", "Joel Kiviranta", "Logan O'Connor", "Parker Kelly", "Josh Manson", "Sam Malinski", "Charlie Coyle", "Brock Nelson", "Jack Drury", "Nikolai Kovalenko", "Miles Wood", "Ivan Ivan", "Calvin de Haan", "Juuso Parssinen", "Oliver Kylington", "Ryan Lindgren", "John Ludvig", "Jimmy Vesey", "Erik Johnson", "Keaton Middleton", "Wyatt Aamodt", "Calum Ritchie", "T.J. Tynan", "Chris Wagner", "Jack Ahcan", "Chase Bradley", "Oskar Olausson", "Jason Polin", "Tye Felhaber", "Givani Smith", "Matt Stienburg", "Nikita Prishchepov", "Jere Innala"
-],
-        "Rangers": ["Shesterkin", "Zibanejad", "Panarin"],
-        "Panthers": ["Barkov", "Tkachuk", "Bobrovsky"],
-        "Avalanche": ["MacKinnon", "Rantanen", "Makar"],
-        "Oilers": ["McDavid", "Draisaitl", "Skinner"]
-        // Ajoute d'autres équipes ici si nécessaire
-    };
-
-    // Met à jour dynamiquement la liste des joueurs disponibles pour le Conn Smythe
-    function updateConnSmytheList(team1, team2) {
-        const list = [...(playersByTeam[team1] || []), ...(playersByTeam[team2] || [])];
-        const connSmytheInput = document.getElementById('conn-smythe');
-        const dataList = document.getElementById('conn-options');
-
-        dataList.innerHTML = "";
-        list.forEach(player => {
-            const option = document.createElement("option");
-            option.value = player;
-            dataList.appendChild(option);
-        });
-
-        connSmytheInput.disabled = false;
-    }
-
-    // Sur changement d'une des deux équipes finalistes
-    function updateConnSmytheField() {
-        const team1 = document.getElementById('R3_EST_1_team').value;
-        const team2 = document.getElementById('R3_WEST_1_team').value;
-        if (team1 && team2) {
-            updateConnSmytheList(team1, team2);
-        }
-    }
-
-    document.getElementById('R3_EST_1_team').addEventListener('change', updateConnSmytheField);
-    document.getElementById('R3_WEST_1_team').addEventListener('change', updateConnSmytheField);
-
-    // Gestion du formulaire
-    document.getElementById('pool-form').addEventListener('submit', handleFormSubmit);
-
-</script>
 <body>
   <h1>🏒 Pool des séries éliminatoires de la LNH</h1>
   <form id="predictionForm">
@@ -301,7 +236,71 @@ document.addEventListener("DOMContentLoaded", () => {
       <button type="button" onclick="submitPredictions()">Soumettre les prédictions</button>
     </div>
   </form>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll("#predictionForm select, #predictionForm input").forEach(el => {
+    el.addEventListener("change", checkIfReadyToSubmit);
+  });
+});
+  function getAllSelectValues() {
+    const selects = document.querySelectorAll('select');
+    const data = [];
+    selects.forEach(select => {
+      const label = select.previousElementSibling ? select.previousElementSibling.textContent : select.name;
+      data.push({
+        Matchup: label.trim(),
+        Choix: select.value || "Non choisi"
+      });
+    });
+    return data;
+  }
+    const allPredictions = [];
 
+    // Liste des joueurs par équipe
+    const playersByTeam = {
+        "CAR": ["Sebastian Aho", "Seth Jarvis", "Martin Necas", "Andrei Svechnikov", "Shayne Gostisbehere", "Jack Roslovic", "Jordan Staal", "Jordan Martinook", "Jackson Blake", "Jesperi Kotkaniemi", "Eric Robinson", "Brent Burns", "Dmitry Orlov", "Jaccob Slavin", "Taylor Hall", "Jalen Chatfield", "Sean Walker", "William Carrier", "Logan Stankoven", "Tyson Jost", "Jack Drury", "Mark Jankowski", "Mikko Rantanen", "Scott Morrow", "Juha Jaaska", "Justin Robidas", "Ty Smith", "Skyler Brind'Amour", "Bradly Nadeau", "Domenick Fensore", "Ryan Suzuki", "Riley Stillman"
+],
+        "COL": ["Nathan MacKinnon", "Cale Makar", "Mikko Rantanen", "Artturi Lehkonen", "Devon Toews", "Jonathan Drouin", "Valeri Nichushkin", "Casey Mittelstadt", "Ross Colton", "Martin Necas", "Samuel Girard", "Joel Kiviranta", "Logan O'Connor", "Parker Kelly", "Josh Manson", "Sam Malinski", "Charlie Coyle", "Brock Nelson", "Jack Drury", "Nikolai Kovalenko", "Miles Wood", "Ivan Ivan", "Calvin de Haan", "Juuso Parssinen", "Oliver Kylington", "Ryan Lindgren", "John Ludvig", "Jimmy Vesey", "Erik Johnson", "Keaton Middleton", "Wyatt Aamodt", "Calum Ritchie", "T.J. Tynan", "Chris Wagner", "Jack Ahcan", "Chase Bradley", "Oskar Olausson", "Jason Polin", "Tye Felhaber", "Givani Smith", "Matt Stienburg", "Nikita Prishchepov", "Jere Innala"
+],
+        "Rangers": ["Shesterkin", "Zibanejad", "Panarin"],
+        "Panthers": ["Barkov", "Tkachuk", "Bobrovsky"],
+        "Avalanche": ["MacKinnon", "Rantanen", "Makar"],
+        "Oilers": ["McDavid", "Draisaitl", "Skinner"]
+        // Ajoute d'autres équipes ici si nécessaire
+    };
+
+    // Met à jour dynamiquement la liste des joueurs disponibles pour le Conn Smythe
+    function updateConnSmytheList(team1, team2) {
+        const list = [...(playersByTeam[team1] || []), ...(playersByTeam[team2] || [])];
+        const connSmytheInput = document.getElementById('conn-smythe');
+        const dataList = document.getElementById('conn-options');
+
+        dataList.innerHTML = "";
+        list.forEach(player => {
+            const option = document.createElement("option");
+            option.value = player;
+            dataList.appendChild(option);
+        });
+
+        connSmytheInput.disabled = false;
+    }
+
+    // Sur changement d'une des deux équipes finalistes
+    function updateConnSmytheField() {
+        const team1 = document.getElementById('R3_EST_1_team').value;
+        const team2 = document.getElementById('R3_WEST_1_team').value;
+        if (team1 && team2) {
+            updateConnSmytheList(team1, team2);
+        }
+    }
+
+    document.getElementById('R3_EST_1_team').addEventListener('change', updateConnSmytheField);
+    document.getElementById('R3_WEST_1_team').addEventListener('change', updateConnSmytheField);
+
+    // Gestion du formulaire
+    document.getElementById('pool-form').addEventListener('submit', handleFormSubmit);
+
+</script>
   <script>
     const round1Ids = [
       'R1_EST_1_team', 'R1_EST_2_team', 'R1_EST_3_team', 'R1_EST_4_team',
