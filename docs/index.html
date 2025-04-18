@@ -68,6 +68,9 @@
 <body>
   <h1>🏒 Pool des séries éliminatoires de la LNH</h1>
   <form action="https://formsubmit.co/charles.brosseau@hotmail.com" method="POST"">
+    <!-- Champ pour le nom -->
+    <label for="nom">Nom :</label>
+    <input type="text" id="nom" name="nom" required>
     <!-- Ronde 1 -->
     <div class="section" id="round1">
       <h2>Ronde 1 - Association Est</h2>
@@ -277,6 +280,14 @@
       <button type="submit">Soumettre mes prédictions</button>
       <div class="results" id="results"></div>
     </div>
+        <!-- Liste dynamique des joueurs pour le Conn Smythe -->
+    <label for="connSmythe">Prédiction Conn Smythe :</label>
+    <input type="text" id="connSmythe" name="connSmythe" list="joueursList">
+
+    <datalist id="joueursList">
+        <!-- Liste des joueurs sera remplie dynamiquement ici -->
+    </datalist>
+    
   </form>
 
   <script>
@@ -378,6 +389,31 @@
     ].forEach(id => {
       document.getElementById(id).addEventListener('change', createRound4Matchup);
     });
+        const joueurs = {
+        "R3_EST_1": ["Joueur A", "Joueur B", "Joueur C"],  // Remplacer par les joueurs réels
+        "R3_EST_2": ["Joueur D", "Joueur E", "Joueur F"],
+        "R3_OUEST_1": ["Joueur G", "Joueur H", "Joueur I"],
+        "R3_OUEST_2": ["Joueur J", "Joueur K", "Joueur L"]
+    };
+
+    function mettreAJourListeJoueurs() {
+        const equipeSelectionnee = document.getElementById('finale').value;
+        const datalist = document.getElementById('joueursList');
+        
+        // Vider la liste existante
+        datalist.innerHTML = "";
+        
+        // Ajouter les joueurs de l'équipe sélectionnée à la liste
+        joueurs[equipeSelectionnee].forEach(function(joueur) {
+            const option = document.createElement('option');
+            option.value = joueur;
+            datalist.appendChild(option);
+        });
+    }
+
+    // Initialiser la liste des joueurs dès le chargement de la page
+    mettreAJourListeJoueurs();
+</script>
   </script>
 </body>
 </html>
