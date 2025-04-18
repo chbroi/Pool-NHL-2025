@@ -1,4 +1,3 @@
-<form id="pool-form">
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -18,7 +17,7 @@
 </head>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
-  document.getElementById('predictionForm').insertAdjacentHTML("beforeend", `
+  document.getElementById('pool-form').insertAdjacentHTML("beforeend", `
     <div class="section">
       <button type="button" onclick="submitPredictions()">Soumettre les prédictions</button>
     </div>
@@ -117,7 +116,7 @@
 </script>
 <body>
   <h1>🏒 Pool des séries éliminatoires de la LNH</h1>
-  <form>
+  <form id="pool-form">
     <!-- Champ pour le nom -->
     <label for="nom">Nom :</label>
     <input type="text" id="nom" name="nom" required>
@@ -437,6 +436,7 @@
     ].forEach(id => {
       document.getElementById(id).addEventListener('change', createRound4Matchup);
     });
+    
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
@@ -495,4 +495,3 @@ function submitPredictions() {
 </script>
 </body>
 </html>
-</form>
