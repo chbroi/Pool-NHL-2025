@@ -436,21 +436,24 @@ function submitPredictions() {
     Conn_Smythe: document.getElementById("Conn_Smythe").value,
   };
 
-  fetch("https://script.google.com/macros/s/AKfycbyB-iIt3Jy8Y2ceVJAuxCKDMwyfIZ4Dr0BOCyCdtVpmtKIlta6uArgrFiLOk7mCBM39/exec", {
+  fetch("https://script.google.com/macros/s/AKfycbxgyq_c8rf1v6Qn1e70Ad80osVtkd-ixYQtwuE8eBZ_W2hwA7PTILiofbRu1bldx7FL/exec", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data)
-  })
-  .then(response => {
-    alert("Prédictions envoyées !");
-    form.reset();
-  })
-  .catch(error => {
-    alert("Erreur lors de l’envoi : " + error);
-    console.error(error);
-  });
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify(data)
+})
+.then(response => {
+  if (!response.ok) throw new Error("Erreur lors de l’envoi");
+  return response.json();
+})
+.then(result => {
+  alert("Prédictions envoyées !");
+})
+.catch(error => {
+  alert("Erreur lors de l’envoi : " + error);
+  console.error(error);
+});
 }
   function checkIfReadyToSubmit() {
   const requiredFields = [
