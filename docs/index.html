@@ -446,31 +446,30 @@ function submitPredictions() {
     "Conn_Smythe"
   ];
 
-const allFilled = requiredFields.every(id => {
+  const allFilled = requiredFields.every(id => {
     const el = document.getElementById(id);
     if (!el) return false;
     const value = el.value.trim();
-    return value !== ""; // On suppose que les <select> ont une <option value="">Choisir</option>
+    return value !== "";
   });
 
   const submitBtn = document.getElementById("submitBtn");
   if (submitBtn) {
     submitBtn.disabled = !allFilled;
   }
+}
 window.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("predictionForm");
-  
+
   if (form) {
     form.querySelectorAll("input, select").forEach(el => {
       el.addEventListener("input", checkIfReadyToSubmit);
       el.addEventListener("change", checkIfReadyToSubmit);
     });
 
-    // Appel initial au chargement de la page
-    checkIfReadyToSubmit();
+    checkIfReadyToSubmit(); // Appel initial
   }
 });
-}
 </script>
 </body>
 </html>
