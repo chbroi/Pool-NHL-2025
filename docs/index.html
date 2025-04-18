@@ -1,3 +1,4 @@
+<form id="pool-form">
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -64,6 +65,80 @@
     // Télécharger le fichier
     XLSX.writeFile(workbook, "predictions_nhl.xlsx");
   }
+</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+    const allPredictions = [];
+
+    // Liste des joueurs par équipe
+    const playersByTeam = {
+        "Rangers": ["Shesterkin", "Zibanejad", "Panarin"],
+        "Panthers": ["Barkov", "Tkachuk", "Bobrovsky"],
+        "Avalanche": ["MacKinnon", "Rantanen", "Makar"],
+        "Oilers": ["McDavid", "Draisaitl", "Skinner"]
+        // Ajoute d'autres équipes ici si nécessaire
+    };
+
+    // Met à jour dynamiquement la liste des joueurs disponibles pour le Conn Smythe
+    function updateConnSmytheList(team1, team2) {
+        const list = [...(playersByTeam[team1] || []), ...(playersByTeam[team2] || [])];
+        const connSmytheInput = document.getElementById('conn-smythe');
+        const dataList = document.getElementById('conn-options');
+
+        dataList.innerHTML = "";
+        list.forEach(player => {
+            const option = document.createElement("option");
+            option.value = player;
+            dataList.appendChild(option);
+        });
+
+        connSmytheInput.disabled = false;
+    }
+
+    // Sur changement d'une des deux équipes finalistes
+    function updateConnSmytheField() {
+        const team1 = document.getElementById('R3_EST_1_team').value;
+        const team2 = document.getElementById('R3_WEST_1_team').value;
+        if (team1 && team2) {
+            updateConnSmytheList(team1, team2);
+        }
+    }
+
+    document.getElementById('R3_EST_1_team').addEventListener('change', updateConnSmytheField);
+    document.getElementById('R3_WEST_1_team').addEventListener('change', updateConnSmytheField);
+
+    // Gestion du formulaire
+    document.getElementById('pool-form').addEventListener('submit', handleFormSubmit);
+
+    function handleFormSubmit(event) {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        const data = {};
+        formData.forEach((value, key) => {
+            data[key] = value;
+        });
+
+        allPredictions.push(data);
+        generateExcel(allPredictions);
+    }
+
+    function generateExcel(predictions) {
+        const ws_data = [];
+
+        const headers = Object.keys(predictions[0]);
+        ws_data.push(headers);
+
+        predictions.forEach(entry => {
+            ws_data.push(headers.map(key => entry[key]));
+        });
+
+        const ws = XLSX.utils.aoa_to_sheet(ws_data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Prédictions");
+
+        XLSX.writeFile(wb, "Predictions_Pool_Playoffs.xlsx");
+    }
 </script>
 <body>
   <h1>🏒 Pool des séries éliminatoires de la LNH</h1>
@@ -275,18 +350,16 @@
         </select> matchs
       </div>
     </div>
-
+    <!-- Liste dynamique des joueurs pour le Conn Smythe -->
+    <label for="conn-smythe">Gagnant du Conn Smythe :</label>
+    <input list="conn-options" name="Conn_Smythe" id="conn-smythe" disabled>
+    <datalist id="conn-options"></datalist>
+    
     <div class="section">
       <button type="submit">Soumettre mes prédictions</button>
       <div class="results" id="results"></div>
     </div>
-        <!-- Liste dynamique des joueurs pour le Conn Smythe -->
-    <label for="connSmythe">Prédiction Conn Smythe :</label>
-    <input type="text" id="connSmythe" name="connSmythe" list="joueursList">
 
-    <datalist id="joueursList">
-        <!-- Liste des joueurs sera remplie dynamiquement ici -->
-    </datalist>
     
   </form>
 
@@ -389,31 +462,50 @@
     ].forEach(id => {
       document.getElementById(id).addEventListener('change', createRound4Matchup);
     });
-        const joueurs = {
-        "R3_EST_1": ["Joueur A", "Joueur B", "Joueur C"],  // Remplacer par les joueurs réels
-        "R3_EST_2": ["Joueur D", "Joueur E", "Joueur F"],
-        "R3_OUEST_1": ["Joueur G", "Joueur H", "Joueur I"],
-        "R3_OUEST_2": ["Joueur J", "Joueur K", "Joueur L"]
-    };
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+    const allPredictions = [];
 
-    function mettreAJourListeJoueurs() {
-        const equipeSelectionnee = document.getElementById('finale').value;
-        const datalist = document.getElementById('joueursList');
-        
-        // Vider la liste existante
-        datalist.innerHTML = "";
-        
-        // Ajouter les joueurs de l'équipe sélectionnée à la liste
-        joueurs[equipeSelectionnee].forEach(function(joueur) {
-            const option = document.createElement('option');
-            option.value = joueur;
-            datalist.appendChild(option);
+    function handleFormSubmit(event) {
+        event.preventDefault();
+
+        // Collecte des données du formulaire
+        const formData = new FormData(event.target);
+        const data = {};
+        formData.forEach((value, key) => {
+            data[key] = value;
         });
+
+        // Ajouter aux prédictions
+        allPredictions.push(data);
+
+        // Générer le fichier Excel
+        generateExcel(allPredictions);
     }
 
-    // Initialiser la liste des joueurs dès le chargement de la page
-    mettreAJourListeJoueurs();
+    function generateExcel(predictions) {
+        const ws_data = [];
+
+        // En-têtes
+        const headers = Object.keys(predictions[0]);
+        ws_data.push(headers);
+
+        // Valeurs
+        predictions.forEach(entry => {
+            ws_data.push(headers.map(key => entry[key]));
+        });
+
+        const ws = XLSX.utils.aoa_to_sheet(ws_data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Prédictions");
+
+        XLSX.writeFile(wb, "Predictions_Pool_Playoffs.xlsx");
+    }
+
+    document.getElementById('pool-form').addEventListener('submit', handleFormSubmit);
 </script>
-  </script>
 </body>
 </html>
+</form>
+
