@@ -36,35 +36,6 @@
     });
     return data;
   }
-
-  function submitPredictions() {
-    const selects = document.querySelectorAll('select');
-    let allSelected = true;
-
-    selects.forEach(select => {
-      if (!select.value) {
-        allSelected = false;
-        select.style.border = "2px solid red";
-      } else {
-        select.style.border = "";
-      }
-    });
-
-    if (!allSelected) {
-      alert("Veuillez compléter toutes les sélections avant de soumettre.");
-      return;
-    }
-
-    const data = getAllSelectValues();
-
-    // Créer une feuille Excel
-    const worksheet = XLSX.utils.json_to_sheet(data);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Prédictions");
-
-    // Télécharger le fichier
-    XLSX.writeFile(workbook, "predictions_nhl.xlsx");
-  }
 </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
