@@ -398,32 +398,38 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     
 function submitPredictions() {
-  const form = document.getElementById("predictionForm");
-  const formData = new FormData(form);
+  // Demander la confirmation avant de soumettre
+  const confirmation = window.confirm("Êtes-vous sûr de soumettre vos prédictions ?");
 
-  // Convertir en format x-www-form-urlencoded
-  const data = new URLSearchParams();
-  for (const pair of formData.entries()) {
-    data.append(pair[0], pair[1]);
+  if (confirmation) {
+    const form = document.getElementById("predictionForm");
+    const formData = new FormData(form);
+
+    // Convertir en format x-www-form-urlencoded
+    const data = new URLSearchParams();
+    for (const pair of formData.entries()) {
+      data.append(pair[0], pair[1]);
+    }
+
+    fetch("https://script.google.com/macros/s/AKfycbxwYKOYPDcTmT0xnT88ZA2Q2VnXXpOLQahc-0V9OT7eiMh9q6SIMN25iAIGFdzmWsFW/exec", {
+      method: "POST",
+      mode: "no-cors", 
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      body: data
+    })
+    .then(() => {
+      alert("Prédictions envoyées!");
+      form.reset(); // Réinitialiser le formulaire après l'envoi
+    })
+    .catch(error => {
+      alert("Erreur lors de l’envoi : " + error);
+      console.error(error);
+    });
+  } else {
+    console.log("Soumission annulée.");
   }
-
-  fetch("https://script.google.com/macros/s/AKfycbxwYKOYPDcTmT0xnT88ZA2Q2VnXXpOLQahc-0V9OT7eiMh9q6SIMN25iAIGFdzmWsFW/exec", {
-    method: "POST",
-    mode: "no-cors", // 🔥 évite l'erreur CORS
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
-    },
-    body: data
-  })
-  .then(() => {
-    // ✅ Réponse opaque, donc on ne peut pas lire la réponse, mais la requête passe
-    alert("Prédictions envoyées !");
-    form.reset();
-  })
-  .catch(error => {
-    alert("Erreur lors de l’envoi : " + error);
-    console.error(error);
-  });
 }
   function checkIfReadyToSubmit() {
   const requiredFields = [
