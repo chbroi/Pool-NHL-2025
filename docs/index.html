@@ -446,10 +446,15 @@ function submitPredictions() {
     "Conn_Smythe"
   ];
 
-  const allFilled = requiredFields.every(id => {
-    const el = document.getElementById(id);
-    return el && el.value.trim() !== "";
-  });
+const allFilled = requiredFields.every(id => {
+  const el = document.getElementById(id);
+  if (!el) return false;
+  
+  const value = el.value.trim();
+  
+  // Vérifie qu'une option autre que "Choisir" a été sélectionnée
+  return value !== "" && value !== "Choisir";
+});
 
   const form = document.getElementById("predictionForm");
   const submitBtnExists = document.getElementById("submitBtn");
