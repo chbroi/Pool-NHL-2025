@@ -150,6 +150,8 @@
     <!-- Champ pour le nom -->
     <label for="nom">Nom :</label>
     <input type="text" id="nom" name="nom" required>
+    <label for="prénom">Prénom :</label>
+    <input type="text" id="prénom" name="prénom" required>
     <!-- Ronde 1 -->
     <div class="section" id="round1">
       <h2>Ronde 1 - Association Est</h2>
@@ -360,11 +362,8 @@
     <datalist id="conn-options"></datalist>
     
     <div class="section">
-      <button type="submit">Soumettre mes prédictions</button>
-      <div class="results" id="results"></div>
+      <button type="button" onclick="submitPredictions()">Soumettre les prédictions</button>
     </div>
-
-    
   </form>
 
   <script>
@@ -470,45 +469,44 @@
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
-    const allPredictions = [];
+function submitPredictions() {
+  const form = document.getElementById('predictionForm');
+  const data = {};
+  
+  // Champs à extraire
+  const fields = [
+    "Nom","Prénom"
+    "R1_EST_1_team", "R1_EST_1_games", "R1_EST_2_team", "R1_EST_2_games",
+    "R1_EST_3_team", "R1_EST_3_games", "R1_EST_4_team", "R1_EST_4_games",
+    "R1_WEST_1_team", "R1_WEST_1_games", "R1_WEST_2_team", "R1_WEST_2_games",
+    "R1_WEST_3_team", "R1_WEST_3_games", "R1_WEST_4_team", "R1_WEST_4_games",
+    "R2_EST_1_team", "R2_EST_1_games", "R2_EST_2_team", "R2_EST_2_games",
+    "R2_WEST_1_team", "R2_WEST_1_games", "R2_WEST_2_team", "R2_WEST_2_games",
+    "R3_EST_1_team", "R3_EST_1_games", "R3_WEST_1_team", "R3_WEST_1_games",
+    "R4_final_team", "R4_final_games", "Conn_Smythe"
+  ];
+  
+  fields.forEach(id => {
+    const el = document.getElementById(id);
+    data[id] = el ? el.value : "";
+  });
 
-    function handleFormSubmit(event) {
-        event.preventDefault();
+  // Appel Google Script
+  fetch('https://script.google.com/macros/s/TON_URL_DÉPLOIEMENT/exec', {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: { 'Content-Type': 'application/json' }
+  })
+  .then(response => response.json())
+  .then(result => {
+    alert("Prédictions enregistrées avec succès!");
+    form.reset();
+  })
+  .catch(error => {
+    alert("Erreur lors de l'enregistrement : " + error);
+  });
+}
 
-        // Collecte des données du formulaire
-        const formData = new FormData(event.target);
-        const data = {};
-        formData.forEach((value, key) => {
-            data[key] = value;
-        });
-
-        // Ajouter aux prédictions
-        allPredictions.push(data);
-
-        // Générer le fichier Excel
-        generateExcel(allPredictions);
-    }
-
-    function generateExcel(predictions) {
-        const ws_data = [];
-
-        // En-têtes
-        const headers = Object.keys(predictions[0]);
-        ws_data.push(headers);
-
-        // Valeurs
-        predictions.forEach(entry => {
-            ws_data.push(headers.map(key => entry[key]));
-        });
-
-        const ws = XLSX.utils.aoa_to_sheet(ws_data);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Prédictions");
-
-        XLSX.writeFile(wb, "Predictions_Pool_Playoffs.xlsx");
-    }
-
-    document.getElementById('pool-form').addEventListener('submit', handleFormSubmit);
 </script>
 </body>
 </html>
