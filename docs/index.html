@@ -16,12 +16,11 @@
   </style>
 </head>
 <script>
-  document.getElementById('predictionForm').insertAdjacentHTML("beforeend", `
-    <div class="section">
-      <button type="button" onclick="submitPredictions()">Soumettre les prédictions</button>
-    </div>
-  `);
-
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll("#predictionForm select, #predictionForm input").forEach(el => {
+    el.addEventListener("change", checkIfReadyToSubmit);
+  });
+});
   function getAllSelectValues() {
     const selects = document.querySelectorAll('select');
     const data = [];
@@ -460,6 +459,43 @@ function submitPredictions() {
     alert("Erreur lors de l’envoi : " + error);
     console.error(error);
   });
+}
+  function checkIfReadyToSubmit() {
+  const requiredFields = [
+    "Nom", "Prenom",
+    "R1_EST_1_team", "R1_EST_1_games",
+    "R1_EST_2_team", "R1_EST_2_games",
+    "R1_EST_3_team", "R1_EST_3_games",
+    "R1_EST_4_team", "R1_EST_4_games",
+    "R1_WEST_1_team", "R1_WEST_1_games",
+    "R1_WEST_2_team", "R1_WEST_2_games",
+    "R1_WEST_3_team", "R1_WEST_3_games",
+    "R1_WEST_4_team", "R1_WEST_4_games",
+    "R2_EST_1_team", "R2_EST_1_games",
+    "R2_EST_2_team", "R2_EST_2_games",
+    "R2_WEST_1_team", "R2_WEST_1_games",
+    "R2_WEST_2_team", "R2_WEST_2_games",
+    "R3_EST_1_team", "R3_EST_1_games",
+    "R3_WEST_1_team", "R3_WEST_1_games",
+    "R3_final_team", "R3_final_games",
+    "Conn_Smythe"
+  ];
+
+  const allFilled = requiredFields.every(id => {
+    const el = document.getElementById(id);
+    return el && el.value.trim() !== "";
+  });
+
+  const form = document.getElementById("predictionForm");
+  const submitBtnExists = document.getElementById("submitBtn");
+
+  if (allFilled && !submitBtnExists) {
+    form.insertAdjacentHTML("beforeend", `
+      <div class="section">
+        <button id="submitBtn" type="button" onclick="submitPredictions()">Soumettre les prédictions</button>
+      </div>
+    `);
+  }
 }
 </script>
 </body>
