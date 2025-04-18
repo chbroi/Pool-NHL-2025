@@ -272,7 +272,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Met à jour dynamiquement la liste des joueurs disponibles pour le Conn Smythe
     function updateConnSmytheList(team1, team2) {
         const list = [...(playersByTeam[team1] || []), ...(playersByTeam[team2] || [])];
-        const connSmytheInput = document.getElementById('Conn-smythe');
+        const connSmytheInput = document.getElementById('Conn-Smythe');
         const dataList = document.getElementById('Conn-options');
 
         dataList.innerHTML = "";
