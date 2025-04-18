@@ -21,7 +21,7 @@
     <!-- Champ pour le nom -->
     <label for="Nom">Nom :</label>
     <input type="text" id="Nom" name="Nom" required>
-    <label for="Prenom">Prenom :</label>
+    <label for="Prenom">Prénom :</label>
     <input type="text" id="Prenom" name="Prenom" required>
     <!-- Ronde 1 -->
     <div class="section" id="round1">
@@ -186,7 +186,7 @@
         </select>
         <label>en</label>
         <select name="R3_EST_1_games" id="R3_EST_1_games">>
-          <option value="Choisir">Choisir</option>
+          <option value="">Choisir</option>
           <option value="4">4</option>
           <option value="5">5</option>
           <option value="6">6</option>
@@ -200,7 +200,7 @@
         </select>
         <label>en</label>
         <select name="R3_WEST_1_games" id="R3_WEST_1_games">
-          <option value="Choisir">Choisir</option>
+          <option value="">Choisir</option>
           <option value="4">4</option>
           <option value="5">5</option>
           <option value="6">6</option>
@@ -219,7 +219,7 @@
         </select>
         <label>en</label>
         <select name="R4_final_games" id="R4_final_games">
-          <option value="Choisir">Choisir</option>
+          <option value="">Choisir</option>
           <option value="4">4</option>
           <option value="5">5</option>
           <option value="6">6</option>
@@ -233,7 +233,7 @@
     <datalist id="Conn_options"></datalist>
     
     <div class="section">
-      <button type="button" onclick="submitPredictions()">Soumettre les prédictions</button>
+      <button type="button" onclick="submitPredictions()" disabled>Soumettre les prédictions</button>
     </div>
   </form>
 <script>
@@ -447,25 +447,29 @@ function submitPredictions() {
   ];
 
 const allFilled = requiredFields.every(id => {
-  const el = document.getElementById(id);
-  if (!el) return false;
-  
-  const value = el.value.trim();
-  
-  // Vérifie qu'une option autre que "Choisir" a été sélectionnée
-  return value !== "" && value !== "Choisir";
-});
+    const el = document.getElementById(id);
+    if (!el) return false;
+    const value = el.value.trim();
+    return value !== ""; // On suppose que les <select> ont une <option value="">Choisir</option>
+  });
 
-  const form = document.getElementById("predictionForm");
-  const submitBtnExists = document.getElementById("submitBtn");
-
-  if (allFilled && !submitBtnExists) {
-    form.insertAdjacentHTML("beforeend", `
-      <div class="section">
-        <button id="submitBtn" type="button" onclick="submitPredictions()">Soumettre les prédictions</button>
-      </div>
-    `);
+  const submitBtn = document.getElementById("submitBtn");
+  if (submitBtn) {
+    submitBtn.disabled = !allFilled;
   }
+window.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("predictionForm");
+  
+  if (form) {
+    form.querySelectorAll("input, select").forEach(el => {
+      el.addEventListener("input", checkIfReadyToSubmit);
+      el.addEventListener("change", checkIfReadyToSubmit);
+    });
+
+    // Appel initial au chargement de la page
+    checkIfReadyToSubmit();
+  }
+});
 }
 </script>
 </body>
