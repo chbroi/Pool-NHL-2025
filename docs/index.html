@@ -399,61 +399,27 @@ document.addEventListener("DOMContentLoaded", () => {
     
 function submitPredictions() {
   const form = document.getElementById("predictionForm");
+  const formData = new FormData(form);
 
-  const data = {
-    Nom: document.getElementById("Nom").value,
-    Prenom: document.getElementById("Prenom").value,
-    R1_EST_1_team: document.getElementById("R1_EST_1_team").value,
-    R1_EST_1_games: document.getElementById("R1_EST_1_games").value,
-    R1_EST_2_team: document.getElementById("R1_EST_2_team").value,
-    R1_EST_2_games: document.getElementById("R1_EST_2_games").value,
-    R1_EST_3_team: document.getElementById("R1_EST_3_team").value,
-    R1_EST_3_games: document.getElementById("R1_EST_3_games").value,
-    R1_EST_4_team: document.getElementById("R1_EST_4_team").value,
-    R1_EST_4_games: document.getElementById("R1_EST_4_games").value,
-    R1_WEST_1_team: document.getElementById("R1_WEST_1_team").value,
-    R1_WEST_1_games: document.getElementById("R1_WEST_1_games").value,
-    R1_WEST_2_team: document.getElementById("R1_WEST_2_team").value,
-    R1_WEST_2_games: document.getElementById("R1_WEST_2_games").value,
-    R1_WEST_3_team: document.getElementById("R1_WEST_3_team").value,
-    R1_WEST_3_games: document.getElementById("R1_WEST_3_games").value,
-    R1_WEST_4_team: document.getElementById("R1_WEST_4_team").value,
-    R1_WEST_4_games: document.getElementById("R1_WEST_4_games").value,
-    R2_EST_1_team: document.getElementById("R2_EST_1_team").value,
-    R2_EST_1_games: document.getElementById("R2_EST_1_games").value,
-    R2_EST_2_team: document.getElementById("R2_EST_2_team").value,
-    R2_EST_2_games: document.getElementById("R2_EST_2_games").value,
-    R2_WEST_1_team: document.getElementById("R2_WEST_1_team").value,
-    R2_WEST_1_games: document.getElementById("R2_WEST_1_games").value,
-    R2_WEST_2_team: document.getElementById("R2_WEST_2_team").value,
-    R2_WEST_2_games: document.getElementById("R2_WEST_2_games").value,
-    R3_EST_1_team: document.getElementById("R3_EST_1_team").value,
-    R3_EST_1_games: document.getElementById("R3_EST_1_games").value,
-    R3_WEST_1_team: document.getElementById("R3_WEST_1_team").value,
-    R3_WEST_1_games: document.getElementById("R3_WEST_1_games").value,
-    R4_final_team: document.getElementById("R4_final_team").value,
-    R4_final_games: document.getElementById("R4_final_games").value,
-    Conn_Smythe: document.getElementById("Conn_Smythe").value,
-  };
+  // Convertir en string x-www-form-urlencoded
+  const data = new URLSearchParams();
+  for (const pair of formData.entries()) {
+    data.append(pair[0], pair[1]);
+  }
 
-  fetch("https://script.google.com/macros/s/AKfycbzX_gT8aKo3v3QVY_iF16bTo3Sbr4y6wfqVSX3qwUVyHYTcgSVuzQ1yUrnuH2W0nqYN/exec", {
+  fetch("https://script.google.com/macros/s/AKfycbyB-iIt3Jy8Y2ceVJAuxCKDMwyfIZ4Dr0BOCyCdtVpmtKIlta6uArgrFiLOk7mCBM39/exec", {
     method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify(data)
-})
-.then(response => {
-  if (!response.ok) throw new Error("Erreur lors de l’envoi");
-  return response.json();
-})
-.then(result => {
-  alert("Prédictions envoyées !");
-})
-.catch(error => {
-  alert("Erreur lors de l’envoi : " + error);
-  console.error(error);
-});
+    body: data,
+  })
+  .then(response => response.text())
+  .then(result => {
+    alert("Prédictions envoyées !");
+    form.reset();
+  })
+  .catch(error => {
+    alert("Erreur lors de l’envoi : " + error);
+    console.error(error);
+  });
 }
   function checkIfReadyToSubmit() {
   const requiredFields = [
