@@ -401,18 +401,22 @@ function submitPredictions() {
   const form = document.getElementById("predictionForm");
   const formData = new FormData(form);
 
-  // Convertir en string x-www-form-urlencoded
+  // Convertir en format x-www-form-urlencoded
   const data = new URLSearchParams();
   for (const pair of formData.entries()) {
     data.append(pair[0], pair[1]);
   }
 
-  fetch("https://script.google.com/macros/s/AKfycbzhxFQ1uihQeSTaZjzlI6ExHMQ23Yz0bVbylJeUibcL0Mhfw1mEIIc61qtBYRGnu2qy/exec", {
+  fetch("https://script.google.com/macros/s/AKfycbxwYKOYPDcTmT0xnT88ZA2Q2VnXXpOLQahc-0V9OT7eiMh9q6SIMN25iAIGFdzmWsFW/exec", {
     method: "POST",
-    body: data,
+    mode: "no-cors", // 🔥 évite l'erreur CORS
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    },
+    body: data
   })
-  .then(response => response.text())
-  .then(result => {
+  .then(() => {
+    // ✅ Réponse opaque, donc on ne peut pas lire la réponse, mais la requête passe
     alert("Prédictions envoyées !");
     form.reset();
   })
