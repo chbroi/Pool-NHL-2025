@@ -129,8 +129,8 @@
         <label>TOR vs OTT</label>
         <select name="R1_EST_1_team" id="R1_EST_1_team">
           <option value="">Choisir</option>
-          <option value="TOR">Toronto</option>
-          <option value="OTT">Ottawa</option>
+          <option value="TOR">TOR</option>
+          <option value="OTT">OTT</option>
         </select>
         <label>en</label>
         <select name="R1_EST_1_games">
@@ -142,8 +142,8 @@
         <label>TBL vs FLA</label>
         <select name="R1_EST_2_team" id="R1_EST_2_team">
           <option value="">Choisir</option>
-          <option value="TBL">Tampa Bay</option>
-          <option value="FLA">Floride</option>
+          <option value="TBL">TBL</option>
+          <option value="FLA">FLA</option>
         </select>
         <label>en</label>
         <select name="R1_EST_2_games">
@@ -155,8 +155,8 @@
         <label>WSH vs MTL</label>
         <select name="R1_EST_3_team" id="R1_EST_3_team">
           <option value="">Choisir</option>
-          <option value="WSH">Washington</option>
-          <option value="MTL">Montréal</option>
+          <option value="WSH">WSH</option>
+          <option value="MTL">MTL</option>
         </select>
         <label>en</label>
         <select name="R1_EST_3_games">
@@ -168,8 +168,8 @@
         <label>CAR vs NJD</label>
         <select name="R1_EST_4_team" id="R1_EST_4_team">
           <option value="">Choisir</option>
-          <option value="CAR">Caroline</option>
-          <option value="NJD">New Jersey</option>
+          <option value="CAR">CAR</option>
+          <option value="NJD">NJD</option>
         </select>
         <label>en</label>
         <select name="R1_EST_4_games">
@@ -182,8 +182,8 @@
         <label>WPG vs STL</label>
         <select name="R1_WEST_1_team" id="R1_WEST_1_team">
           <option value="">Choisir</option>
-          <option value="WPG">Winnipeg</option>
-          <option value="STL">St. Louis</option>
+          <option value="WPG">WPG</option>
+          <option value="STL">STL</option>
         </select>
         <label>en</label>
         <select name="R1_WEST_1_games">
@@ -195,8 +195,8 @@
         <label>DAL vs COL</label>
         <select name="R1_WEST_2_team" id="R1_WEST_2_team">
           <option value="">Choisir</option>
-          <option value="DAL">Dallas</option>
-          <option value="COL">Colorado</option>
+          <option value="DAL">DAL</option>
+          <option value="COL">COL</option>
         </select>
         <label>en</label>
         <select name="R1_WEST_2_games">
@@ -208,8 +208,8 @@
         <label>VGK vs MIN</label>
         <select name="R1_WEST_3_team" id="R1_WEST_3_team">
           <option value="">Choisir</option>
-          <option value="VGK">Vegas</option>
-          <option value="MIN">Minnesota</option>
+          <option value="VGK">VGK</option>
+          <option value="MIN">MIN</option>
         </select>
         <label>en</label>
         <select name="R1_WEST_3_games">
@@ -221,8 +221,8 @@
         <label>LAK vs EDM</label>
         <select name="R1_WEST_4_team" id="R1_WEST_4_team">
           <option value="">Choisir</option>
-          <option value="LAK">Los Angeles</option>
-          <option value="EDM">Edmonton</option>
+          <option value="LAK">LAK</option>
+          <option value="EDM">EDM</option>
         </select>
         <label>en</label>
         <select name="R1_WEST_4_games">
@@ -477,9 +477,11 @@ function submitPredictions() {
     formData.append("entry.151599893", document.getElementById("R3_WEST_1_games").value);
     formData.append("entry.996298335", document.getElementById("R3_final_team").value);
     formData.append("entry.1227057837", document.getElementById("R3_final_games").value);
-    formData.append("entry.entry.2005586951", document.getElementById("Conn_Smythe").value);
+    formData.append("entry.2005586951", document.getElementById("Conn_Smythe").value);
     // Ajoute d'autres champs ici
-
+  for (const [key, value] of formData.entries()) {
+    console.log(`${key}: ${value}`);
+  }
     fetch("https://docs.google.com/forms/d/e/1FAIpQLSfuNE6r30XIL0uoIKlXlOafEZxw5B5AUxWvq9LFiknXEADmSg/formResponse", {
       method: "POST",
       mode: "no-cors",
