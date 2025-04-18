@@ -230,7 +230,7 @@
     <!-- Liste dynamique des joueurs pour le Conn Smythe -->
     <label for="conn-smythe">Gagnant du Conn Smythe :</label>
     <input list="conn-options" name="Conn_Smythe" id="Conn_Smythe" disabled>
-    <datalist id="Conn-options"></datalist>
+    <datalist id="Conn_options"></datalist>
     
     <div class="section">
       <button type="button" onclick="submitPredictions()">Soumettre les prédictions</button>
@@ -272,8 +272,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Met à jour dynamiquement la liste des joueurs disponibles pour le Conn Smythe
     function updateConnSmytheList(team1, team2) {
         const list = [...(playersByTeam[team1] || []), ...(playersByTeam[team2] || [])];
-        const connSmytheInput = document.getElementById('Conn-Smythe');
-        const dataList = document.getElementById('Conn-options');
+        const connSmytheInput = document.getElementById('Conn_Smythe');
+        const dataList = document.getElementById('Conn_options');
 
         dataList.innerHTML = "";
         list.forEach(player => {
