@@ -15,7 +15,6 @@
     button { padding: 10px 20px; font-size: 16px; margin-top: 20px; cursor: pointer; }
   </style>
 </head>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
   document.getElementById('pool-form').insertAdjacentHTML("beforeend", `
     <div class="section">
@@ -35,9 +34,6 @@
     });
     return data;
   }
-</script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script>
     const allPredictions = [];
 
     // Liste des joueurs par équipe
@@ -84,35 +80,6 @@
     // Gestion du formulaire
     document.getElementById('pool-form').addEventListener('submit', handleFormSubmit);
 
-    function handleFormSubmit(event) {
-        event.preventDefault();
-
-        const formData = new FormData(event.target);
-        const data = {};
-        formData.forEach((value, key) => {
-            data[key] = value;
-        });
-
-        allPredictions.push(data);
-        generateExcel(allPredictions);
-    }
-
-    function generateExcel(predictions) {
-        const ws_data = [];
-
-        const headers = Object.keys(predictions[0]);
-        ws_data.push(headers);
-
-        predictions.forEach(entry => {
-            ws_data.push(headers.map(key => entry[key]));
-        });
-
-        const ws = XLSX.utils.aoa_to_sheet(ws_data);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Prédictions");
-
-        XLSX.writeFile(wb, "Predictions_Pool_Playoffs.xlsx");
-    }
 </script>
 <body>
   <h1>🏒 Pool des séries éliminatoires de la LNH</h1>
@@ -438,7 +405,6 @@
     });
     
   </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 function submitPredictions() {
   const form = document.getElementById("predictionForm");
@@ -474,8 +440,8 @@ function submitPredictions() {
     R3_EST_1_games: document.getElementById("R3_EST_1_games").value,
     R3_WEST_1_team: document.getElementById("R3_WEST_1_team").value,
     R3_WEST_1_games: document.getElementById("R3_WEST_1_games").value,
-    R4_final_team: document.getElementById("R3_final_team").value,
-    R4_final_games: document.getElementById("R3_final_games").value,
+    R4_final_team: document.getElementById("R4_final_team").value,
+    R4_final_games: document.getElementById("R4_final_games").value,
     Conn_Smythe: document.getElementById("Conn_Smythe").value,
   };
 
