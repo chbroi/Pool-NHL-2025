@@ -309,24 +309,23 @@
     </div>
   </form>
 <script>
-// Quand la page est prête, afficher les règlements
-        window.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('rulesContainer').style.display = 'block';
-        });
+// Affiche les règlements au chargement
+    window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('rulesContainer').style.display = 'block';
+    });
 
-        // Lorsque l'utilisateur accepte les règles, on cache la section des règlements et montre le formulaire
-        document.getElementById('acceptRulesButton').addEventListener('click', () => {
-            document.getElementById('rulesContainer').style.display = 'none';
-            document.getElementById('engagementContainer').style.display = 'block';
-        });
+    // Lorsqu'on accepte les règles
+    document.getElementById('acceptRulesButton').addEventListener('click', () => {
+      document.getElementById('rulesContainer').style.display = 'none';
+      document.getElementById('engagementContainer').style.display = 'block';
+    });
 
-        // Fonction pour confirmer l'engagement et passer à la soumission
-        function confirmEngagement() {
-            // L'utilisateur a accepté de participer au pool, on peut maintenant soumettre ses prédictions
-            alert("Merci de vous être engagé. Vous pouvez maintenant soumettre vos prédictions.");
-            document.getElementById('engagementContainer').style.display = 'none';
-            document.getElementById('predictionForm').style.display = 'block';
-        }
+    // Lorsqu'on confirme l'engagement
+    function confirmEngagement() {
+      alert("Merci de vous être engagé. Vous pouvez maintenant soumettre vos prédictions.");
+      document.getElementById('engagementContainer').style.display = 'none';
+      document.getElementById('predictionForm').style.display = 'block';
+    }
   
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("#predictionForm select, #predictionForm input").forEach(el => {
