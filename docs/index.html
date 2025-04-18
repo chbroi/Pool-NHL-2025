@@ -13,9 +13,75 @@
     label { font-weight: bold; }
     .results { margin-top: 20px; }
     button { padding: 10px 20px; font-size: 16px; margin-top: 20px; cursor: pointer; }
+    .rules-container {
+            display: none;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .engagement-container {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+        #predictionForm {
+            display: none;
+            margin-top: 20px;
+        }
+        .button {
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
   </style>
 </head>
 <body>
+   <!-- Section des Règlements -->
+    <div class="rules-container" id="rulesContainer">
+        <h2>Règlements du pool LNH</h2>
+        <h3>1. Bref rappel sur les séries dans la LNH</h3>
+        <p>Les séries éliminatoires sont composés de 4 rondes: 1ere ronde, 2e ronde, Finales de conférences, Finale de la Coupe Stanley </p>
+        <p>Le gagnant d'un affrontement entre 2 équipes de la LNH est déterminé par la première équipe remportant 4 matchs sur une possibilités de 7.</p>
+        <p>La LNH est divisé entre 2 conférence (Est et Ouest) et chacune des conférences est divisée de la manière suivante:
+            Conférence Est: Division Metropolitaine (MET) et Atlantique (ATL)
+            Conférence Ouest: Division Pacifique (PAC) et Centrale (CEN) </p>
+        <p>Le trophée Conn Smythe est remis au joueur par excellence des séries éliminatoires dans la LNH. </p>
+        <h3>2. Définitions et règles du pool</h3>
+        <p>Une personne est considérée comme un participant du pool s'il contribue au montant de 5$ à envoyer à Charles Brosseau (via virement interac à charles.brosseau@hotmail.com) et entre sa prédiction de 1ere ronde avant le début des series éliminatoires (19 avril 2025 19h). <!-- Ajoute le texte complet ici -->
+        <p>Le choix du participant est composé de l'équipe gagnante de chaque affrontement (1 équipe parmi 2), le nombre de matchs pour y arriver (de 4 à 7 matchs)</p>
+        <p>La prédiction du participant est composée de chaque choix de établi en 2.2, et du gagnant du Conn Smythe pour chacune des rondes (active et subséquentes)</p>
+        <p>"Pour résumer les deux derniers points, le participant doit entrer sa prédiction avant chacune des 4 rondes. Voici donc les 4 prédictions à faire:
+        Les choix des rondes 1 et 2, des finales de conférences, de la Coupe Stanley et du Conn Smythe
+        Les choix de la ronde 2, des finales de conférences, de la Coupe Stanley et du Conn Smythe
+        Les choix des finales de conférences, de la Coupe Stanley et du Conn Smythe
+        Les choix de la Coupe Stanley et du Conn Smythe"</p>
+        <p> Chacune des prédictions est considérée valide si elle est entrée avant le début du premier match de chacune des rondes par le participant:
+        1ere prédiction:  avant le 19 avril 2025 19h
+        2e prédiction: TBD
+        3e prédiction: TBD
+        4e prédiction : TBD.</p>
+        <p>Si un participant n'effectue pas une prédiction valide, ses choix précédents seront reconduits à la prochaine ronde. S'il s'agit de la première ronde, le participant est de facto éliminé.</p>
+          <h3>3. Système de pointage</h3>
+        <p>Le système de pointage est illustré dans le tableau sous l'onglet système de pointage.</p> 
+        <p>Pour que le participants obtiennent les points associés aux nombres de matchs, son choix doit aussi contenir l'équipe gagnante.</p> 
+        <p>Les gagnants du pool sont ceux qui ont les 3 récoltes de points les plus élevés sur la durée des séries éliminatoires.</p>
+        <p>"Le montant attribué aux 3 gagnants est calculé de la manière suivante:
+        1ere place: Nombre de participants*5$*4/7
+        2e place: Nombre de participants*5$*2/7
+        3e place: Nombre de participants*5$*1/7</p>
+        <button class="button" id="acceptRulesButton">J'ai lu et j'accepte les règles</button>
+    </div>
   <h1>🏒 Pool des séries éliminatoires de la LNH</h1>
   <form id="predictionForm">
     <!-- Champ pour le nom -->
@@ -235,8 +301,33 @@
     <div class="section">
       <button id="submitBtn" type="button" onclick="submitPredictions()" disabled>Soumettre les prédictions</button>
     </div>
+     <!-- Section de l'engagement -->
+    <div class="engagement-container" id="engagementContainer">
+        <p>Je m'engage à envoyer un montant de 5$ pour participer à ce pool à l'adresse <strong>charles.brosseau@hotmail.com</strong>.</p>
+        <p>Charles s'engage à vous envoyer le montant pour ceux finissant sur le podium tel que mentionné dans les règlements.</p>
+        <button class="button" id="confirmEngagementButton" onclick="confirmEngagement()">Je m'engage</button>
+    </div>
   </form>
 <script>
+// Quand la page est prête, afficher les règlements
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('rulesContainer').style.display = 'block';
+        });
+
+        // Lorsque l'utilisateur accepte les règles, on cache la section des règlements et montre le formulaire
+        document.getElementById('acceptRulesButton').addEventListener('click', () => {
+            document.getElementById('rulesContainer').style.display = 'none';
+            document.getElementById('predictionForm').style.display = 'block';
+        });
+
+        // Fonction pour confirmer l'engagement et passer à la soumission
+        function confirmEngagement() {
+            // L'utilisateur a accepté de participer au pool, on peut maintenant soumettre ses prédictions
+            alert("Merci de vous être engagé. Vous pouvez maintenant soumettre vos prédictions.");
+            document.getElementById('engagementContainer').style.display = 'none';
+            document.getElementById('predictionForm').style.display = 'block';
+        }
+  
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("#predictionForm select, #predictionForm input").forEach(el => {
     el.addEventListener("change", checkIfReadyToSubmit);
