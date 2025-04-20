@@ -333,6 +333,24 @@ document.addEventListener("DOMContentLoaded", () => {
     el.addEventListener("change", checkIfReadyToSubmit);
   });
 });
+//Décommenter lorsque la première soumission est terminée
+window.addEventListener('DOMContentLoaded', () => {
+  // Affiche uniquement le message de fin
+  document.getElementById('rulesContainer').style.display = 'none';
+  document.getElementById('engagementContainer').style.display = 'none';
+  document.getElementById('predictionForm').style.display = 'none';
+
+  const lateMessage = document.createElement('div');
+  lateMessage.style.padding = '1rem';
+  lateMessage.style.fontSize = '1.2rem';
+  lateMessage.style.textAlign = 'center';
+  lateMessage.style.fontWeight = 'bold';
+  lateMessage.innerText = "Il est désormais trop tard pour la première prédiction. Veuillez revenir sur cette page lors de la prochaine soumission après la deuxième ronde! :)";
+
+  document.body.appendChild(lateMessage);
+});
+
+  
   function getAllSelectValues() {
     const selects = document.querySelectorAll('select');
     const data = [];
