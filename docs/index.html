@@ -333,7 +333,7 @@ document.addEventListener("DOMContentLoaded", () => {
     el.addEventListener("change", checkIfReadyToSubmit);
   });
 });
-//Décommenter lorsque la première soumission est terminée
+/*Décommenter lorsque la première soumission est terminée
 window.addEventListener('DOMContentLoaded', () => {
   // Affiche uniquement le message de fin
   document.getElementById('rulesContainer').style.display = 'none';
@@ -345,10 +345,11 @@ window.addEventListener('DOMContentLoaded', () => {
   lateMessage.style.fontSize = '1.2rem';
   lateMessage.style.textAlign = 'center';
   lateMessage.style.fontWeight = 'bold';
-  lateMessage.innerText = "Il est désormais trop tard pour la première prédiction. Veuillez revenir sur cette page lors de la prochaine soumission après la deuxième ronde! :)";
+  lateMessage.innerText = "Il est désormais trop tard pour la première prédiction. Veuillez revenir sur cette page lors de la prochaine soumission avant le début de la  deuxième ronde! :)";
 
   document.body.appendChild(lateMessage);
 });
+Décommenter lorsque la première soumission est terminée*/
 
   
   function getAllSelectValues() {
