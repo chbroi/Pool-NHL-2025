@@ -310,7 +310,10 @@
     </div>
   </form>
 <script>
-// Affiche les règlements au chargement
+    const currentSubmission = 2; // à modifier pour 1, 2, 3, 4 selon le moment  
+  // Affichage spécial si 
+  if (currentSubmission === 1) {
+    // Affiche les règlements au chargement
     window.addEventListener('DOMContentLoaded', () => {
       document.getElementById('rulesContainer').style.display = 'block';
     });
@@ -327,12 +330,26 @@
       document.getElementById('engagementContainer').style.display = 'none';
       document.getElementById('predictionForm').style.display = 'block';
     }
+}
+  // Lor
+    window.addEventListener("DOMContentLoaded", () => {
+    if (currentSubmission > 1) {
+    document.getElementById("round1").style.display = "none";
+    }
+    if (currentSubmission > 2) {
+    document.getElementById("round2").style.display = "none";
+    }
+    if (currentSubmission > 3) {
+      document.getElementById("round3").style.display = "none";
+    }
+  });
   
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("#predictionForm select, #predictionForm input").forEach(el => {
     el.addEventListener("change", checkIfReadyToSubmit);
   });
 });
+
 /*Décommenter lorsque la première soumission est terminée
 window.addEventListener('DOMContentLoaded', () => {
   // Affiche uniquement le message de fin
@@ -349,7 +366,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   document.body.appendChild(lateMessage);
 });
-*/Décommenter lorsque la première soumission est terminée
+Décommenter lorsque la première soumission est terminée*/
 
   
   function getAllSelectValues() {
@@ -401,18 +418,7 @@ window.addEventListener('DOMContentLoaded', () => {
         "WPG": ["Connor Hellebuyck","Eric Comrie","Kyle Connor", "Mark Scheifele", "Nikolaj Ehlers", "Josh Morrissey", "Gabriel Vilardi", "Cole Perfetti", "Neal Pionk", "Vladislav Namestnikov", "Nino Niederreiter", "Adam Lowry", "Alex Iafallo", "Mason Appleton", "Dylan Samberg", "Dylan DeMelo", "Colin Miller", "Morgan Barron", "Logan Stanley", "Rasmus Kupari", "Haydn Fleury", "David Gustafsson", "Brandon Tanev", "Nikita Chibrikov", "Luke Schenn", "Parker Ford", "Brad Lambert", "Jaret Anderson-Dolan", "Ville Heinola", "Dominic Toninato", "Dylan Coghlan"
 ],
     };
-    const currentSubmission = 2; // à modifier pour 1, 2, 3, 4 selon le moment
-    window.addEventListener("DOMContentLoaded", () => {
-    if (currentSubmission > 1) {
-    document.getElementById("round1").style.display = "none";
-    }
-    if (currentSubmission > 2) {
-    document.getElementById("round2").style.display = "none";
-    }
-    if (currentSubmission > 3) {
-      document.getElementById("round3").style.display = "none";
-    }
-  });
+
     // Met à jour dynamiquement la liste des joueurs disponibles pour le Conn Smythe
     function updateConnSmytheList(team1, team2) {
       const list = [...(playersByTeam[team1] || []), ...(playersByTeam[team2] || [])];
