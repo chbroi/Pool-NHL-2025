@@ -96,7 +96,7 @@
     <label for="Prenom">Prénom :</label>
     <input type="text" id="Prenom" name="Prenom" required>
     <!-- Ronde 1 -->
-    <div class="section" id="round1">
+    <div class="section" id="round1" style="display: none;>
       <h2>Ronde 1 - Association Est</h2>
       <div class="matchup">
         <label>TOR vs OTT</label>
@@ -329,6 +329,7 @@
       alert("Merci de vous être engagé. Vous pouvez maintenant soumettre vos prédictions.");
       document.getElementById('engagementContainer').style.display = 'none';
       document.getElementById('predictionForm').style.display = 'block';
+      document.getElementById('round1').style.display = "block";
     }
 }
   // Affichage conditionnel
