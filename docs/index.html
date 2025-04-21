@@ -333,7 +333,7 @@ document.addEventListener("DOMContentLoaded", () => {
     el.addEventListener("change", checkIfReadyToSubmit);
   });
 });
-//Décommenter lorsque la première soumission est terminée
+/*Décommenter lorsque la première soumission est terminée
 window.addEventListener('DOMContentLoaded', () => {
   // Affiche uniquement le message de fin
   document.getElementById('rulesContainer').style.display = 'none';
@@ -349,7 +349,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   document.body.appendChild(lateMessage);
 });
-//Décommenter lorsque la première soumission est terminée
+*/Décommenter lorsque la première soumission est terminée
 
   
   function getAllSelectValues() {
@@ -401,7 +401,18 @@ window.addEventListener('DOMContentLoaded', () => {
         "WPG": ["Connor Hellebuyck","Eric Comrie","Kyle Connor", "Mark Scheifele", "Nikolaj Ehlers", "Josh Morrissey", "Gabriel Vilardi", "Cole Perfetti", "Neal Pionk", "Vladislav Namestnikov", "Nino Niederreiter", "Adam Lowry", "Alex Iafallo", "Mason Appleton", "Dylan Samberg", "Dylan DeMelo", "Colin Miller", "Morgan Barron", "Logan Stanley", "Rasmus Kupari", "Haydn Fleury", "David Gustafsson", "Brandon Tanev", "Nikita Chibrikov", "Luke Schenn", "Parker Ford", "Brad Lambert", "Jaret Anderson-Dolan", "Ville Heinola", "Dominic Toninato", "Dylan Coghlan"
 ],
     };
-
+    const currentSubmission = 2; // à modifier pour 1, 2, 3, 4 selon le moment
+    window.addEventListener("DOMContentLoaded", () => {
+    if (currentSubmission > 1) {
+    document.getElementById("round1").style.display = "none";
+    }
+    if (currentSubmission > 2) {
+    document.getElementById("round2").style.display = "none";
+    }
+    if (currentSubmission > 3) {
+      document.getElementById("round3").style.display = "none";
+    }
+  });
     // Met à jour dynamiquement la liste des joueurs disponibles pour le Conn Smythe
     function updateConnSmytheList(team1, team2) {
       const list = [...(playersByTeam[team1] || []), ...(playersByTeam[team2] || [])];
@@ -446,6 +457,7 @@ window.addEventListener('DOMContentLoaded', () => {
     ];
 
     function createRound2Matchups() {
+      if (currentSubmission > 1) return;
       const r2Matchups = [
         ['R1_EST_1_team', 'R1_EST_2_team', 'R2_EST_1_team', 'R2_EST_1_label'],
         ['R1_EST_3_team', 'R1_EST_4_team', 'R2_EST_2_team', 'R2_EST_2_label'],
@@ -477,6 +489,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     function createRound3Matchups() {
+      if (currentSubmission > 2) return;
       const r3Matchups = [
         ['R2_EST_1_team', 'R2_EST_2_team', 'R3_EST_1_team', 'R3_EST_1_label'],
         ['R2_WEST_1_team', 'R2_WEST_2_team', 'R3_WEST_1_team', 'R3_WEST_1_label']
@@ -507,6 +520,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     function createRound4Matchup() {
+      if (currentSubmission > 3) return;
       const team1 = document.getElementById('R3_EST_1_team').value;
       const team2 = document.getElementById('R3_WEST_1_team').value;
 
