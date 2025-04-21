@@ -333,6 +333,10 @@
 }
   // Affichage conditionnel
     window.addEventListener("DOMContentLoaded", () => {
+      
+      if (currentSubmission > 1) {
+        document.getElementById('predictionForm').style.display = "block";
+      }
       if (currentSubmission === 2) {
         document.getElementById('round2').style.display = "block";
       }
@@ -341,7 +345,6 @@
       }
       if (currentSubmission === 4) {
        document.getElementById('round4').style.display = "block";
-      
       }
   });
   
