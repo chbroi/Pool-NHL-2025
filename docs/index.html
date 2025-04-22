@@ -323,7 +323,7 @@ const previousData = {
   R3_WEST_1_team: "WPG",
   R4_final_team: "TOR",
 };
-    const currentSubmission = 3; // à modifier pour 1, 2, 3, 4 selon le moment  
+    const currentSubmission = 1; // à modifier pour 1, 2, 3, 4 selon le moment  
   // Affichage spécial si la soumission est 1
   if (currentSubmission === 1) {
     // Affiche les règlements au chargement
@@ -526,65 +526,6 @@ Décommenter lorsque la première soumission est terminée*/
       'R1_EST_1_team', 'R1_EST_2_team', 'R1_EST_3_team', 'R1_EST_4_team',
       'R1_WEST_1_team', 'R1_WEST_2_team', 'R1_WEST_3_team', 'R1_WEST_4_team'
     ];
-
-function showRound2FromData(data) {
-  const r2Matchups = [
-    ['R2_EST_1_team', 'R2_EST_1_label', 'R1_EST_1_team', 'R1_EST_2_team'],
-    ['R2_EST_2_team', 'R2_EST_2_label', 'R1_EST_3_team', 'R1_EST_4_team'],
-    ['R2_WEST_1_team', 'R2_WEST_1_label', 'R1_WEST_1_team', 'R1_WEST_2_team'],
-    ['R2_WEST_2_team', 'R2_WEST_2_label', 'R1_WEST_3_team', 'R1_WEST_4_team']
-  ];
-
-  r2Matchups.forEach(([selectId, labelId, id1, id2]) => {
-    const team1 = data[id1];
-    const team2 = data[id2];
-    const select = document.getElementById(selectId);
-    const label = document.getElementById(labelId);
-
-    if (team1 && team2) {
-      label.textContent = `${team1} vs ${team2}`;
-      select.innerHTML = `<option value="">Choisir</option>
-                          <option value="${team1}">${team1}</option>
-                          <option value="${team2}">${team2}</option>`;
-    }
-  });
-}
-  
-function showRound3FromData(data) {
-  const r3Matchups = [
-    ['R3_EST_1_team', 'R3_EST_1_label', 'R2_EST_1_team', 'R2_EST_2_team'],
-    ['R3_WEST_1_team', 'R3_WEST_1_label', 'R2_WEST_1_team', 'R2_WEST_2_team']
-  ];
-
-  r3Matchups.forEach(([selectId, labelId, id1, id2]) => {
-    const team1 = data[id1];
-    const team2 = data[id2];
-    const select = document.getElementById(selectId);
-    const label = document.getElementById(labelId);
-
-    if (team1 && team2) {
-      label.textContent = `${team1} vs ${team2}`;
-      select.innerHTML = `<option value="">Choisir</option>
-                          <option value="${team1}">${team1}</option>
-                          <option value="${team2}">${team2}</option>`;
-    }
-  });
-}
-  function showRound4FromData(data) {
-  const id1 = 'R3_EST_1_team';
-  const id2 = 'R3_WEST_1_team';
-  const team1 = data[id1];
-  const team2 = data[id2];
-  const select = document.getElementById('R4_team');
-  const label = document.getElementById('R4_label');
-
-  if (team1 && team2) {
-    label.textContent = `${team1} vs ${team2}`;
-    select.innerHTML = `<option value="">Choisir</option>
-                        <option value="${team1}">${team1}</option>
-                        <option value="${team2}">${team2}</option>`;
-  }
-}
     function createRound2Matchups() {
       if (currentSubmission > 1) return;
       const r2Matchups = [
