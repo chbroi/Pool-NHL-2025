@@ -373,8 +373,16 @@ window.addEventListener("DOMContentLoaded", () => {
   if (currentSubmission >= 4) {
     document.getElementById('round3').style.display = "none";
     document.getElementById('round4').style.display = "block";
-    showRoundFromData(4, previousData); // Affiche les choix de la ronde 4
-    updateConnSmytheField(); // Met à jour le Conn Smythe avec les équipes finalistes
+    
+    // On récupère les matchups de la ronde 4
+    const matchups = getMatchupsForRound(4);
+    
+    // Mise à jour des équipes de la finale dans le formulaire
+    document.getElementById('R4_final_team').value = matchups[0][2];  // L'équipe Est
+    document.getElementById('R4_final_label').textContent = matchups[0][3];  // L'équipe Ouest
+    
+    // Mettez à jour le Conn Smythe ici
+    updateConnSmytheField();  // Vous pouvez appeler ici la fonction updateConnSmythe si nécessaire
   }
 });
     
