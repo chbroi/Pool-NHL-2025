@@ -374,15 +374,9 @@ window.addEventListener("DOMContentLoaded", () => {
     document.getElementById('round3').style.display = "none";
     document.getElementById('round4').style.display = "block";
     showRoundFromData(4, previousData); // Affiche les choix de la ronde 4
-    
+    updateConnSmytheList(previousData.R3_EST_1_team,previousData.R1_WEST_1_team);
   }
-});
-window.addEventListener('load', () => {
-  if (currentSubmission >= 4) {
-    // Utilisez 'load' qui attend tous les éléments.
-    updateConnSmytheList(document.getElementById('R3_EST_1_team').value,document.getElementById('R3_WEST_1_team').value);
-  }
-});  
+}); 
     
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("#predictionForm select, #predictionForm input").forEach(el => {
