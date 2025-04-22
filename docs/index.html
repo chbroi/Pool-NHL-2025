@@ -419,8 +419,19 @@ function getMatchupsForRound(roundNumber) {
       ];
     case 4:
       // Ici, on met à jour les équipes de la finale (ronde 4) avec les gagnants de la ronde 3
+      // Si les données de la ronde 3 existent dans previousData, on les utilise
+      const finalTeams = [
+        {
+          team: previousData.R3_EST_1_team || 'N/A',  // Utiliser les données de la ronde 3 ou 'N/A' si non définies
+          label: 'Est'
+        },
+        {
+          team: previousData.R3_WEST_1_team || 'N/A', // Idem pour l'équipe Ouest
+          label: 'Ouest'
+        }
+      ];
       return [
-        ['R4_final_team', 'R4_final_label', 'R3_EST_1_team', 'R3_WEST_1_team']
+        ['R4_final_team', 'R4_final_label', finalTeams[0].team, finalTeams[1].team]
       ];
     default:
       return [];
