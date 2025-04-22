@@ -374,9 +374,15 @@ window.addEventListener("DOMContentLoaded", () => {
     document.getElementById('round3').style.display = "none";
     document.getElementById('round4').style.display = "block";
     showRoundFromData(4, previousData); // Affiche les choix de la ronde 4
-    updateConnSmytheField(); // Met à jour le Conn Smythe avec les équipes finalistes
+    
   }
 });
+window.addEventListener('load', () => {
+  if (currentSubmission >= 4) {
+    // Utilisez 'load' qui attend tous les éléments.
+    updateConnSmytheField();
+  }
+});  
     
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("#predictionForm select, #predictionForm input").forEach(el => {
