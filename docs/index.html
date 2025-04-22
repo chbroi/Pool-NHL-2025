@@ -310,10 +310,7 @@
     </div>
   </form>
 <script>
-const currentSubmission = 2; // à modifier pour 1, 2, 3, 4 selon le moment  
-  //Résultats jusqu'à présent
-const previousData = {
-  // Ronde 1
+  const previousData = {
   R1_EST_1_team: "TOR",
   R1_EST_2_team: "TBL",
   R1_EST_3_team: "WSH",
@@ -321,22 +318,9 @@ const previousData = {
   R1_WEST_1_team: "WPG",
   R1_WEST_2_team: "COL",
   R1_WEST_3_team: "VGK",
-  R1_WEST_4_team: "LAK",
-
-  // Ronde 2 
-  R2_EST_1_team: "TOR",  
-  R2_EST_2_team: "CAR",   
-  R2_WEST_1_team: "COL",  
-  R2_WEST_2_team: "VGK",  
-
-  // Ronde 3
-  R3_EST_1_team: "CAR",   
-  R3_WEST_1_team: "VGK", 
-
-  // Ronde 4 (finale)
-  R4_final_team: "CAR",  
+  R1_WEST_4_team: "LAK"
 };
-    
+    const currentSubmission = 2; // à modifier pour 1, 2, 3, 4 selon le moment  
   // Affichage spécial si la soumission est 1
   if (currentSubmission === 1) {
     // Affiche les règlements au chargement
@@ -505,24 +489,20 @@ function showRound2FromData(data) {
     ['R2_WEST_2_team', 'R2_WEST_2_label', 'R1_WEST_3_team', 'R1_WEST_4_team']
   ];
 
-  r2Matchups.forEach(([selectId, labelId, prev1Id, prev2Id]) => {
-    const selectEl = document.getElementById(selectId);
-    const labelEl = document.getElementById(labelId);
-    const team1 = data[prev1Id];
-    const team2 = data[prev2Id];
+  r2Matchups.forEach(([selectId, labelId, id1, id2]) => {
+    const team1 = data[id1];
+    const team2 = data[id2];
+    const select = document.getElementById(selectId);
+    const label = document.getElementById(labelId);
 
-    // Met à jour le label de l'affrontement
-    if (labelEl && team1 && team2) {
-      labelEl.textContent = `${team1} vs ${team2}`;
-    }
-
-    // Pré-sélectionne l’équipe si elle existe déjà dans previousData
-    if (selectEl && data[selectId]) {
-      selectEl.value = data[selectId];
+    if (team1 && team2) {
+      label.textContent = `${team1} vs ${team2}`;
+      select.innerHTML = `<option value="">Choisir</option>
+                          <option value="${team1}">${team1}</option>
+                          <option value="${team2}">${team2}</option>`;
     }
   });
 }
-
   
 function showRound3FromData(data) {
   const r3Matchups = [
@@ -530,41 +510,37 @@ function showRound3FromData(data) {
     ['R3_WEST_1_team', 'R3_WEST_1_label', 'R2_WEST_1_team', 'R2_WEST_2_team']
   ];
 
-  r3Matchups.forEach(([selectId, labelId, prev1Id, prev2Id]) => {
-    const selectEl = document.getElementById(selectId);
-    const labelEl = document.getElementById(labelId);
-    const team1 = data[prev1Id];
-    const team2 = data[prev2Id];
+  r3Matchups.forEach(([selectId, labelId, id1, id2]) => {
+    const team1 = data[id1];
+    const team2 = data[id2];
+    const select = document.getElementById(selectId);
+    const label = document.getElementById(labelId);
 
-    // Met à jour le label de l'affrontement
-    if (labelEl && team1 && team2) {
-      labelEl.textContent = `${team1} vs ${team2}`;
-    }
-
-    // Pré-sélectionne l’équipe si elle existe déjà dans previousData
-    if (selectEl && data[selectId]) {
-      selectEl.value = data[selectId];
+    if (team1 && team2) {
+      label.textContent = `${team1} vs ${team2}`;
+      select.innerHTML = `<option value="">Choisir</option>
+                          <option value="${team1}">${team1}</option>
+                          <option value="${team2}">${team2}</option>`;
     }
   });
 }
-function showRound4FromData(data) {
-  const selectId = 'R4_final_team';
-  const labelId = 'R4_final_label';
-  const team1 = data['R3_EST_1_team'];
-  const team2 = data['R3_WEST_1_team'];
+  function showRound4FromData(data) {
+  const id1 = 'R3_EST_1_team';
+  const id2 = 'R3_WEST_1_team';
+  const team1 = data[id1];
+  const team2 = data[id2];
+  const select = document.getElementById('R4_team');
+  const label = document.getElementById('R4_label');
 
-  const selectEl = document.getElementById(selectId);
-  const labelEl = document.getElementById(labelId);
-
-  if (labelEl && team1 && team2) {
-    labelEl.textContent = `${team1} vs ${team2}`;
-  }
-
-  if (selectEl && data[selectId]) {
-    selectEl.value = data[selectId];
+  if (team1 && team2) {
+    label.textContent = `${team1} vs ${team2}`;
+    select.innerHTML = `<option value="">Choisir</option>
+                        <option value="${team1}">${team1}</option>
+                        <option value="${team2}">${team2}</option>`;
   }
 }
     function createRound2Matchups() {
+      if (currentSubmission > 1) return;
       const r2Matchups = [
         ['R1_EST_1_team', 'R1_EST_2_team', 'R2_EST_1_team', 'R2_EST_1_label'],
         ['R1_EST_3_team', 'R1_EST_4_team', 'R2_EST_2_team', 'R2_EST_2_label'],
@@ -596,6 +572,7 @@ function showRound4FromData(data) {
     }
 
     function createRound3Matchups() {
+      if (currentSubmission > 2) return;
       const r3Matchups = [
         ['R2_EST_1_team', 'R2_EST_2_team', 'R3_EST_1_team', 'R3_EST_1_label'],
         ['R2_WEST_1_team', 'R2_WEST_2_team', 'R3_WEST_1_team', 'R3_WEST_1_label']
@@ -626,6 +603,7 @@ function showRound4FromData(data) {
     }
 
     function createRound4Matchup() {
+      if (currentSubmission > 3) return;
       const team1 = document.getElementById('R3_EST_1_team').value;
       const team2 = document.getElementById('R3_WEST_1_team').value;
 
