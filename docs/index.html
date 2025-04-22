@@ -564,7 +564,6 @@ function showRound4FromData(data) {
   }
 }
     function createRound2Matchups() {
-      if (currentSubmission > 1) return;
       const r2Matchups = [
         ['R1_EST_1_team', 'R1_EST_2_team', 'R2_EST_1_team', 'R2_EST_1_label'],
         ['R1_EST_3_team', 'R1_EST_4_team', 'R2_EST_2_team', 'R2_EST_2_label'],
@@ -596,7 +595,6 @@ function showRound4FromData(data) {
     }
 
     function createRound3Matchups() {
-      if (currentSubmission > 2) return;
       const r3Matchups = [
         ['R2_EST_1_team', 'R2_EST_2_team', 'R3_EST_1_team', 'R3_EST_1_label'],
         ['R2_WEST_1_team', 'R2_WEST_2_team', 'R3_WEST_1_team', 'R3_WEST_1_label']
@@ -627,7 +625,6 @@ function showRound4FromData(data) {
     }
 
     function createRound4Matchup() {
-      if (currentSubmission > 3) return;
       const team1 = document.getElementById('R3_EST_1_team').value;
       const team2 = document.getElementById('R3_WEST_1_team').value;
 
