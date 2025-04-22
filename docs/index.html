@@ -311,17 +311,29 @@
   </form>
 <script>
 const previousData = {
+  // Ronde 1
+  R1_EST_1_team: "TOR",
+  R1_EST_2_team: "TBL",
+  R1_EST_3_team: "WSH",
+  R1_EST_4_team: "CAR",
   R1_WEST_1_team: "WPG",
   R1_WEST_2_team: "DAL",
   R1_WEST_3_team: "VGK",
   R1_WEST_4_team: "LAK",
-  R2_EST_1_team: "TOR",
-  R2_EST_2_team: "TBL",
-  R2_WEST_1_team: "WPG",
-  R2_WEST_2_team: "COL",
-  R3_EST_1_team: "TOR",
-  R3_WEST_1_team: "WPG",
-  R4_final_team: "TOR",
+  
+  // Ronde 2
+  R2_EST_1_team: "TOR",  // Supposons que TOR a gagné
+  R2_EST_2_team: "TBL",  // Supposons que TBL a gagné
+  R2_WEST_1_team: "WPG", // Supposons que WPG a gagné
+  R2_WEST_2_team: "DAL", // Supposons que DAL a gagné
+
+  // Ronde 3
+  R3_EST_1_team: "TOR",  // TOR gagne en Ronde 2
+  R3_WEST_1_team: "WPG", // WPG gagne en Ronde 2
+
+  // Ronde 4 (Finale de la Coupe Stanley)
+  R4_final_team: "",     // À choisir entre TOR (EST) et WPG (OUEST)
+  R4_final_games: "",    // Choisir le nombre de matchs (4, 5, 6, 7)
 };
     const currentSubmission = 4; // à modifier pour 1, 2, 3, 4 selon le moment  
   // Affichage spécial si la soumission est 1
@@ -405,6 +417,7 @@ function getMatchupsForRound(roundNumber) {
         ['R3_WEST_1_team', 'R3_WEST_1_label', 'R2_WEST_1_team', 'R2_WEST_2_team']
       ];
     case 4:
+      // Ici, on met à jour les équipes de la finale (ronde 4) avec les gagnants de la ronde 3
       return [
         ['R4_final_team', 'R4_final_label', 'R3_EST_1_team', 'R3_WEST_1_team']
       ];
