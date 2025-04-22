@@ -323,7 +323,7 @@ const previousData = {
   R3_WEST_1_team: "WPG",
   R4_final_team: "TOR",
 };
-    const currentSubmission = 1; // à modifier pour 1, 2, 3, 4 selon le moment  
+    const currentSubmission = 4; // à modifier pour 1, 2, 3, 4 selon le moment  
   // Affichage spécial si la soumission est 1
   if (currentSubmission === 1) {
     // Affiche les règlements au chargement
@@ -347,9 +347,8 @@ const previousData = {
 }
   // Affichage des rondes selon les soumissions
 window.addEventListener("DOMContentLoaded", () => {
-  document.getElementById('predictionForm').style.display = "block";
-
   if (currentSubmission >= 2) {
+    document.getElementById('predictionForm').style.display = "block";
     document.getElementById('round1').style.display = "none";
     document.getElementById('round2').style.display = "block";
     showRoundFromData(2, previousData); // Affiche les choix de la ronde 2
