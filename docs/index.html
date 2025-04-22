@@ -310,15 +310,18 @@
     </div>
   </form>
 <script>
-  const previousData = {
+const previousData = {
+  R1_WEST_1_team: "WPG",
+  R1_WEST_2_team: "DAL",
+  R1_WEST_3_team: "VGK",
+  R1_WEST_4_team: "LAK",
   R2_EST_1_team: "TOR",
   R2_EST_2_team: "TBL",
-  //R1_EST_3_team: "WSH",
-  //R1_EST_4_team: "CAR",
   R2_WEST_1_team: "WPG",
   R2_WEST_2_team: "COL",
-  //R1_WEST_3_team: "VGK",
-  //R1_WEST_4_team: "LAK"
+  R3_EST_1_team: "TOR",
+  R3_WEST_1_team: "WPG",
+  R4_final_team: "TOR",
 };
     const currentSubmission = 3; // à modifier pour 1, 2, 3, 4 selon le moment  
   // Affichage spécial si la soumission est 1
@@ -342,32 +345,75 @@
       document.getElementById('round1').style.display = "block";
     }
 }
-  // Affichage conditionnel à la soumission
-  window.addEventListener("DOMContentLoaded", () => {
-    document.getElementById('predictionForm').style.display = "block";
+  // Affichage des rondes selon les soumissions
+window.addEventListener("DOMContentLoaded", () => {
+  document.getElementById('predictionForm').style.display = "block";
 
-    if (currentSubmission >= 2) {
-      document.getElementById('round1').style.display = "none";
-      document.getElementById('round2').style.display = "block";
-      showRound2FromData(previousData); // 'previousData' contient les choix déjà soumis
-    }
-    if (currentSubmission >= 3) {
-      document.getElementById('round2').style.display = "none";
-      document.getElementById('round3').style.display = "block";
-      showRound3FromData(previousData); // 'previousData' contient les choix déjà soumis
-    }
-    if (currentSubmission >= 4) {
-      document.getElementById('round3').style.display = "none";
-      document.getElementById('round4').style.display = "block";
-      showRound4FromData(previousData); // 'previousData' contient les choix déjà soumis
-    }
-  });
+  if (currentSubmission >= 2) {
+    document.getElementById('round1').style.display = "none";
+    document.getElementById('round2').style.display = "block";
+    showRoundFromData(2, previousData); // Affiche les choix de la ronde 2
+  }
+  if (currentSubmission >= 3) {
+    document.getElementById('round2').style.display = "none";
+    document.getElementById('round3').style.display = "block";
+    showRoundFromData(3, previousData); // Affiche les choix de la ronde 3
+  }
+  if (currentSubmission >= 4) {
+    document.getElementById('round3').style.display = "none";
+    document.getElementById('round4').style.display = "block";
+    showRoundFromData(4, previousData); // Affiche les choix de la ronde 4
+  }
+});
     
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("#predictionForm select, #predictionForm input").forEach(el => {
     el.addEventListener("change", checkIfReadyToSubmit);
   });
 });
+  // Fonction pour obtenir les matchs à afficher en fonction de la ronde
+// Fonction générique pour afficher les matchs selon les données précédentes
+function showRoundFromData(roundNumber, data) {
+  const matchups = getMatchupsForRound(roundNumber);
+  matchups.forEach(([selectId, labelId, teamId1, teamId2]) => {
+    const team1 = data[teamId1];
+    const team2 = data[teamId2];
+    const select = document.getElementById(selectId);
+    const label = document.getElementById(labelId);
+
+    if (team1 && team2) {
+      label.textContent = `${team1} vs ${team2}`;
+      select.innerHTML = `<option value="">Choisir</option>
+                          <option value="${team1}">${team1}</option>
+                          <option value="${team2}">${team2}</option>`;
+    }
+  });
+}
+
+// Fonction pour obtenir les matchups en fonction de la ronde
+function getMatchupsForRound(roundNumber) {
+  switch (roundNumber) {
+    case 2:
+      return [
+        ['R2_EST_1_team', 'R2_EST_1_label', 'R1_EST_1_team', 'R1_EST_2_team'],
+        ['R2_EST_2_team', 'R2_EST_2_label', 'R1_EST_3_team', 'R1_EST_4_team'],
+        ['R2_WEST_1_team', 'R2_WEST_1_label', 'R1_WEST_1_team', 'R1_WEST_2_team'],
+        ['R2_WEST_2_team', 'R2_WEST_2_label', 'R1_WEST_3_team', 'R1_WEST_4_team']
+      ];
+    case 3:
+      return [
+        ['R3_EST_1_team', 'R3_EST_1_label', 'R2_EST_1_team', 'R2_EST_2_team'],
+        ['R3_WEST_1_team', 'R3_WEST_1_label', 'R2_WEST_1_team', 'R2_WEST_2_team']
+      ];
+    case 4:
+      return [
+        ['R4_final_team', 'R4_final_label', 'R3_EST_1_team', 'R3_WEST_1_team']
+      ];
+    default:
+      return [];
+  }
+}
+
 
 /*Décommenter lorsque la première soumission est terminée
 window.addEventListener('DOMContentLoaded', () => {
