@@ -650,7 +650,9 @@ function submitPredictions() {
     for (const pair of formData.entries()) {
       data.append(pair[0], pair[1]);
     }
-
+    
+    data.append("Soumission", currentSubmission);
+    
     fetch("https://script.google.com/macros/s/AKfycbzYN13JA9q2VM7DD65EyA2IgpMMlWhjV385oSObthBRj7MlUAPeXcDcmRptqAymtbNr/exec", {
       method: "POST",
       mode: "no-cors", 
