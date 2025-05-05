@@ -90,7 +90,7 @@
     </div>
   <form id="predictionForm">
     <h1>🏒 Pool des séries éliminatoires de la LNH 2025</h1>
-    <h2>🏒 Vous avez jusqu'au 5 mai 2025 20h pour faire votre deuxieme soumission!</h2>
+    <h1> Vous avez jusqu'au 5 mai 2025 20h pour faire votre deuxieme soumission!</h1>
     <!-- Champ pour le nom -->
     <label for="Nom">Nom :</label>
     <input type="text" id="Nom" name="Nom" required>
@@ -656,7 +656,7 @@ function submitPredictions() {
     
     fetch("https://script.google.com/macros/s/AKfycbzYN13JA9q2VM7DD65EyA2IgpMMlWhjV385oSObthBRj7MlUAPeXcDcmRptqAymtbNr/exec", {
       method: "POST",
-      mode: "cors", 
+      mode: "no-cors", 
       headers: {
         "Content-Type": "application/x-www-form-urlencoded"
       },
