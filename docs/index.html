@@ -92,10 +92,30 @@
     <h1>🏒 Pool des séries éliminatoires de la LNH 2025</h1>
     <h1> Vous avez jusqu'au 5 mai 2025 20h pour faire votre deuxieme soumission!</h1>
     <!-- Champ pour le nom -->
-    <label for="Nom">Nom :</label>
+    <!-- <label for="Nom">Nom :</label>
     <input type="text" id="Nom" name="Nom" required>
     <label for="Prenom">Prénom :</label>
     <input type="text" id="Prenom" name="Prenom" required>
+     -->
+
+    <!-- Liste dynamique des noms pour les participants -->
+    <input type="hidden" id="Nom" name="Nom">
+    <input type="hidden" id="Prenom" name="Prenom">
+    <label for="participant">Participant :</label>
+    <select id="participant" name="participant" onchange="updateNomPrenom()" required>
+      <option value="" disabled selected>Choisissez votre nom</option>
+      <option value="Brosseau|Charles">Charles Brosseau</option>
+      <option value="Brosseau|David">David Brosseau</option>
+      <option value="Boomer|John">John Boomer</option>
+      <option value="Bourdages|Samuel">Samuel Bourdages/option>
+      <option value="Cerniavschi|Toma">Toma Cerniavschi</option>
+      <option value="Ferland|Samuel">Samuel Ferland</option>
+      <option value="Gauthier|Olivier">Olivier Gauthier</option>
+      <option value="Girard|Abbygail">Abbygail Girard</option>
+      <option value="De Ste-Croix Killoran|Gabrielle">Gabrielle Killoran</option>
+      <option value="Masson|Liam">Liam Masson</option>
+      <option value="Tanguay|Félix>Félix Tanguay</option>
+    </select>
     <!-- Ronde 1 -->
     <div class="section" id="round1" style="display: none;">
       <h2>Ronde 1 - Association Est</h2>
@@ -462,6 +482,10 @@ window.addEventListener('DOMContentLoaded', () => {
   }
     const allPredictions = [];
 
+    // Liste des participants
+    const participants = {
+      
+    }
     // Liste des joueurs par équipe
     const playersByTeam = {
         "CAR": ["Pyotr Kochetkov","Frederik Andersen","Sebastian Aho", "Seth Jarvis", , "Andrei Svechnikov", "Shayne Gostisbehere", "Jack Roslovic", "Jordan Staal", "Jordan Martinook", "Jackson Blake", "Jesperi Kotkaniemi", "Eric Robinson", "Brent Burns", "Dmitry Orlov", "Jaccob Slavin", "Taylor Hall", "Jalen Chatfield", "Sean Walker", "William Carrier", "Logan Stankoven", "Tyson Jost", "Jack Drury", "Mark Jankowski", "Mikko Rantanen", "Scott Morrow", "Juha Jaaska", "Justin Robidas", "Ty Smith", "Skyler Brind'Amour", "Bradly Nadeau", "Domenick Fensore", "Ryan Suzuki", "Riley Stillman"
@@ -736,6 +760,13 @@ window.addEventListener("DOMContentLoaded", () => {
     checkIfReadyToSubmit(); // Appel initial
   }
 });
+  function updateNomPrenom() {
+  const participant = document.getElementById("participant").value;
+  const [nom, prenom] = participant.split("|");
+
+  document.getElementById("Nom").value = nom || "";
+  document.getElementById("Prenom").value = prenom || "";
+}
 </script>
 </body>
 </html>
