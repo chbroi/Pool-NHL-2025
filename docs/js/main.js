@@ -32,7 +32,7 @@ window.addEventListener("DOMContentLoaded", () => {
     document.getElementById('round3').style.display = "none";
     document.getElementById('round4').style.display = "block";
     showRoundFromData(4, previousData); // Affiche les choix de la ronde 4
-    updateConnSmytheList(previousData.R3_EST_1_team,previousData.R1_WEST_1_team);
+    updateConnSmytheList(previousData.R3_EST_1_team,previousData.R3_WEST_1_team);
   }
 }); 
     
