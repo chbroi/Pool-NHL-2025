@@ -1,6 +1,6 @@
 //Constantes nécessaires au foctionnement du Pool
 
-const currentSubmission = 3; // à modifier pour 1, 2, 3, 4 selon le moment
+const currentSubmission = 4; // à modifier pour 1, 2, 3, 4 selon le moment
 
 //Résultats jusqu'à présent
 const previousData = {
@@ -21,8 +21,8 @@ const previousData = {
   R2_WEST_2_team: "EDM", 
 
   // Ronde 3
-  R3_EST_1_team: "",  // TOR gagne en Ronde 2
-  R3_WEST_1_team: "", // WPG gagne en Ronde 2
+  R3_EST_1_team: "FLA",
+  R3_WEST_1_team: "EDM",
 
   // Ronde 4 (Finale de la Coupe Stanley)
   R4_final_team: "",     // À choisir entre TOR (EST) et WPG (OUEST)
