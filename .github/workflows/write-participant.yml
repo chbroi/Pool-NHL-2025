@@ -29,22 +29,17 @@ jobs:
       run: |
         FILE="docs/data/participants.json"
         NEW_ENTRY="{\"Prenom\": \"${{ github.event.inputs.prenom }}\", \"Nom\": \"${{ github.event.inputs.nom }}\", \"Soumission\": ${{ github.event.inputs.soumission }}}"
-
-        # Lire les données actuelles
+        
         CONTENT=$(cat "$FILE")
-
-        # Ajouter le nouveau participant à la fin
         echo "$CONTENT" | jq ".participants += [ $NEW_ENTRY ]" > "$FILE"
-
-        # Commit & push avec auth via token
+        
         git config --global user.name 'github-actions'
         git config --global user.email 'github-actions@github.com'
         git add "$FILE"
         git commit -m "Ajout de ${{ github.event.inputs.prenom }} ${{ github.event.inputs.nom }} (Soumission ${{ github.event.inputs.soumission }})"
         
-        # Remplacer l'URL distante par une version avec le token
+        # 🟡 Utilise le token personnel (PAT) pour pousser
         git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git
-
         git push origin main
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
