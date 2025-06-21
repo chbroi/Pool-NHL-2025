@@ -168,25 +168,31 @@ function createRound4Matchup() {
   updateConnSmytheField();
 }
 
-async function fetchParticipants() {
-  try {
-    const response = await fetch("https://chbroi.github.io/Pool-NHL-2025/data/participants.json");
-    if (!response.ok) throw new Error("Erreur de chargement");
+function fetchParticipants() {
+  const url = `https://chbroi.github.io/Pool-NHL-2025/data/participants.json?t=${Date.now()}`;
+  fetch(url)
+    .then(response => response.json())
+    .then(json => {
+      const list = document.getElementById("participantsList");
+      list.innerHTML = ""; // Réinitialiser la liste
 
-    const data = await response.json();
-    console.log("Participants chargés :", data.participants);
-
-    // Exemple : afficher les noms dans une liste HTML (optionnel)
-    const container = document.getElementById("participantList");
-    if (container) {
-      container.innerHTML = data.participants.map(p =>
-        `<li>${p.Prenom} ${p.Nom} — Soumission ${p.Soumission}</li>`
-      ).join("");
-    }
-
-  } catch (err) {
-    console.error("Erreur lors du chargement des participants :", err);
-  }
+      if (json.participants && json.participants.length > 0) {
+        json.participants.forEach(participant => {
+          const item = document.createElement("li");
+          item.textContent = `${participant.Prenom} ${participant.Nom} (Soumission ${participant.Soumission})`;
+          list.appendChild(item);
+        });
+      } else {
+        const empty = document.createElement("li");
+        empty.textContent = "Aucun participant trouvé.";
+        list.appendChild(empty);
+      }
+    })
+    .catch(error => {
+      console.error("Erreur lors du chargement des participants:", error);
+      const list = document.getElementById("participantsList");
+      list.innerHTML = "<li>Erreur de chargement des données.</li>";
+    });
 }
 
 async function submitPredictions() { /*
