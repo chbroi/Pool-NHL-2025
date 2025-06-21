@@ -19,6 +19,8 @@ jobs:
     steps:
     - name: Checkout repo
       uses: actions/checkout@v3
+      with:
+        persist-credentials: false  # ❗️ESSENTIEL pour que git remote set-url fonctionne
 
     - name: Set up Node.js
       uses: actions/setup-node@v3
@@ -29,16 +31,16 @@ jobs:
       run: |
         FILE="docs/data/participants.json"
         NEW_ENTRY="{\"Prenom\": \"${{ github.event.inputs.prenom }}\", \"Nom\": \"${{ github.event.inputs.nom }}\", \"Soumission\": ${{ github.event.inputs.soumission }}}"
-        
+
         CONTENT=$(cat "$FILE")
         echo "$CONTENT" | jq ".participants += [ $NEW_ENTRY ]" > "$FILE"
-        
+
         git config --global user.name 'github-actions'
         git config --global user.email 'github-actions@github.com'
         git add "$FILE"
         git commit -m "Ajout de ${{ github.event.inputs.prenom }} ${{ github.event.inputs.nom }} (Soumission ${{ github.event.inputs.soumission }})"
-        
-        # 🟡 Utilise le token personnel (PAT) pour pousser
+
+        # ➕ Utilisation du token personnel (GH_TOKEN)
         git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git
         git push origin main
       env:
