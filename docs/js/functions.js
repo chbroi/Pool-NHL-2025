@@ -195,55 +195,29 @@ function fetchParticipants() {
     });
 }
 
-async function submitPredictions() { /*
- if (!confirm("Confirmer la soumission ?")) return;
-  const form = document.getElementById("predictionForm");
-  const fd = new FormData(form);
-  const data = Object.fromEntries(fd.entries());
-  data.date = new Date().toISOString();
+async function submitPredictions() {
+  if (!confirm("Confirmer la soumission ?")) return;
+  const data = Object.fromEntries(new FormData(
+    document.getElementById("predictionForm")
+  ).entries());
 
   try {
-    // Sauvegarde vers JSONBin
-    await savePredictions(data);
-    alert(" Enregistré dans JSONBin");
-  } catch (err) {
-    console.error(err);
-    alert("Échec JSONBin : " + err.message);
-  }
- */ 
-  // Demander la confirmation avant de soumettre
- const confirmation = window.confirm("Êtes-vous sûr de soumettre vos prédictions ?");
-
-  if (confirmation) {
-    const form = document.getElementById("predictionForm");
-    const formData = new FormData(form);
-
-    // Convertir en format x-www-form-urlencoded
-    const data = new URLSearchParams();
-    for (const pair of formData.entries()) {
-      data.append(pair[0], pair[1]);
-    }
-    
-    data.append("Soumission", currentSubmission);
-    
-    fetch("https://script.google.com/macros/s/AKfycbzYN13JA9q2VM7DD65EyA2IgpMMlWhjV385oSObthBRj7MlUAPeXcDcmRptqAymtbNr/exec", {
+    const res = await fetch("https://script.google.com/macros/s/AKfycbwZeXCvJShPpQpeQ2mpwLKvNgFZaw5SR8lvDG5mEYEiQ-RB4CsIB2-TWiOpNBrXM24Hzw/execT", {
       method: "POST",
-      mode: "no-cors", 
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      },
-      body: data
-    })
-    .then(() => {
-      alert("Prédictions envoyées!");
-      form.reset(); // Réinitialiser le formulaire après l'envoi
-    })
-    .catch(error => {
-      alert("Erreur lors de l’envoi : " + error);
-      console.error(error);
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
     });
-  } else {
-    console.log("Soumission annulée.");
+    const json = await res.json();
+    if (json.success) {
+      alert("Envoyé ✅");
+      form.reset();
+    } else {
+      alert("Erreur côté serveur");
+      console.error(json);
+    }
+  } catch (err) {
+    alert("Erreur réseau ou CORS : " + err.message);
+    console.error(err);
   }
 }
 function checkIfReadyToSubmit() {
@@ -296,6 +270,34 @@ function checkIfReadyToSubmit() {
     submitBtn.disabled = !allFilled;
   }
  
+}
+
+async function submitToGitHub(prenom, nom, soumission) {
+  const repo = "chbroi/Pool-NHL-2025";
+  const token = "ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"; // remplace par ton PAT **local pour test**
+  const url = `https://api.github.com/repos/${repo}/actions/workflows/add-participant.yml/dispatches`;
+
+  const payload = {
+    ref: "main",
+    inputs: {
+      prenom,
+      nom,
+      soumission: soumission.toString()
+    }
+  };
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Authorization": `token ${token}`,
+      "Accept": "application/vnd.github+json"
+    },
+    body: JSON.stringify(payload)
+  });
+
+  if (!response.ok) {
+    throw new Error(`Erreur GitHub API : ${response.statusText}`);
+  }
 }
 
 function updateNomPrenom() {
