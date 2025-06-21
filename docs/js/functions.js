@@ -197,27 +197,32 @@ function fetchParticipants() {
 
 async function submitPredictions() {
   if (!confirm("Confirmer la soumission ?")) return;
-  const data = Object.fromEntries(new FormData(
-    document.getElementById("predictionForm")
-  ).entries());
 
+  const form = document.getElementById("predictionForm");
+  const fd = new FormData(form);
+  const data = Object.fromEntries(fd.entries());
+  data.date = new Date().toISOString();
+
+  // Vérifie que le nom est enregistré
+  if (!isNameRegistered(data.Nom, data.Prenom)) {
+    alert("Nom ou prénom non reconnu. Si vous avez déjà soumis, assurez-vous d’écrire votre nom exactement comme lors de la première soumission.");
+    return;
+  }
+
+  // Pour les soumissions > 1, vérifier qu'il y a une soumission précédente
+  if (parseInt(data.Soumission, 10) > 1 && !hasPreviousSubmission(data.Nom, data.Prenom, parseInt(data.Soumission, 10))) {
+    alert(`Vous devez avoir fait la soumission ${parseInt(data.Soumission, 10) - 1} avant de faire la ${data.Soumission}.`);
+    return;
+  }
+
+  // Si tout est ok, faire la soumission réelle (ex : appeler la GitHub Action ou JSONBin)
   try {
-    const res = await fetch("https://script.google.com/macros/s/AKfycbwZeXCvJShPpQpeQ2mpwLKvNgFZaw5SR8lvDG5mEYEiQ-RB4CsIB2-TWiOpNBrXM24Hzw/execT", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
-    });
-    const json = await res.json();
-    if (json.success) {
-      alert("Envoyé ✅");
-      form.reset();
-    } else {
-      alert("Erreur côté serveur");
-      console.error(json);
-    }
+    await savePredictions(data); // ta fonction pour push vers GitHub (via API ou workflow)
+    alert("Prédictions envoyées!");
+    form.reset();
+    await loadParticipants(); // recharge la liste pour inclure la nouvelle soumission
   } catch (err) {
-    alert("Erreur réseau ou CORS : " + err.message);
-    console.error(err);
+    alert("Erreur lors de l’envoi : " + err.message);
   }
 }
 function checkIfReadyToSubmit() {
@@ -306,4 +311,32 @@ function updateNomPrenom() {
 
   document.getElementById("Nom").value = nom || "";
   document.getElementById("Prenom").value = prenom || "";
+}
+
+let participants = [];
+
+async function loadParticipants() {
+  try {
+    const res = await fetch("data/participants.json");
+    const data = await res.json();
+    participants = data.participants || [];
+  } catch(e) {
+    console.error("Erreur chargement participants :", e);
+  }
+}
+
+function hasPreviousSubmission(nom, prenom, soumission) {
+  // Vérifie qu'il y a une soumission précédente inférieure à 'soumission' pour ce nom/prenom
+  return participants.some(p => 
+    p.Nom.toLowerCase() === nom.toLowerCase().trim() &&
+    p.Prenom.toLowerCase() === prenom.toLowerCase().trim() &&
+    p.Soumission < soumission
+  );
+}
+
+function isNameRegistered(nom, prenom) {
+  return participants.some(p => 
+    p.Nom.toLowerCase() === nom.toLowerCase().trim() &&
+    p.Prenom.toLowerCase() === prenom.toLowerCase().trim()
+  );
 }
