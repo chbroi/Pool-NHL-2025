@@ -168,9 +168,24 @@ function createRound4Matchup() {
   updateConnSmytheField();
 }
 
-function submitPredictions() {
-  // Demander la confirmation avant de soumettre
-  const confirmation = window.confirm("Êtes-vous sûr de soumettre vos prédictions ?");
+async function submitPredictions() {
+ if (!confirm("Confirmer la soumission ?")) return;
+  const form = document.getElementById("predictionForm");
+  const fd = new FormData(form);
+  const data = Object.fromEntries(fd.entries());
+  data.date = new Date().toISOString();
+
+  try {
+    // Sauvegarde vers JSONBin
+    await savePredictions(data);
+    alert(" Enregistré dans JSONBin");
+  } catch (err) {
+    console.error(err);
+    alert("Échec JSONBin : " + err.message);
+  }
+      
+ /*  // Demander la confirmation avant de soumettre
+ const confirmation = window.confirm("Êtes-vous sûr de soumettre vos prédictions ?");
 
   if (confirmation) {
     const form = document.getElementById("predictionForm");
@@ -253,6 +268,7 @@ function checkIfReadyToSubmit() {
   if (submitBtn) {
     submitBtn.disabled = !allFilled;
   }
+  */
 }
 
 function updateNomPrenom() {
