@@ -168,7 +168,28 @@ function createRound4Matchup() {
   updateConnSmytheField();
 }
 
-async function submitPredictions() {
+async function fetchParticipants() {
+  try {
+    const response = await fetch("https://chbroi.github.io/Pool-NHL-2025/data/participants.json");
+    if (!response.ok) throw new Error("Erreur de chargement");
+
+    const data = await response.json();
+    console.log("Participants chargés :", data.participants);
+
+    // Exemple : afficher les noms dans une liste HTML (optionnel)
+    const container = document.getElementById("participantList");
+    if (container) {
+      container.innerHTML = data.participants.map(p =>
+        `<li>${p.Prenom} ${p.Nom} — Soumission ${p.Soumission}</li>`
+      ).join("");
+    }
+
+  } catch (err) {
+    console.error("Erreur lors du chargement des participants :", err);
+  }
+}
+
+async function submitPredictions() { /*
  if (!confirm("Confirmer la soumission ?")) return;
   const form = document.getElementById("predictionForm");
   const fd = new FormData(form);
@@ -183,8 +204,8 @@ async function submitPredictions() {
     console.error(err);
     alert("Échec JSONBin : " + err.message);
   }
-      
- /*  // Demander la confirmation avant de soumettre
+ */ 
+  // Demander la confirmation avant de soumettre
  const confirmation = window.confirm("Êtes-vous sûr de soumettre vos prédictions ?");
 
   if (confirmation) {
@@ -268,7 +289,7 @@ function checkIfReadyToSubmit() {
   if (submitBtn) {
     submitBtn.disabled = !allFilled;
   }
-  */
+ 
 }
 
 function updateNomPrenom() {
