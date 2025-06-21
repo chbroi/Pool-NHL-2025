@@ -1,0 +1,46 @@
+name: Write New Participant
+
+on:
+  workflow_dispatch:
+    inputs:
+      prenom:
+        description: 'Prénom'
+        required: true
+      nom:
+        description: 'Nom'
+        required: true
+      soumission:
+        description: 'Numéro de soumission'
+        required: true
+
+jobs:
+  add-participant:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 20
+
+    - name: Append new participant to JSON
+      run: |
+        FILE="docs/data/participants.json"
+        NEW_ENTRY="{\"Prenom\": \"${{ github.event.inputs.prenom }}\", \"Nom\": \"${{ github.event.inputs.nom }}\", \"Soumission\": ${{ github.event.inputs.soumission }}}"
+
+        # Lire les données actuelles
+        CONTENT=$(cat "$FILE")
+
+        # Ajouter le nouveau participant à la fin
+        echo "$CONTENT" | jq ".participants += [ $NEW_ENTRY ]" > "$FILE"
+
+        # Commit
+        git config --global user.name 'github-actions'
+        git config --global user.email 'github-actions@github.com'
+        git add "$FILE"
+        git commit -m "Ajout de ${{ github.event.inputs.prenom }} ${{ github.event.inputs.nom }} (Soumission ${{ github.event.inputs.soumission }})"
+        git push
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
