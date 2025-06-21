@@ -17,31 +17,30 @@ jobs:
   add-participant:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v3
-      with:
-        persist-credentials: false  # ❗️ESSENTIEL pour que git remote set-url fonctionne
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false  # ❗️Important : on va utiliser notre propre token ensuite
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: 20
+      - name: Append new participant to JSON and push
+        run: |
+          FILE="docs/data/participants.json"
+          NEW_ENTRY="{\"Prenom\": \"${{ github.event.inputs.prenom }}\", \"Nom\": \"${{ github.event.inputs.nom }}\", \"Soumission\": ${{ github.event.inputs.soumission }}}"
 
-    - name: Append new participant to JSON and push
-      run: |
-        FILE="docs/data/participants.json"
-        NEW_ENTRY="{\"Prenom\": \"${{ github.event.inputs.prenom }}\", \"Nom\": \"${{ github.event.inputs.nom }}\", \"Soumission\": ${{ github.event.inputs.soumission }}}"
+          # Lire les données actuelles
+          CONTENT=$(cat "$FILE")
 
-        CONTENT=$(cat "$FILE")
-        echo "$CONTENT" | jq ".participants += [ $NEW_ENTRY ]" > "$FILE"
+          # Ajouter le nouveau participant à la fin
+          echo "$CONTENT" | jq ".participants += [ $NEW_ENTRY ]" > "$FILE"
 
-        git config --global user.name 'github-actions'
-        git config --global user.email 'github-actions@github.com'
-        git add "$FILE"
-        git commit -m "Ajout de ${{ github.event.inputs.prenom }} ${{ github.event.inputs.nom }} (Soumission ${{ github.event.inputs.soumission }})"
+          # Commit & push
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          git add "$FILE"
+          git commit -m "Ajout de ${{ github.event.inputs.prenom }} ${{ github.event.inputs.nom }} (Soumission ${{ github.event.inputs.soumission }})"
 
-        # ➕ Utilisation du token personnel (GH_TOKEN)
-        git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git
-        git push origin main
-      env:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          # 🔐 Auth via Personal Access Token
+          git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git
+          git push origin main
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
