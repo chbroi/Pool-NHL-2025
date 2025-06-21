@@ -1,4 +1,5 @@
-//MAIN Script pour le pool    
+//MAIN Script pour le pool
+loadParticipants()
   // Affichage spécial si la soumission est 1
   if (currentSubmission === 1) {
     // Affiche les règlements au chargement
