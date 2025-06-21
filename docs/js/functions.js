@@ -196,33 +196,35 @@ function fetchParticipants() {
 }
 
 async function submitPredictions() {
-  if (!confirm("Confirmer la soumission ?")) return;
+  const confirmation = window.confirm("Soumettre tes prédictions ?");
+  if (!confirmation) return;
 
   const form = document.getElementById("predictionForm");
   const fd = new FormData(form);
   const data = Object.fromEntries(fd.entries());
   data.date = new Date().toISOString();
+  data.Soumission = currentSubmission;
 
-  // Vérifie que le nom est enregistré
-  if (!isNameRegistered(data.Nom, data.Prenom)) {
-    alert("Nom ou prénom non reconnu. Si vous avez déjà soumis, assurez-vous d’écrire votre nom exactement comme lors de la première soumission.");
-    return;
-  }
-
-  // Pour les soumissions > 1, vérifier qu'il y a une soumission précédente
-  if (parseInt(data.Soumission, 10) > 1 && !hasPreviousSubmission(data.Nom, data.Prenom, parseInt(data.Soumission, 10))) {
-    alert(`Vous devez avoir fait la soumission ${parseInt(data.Soumission, 10) - 1} avant de faire la ${data.Soumission}.`);
-    return;
-  }
-
-  // Si tout est ok, faire la soumission réelle (ex : appeler la GitHub Action ou JSONBin)
   try {
-    await savePredictions(data); // ta fonction pour push vers GitHub (via API ou workflow)
-    alert("Prédictions envoyées!");
-    form.reset();
-    await loadParticipants(); // recharge la liste pour inclure la nouvelle soumission
+    const res = await fetch("https://pool-nhl-2025.vercel.app/api/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+    if (res.ok) {
+      alert("Soumission réussie !");
+      console.log(result);
+      form.reset();
+    } else {
+      alert("Erreur : " + result.error);
+    }
   } catch (err) {
-    alert("Erreur lors de l’envoi : " + err.message);
+    console.error(err);
+    alert("Erreur lors de la soumission.");
   }
 }
 function checkIfReadyToSubmit() {
