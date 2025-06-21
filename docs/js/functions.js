@@ -196,35 +196,51 @@ function fetchParticipants() {
 }
 
 async function submitPredictions() {
-  const confirmation = window.confirm("Soumettre tes prédictions ?");
-  if (!confirmation) return;
+  const confirmation = window.confirm("Êtes-vous sûr de soumettre vos prédictions ?");
+  if (!confirmation) {
+    console.log("Soumission annulée.");
+    return;
+  }
 
   const form = document.getElementById("predictionForm");
-  const fd = new FormData(form);
-  const data = Object.fromEntries(fd.entries());
-  data.date = new Date().toISOString();
-  data.Soumission = currentSubmission;
+  const formData = new FormData(form);
 
+  const data = Object.fromEntries(formData.entries());
+  const prenom = data.Prenom?.trim();
+  const nom = data.Nom?.trim();
+  const soumission = currentSubmission;
+
+  if (!prenom || !nom) {
+    alert("Veuillez remplir le prénom et le nom.");
+    return;
+  }
+
+  // Envoi au backend sécurisé (API route)
   try {
-    const res = await fetch("https://pool-nhl-2025.vercel.app/api/submit", {
+    const resp = await fetch("https://pool-nhl-2025.vercel.app/api/submit", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify({
+        prenom,
+        nom,
+        soumission
+      })
     });
 
-    const result = await res.json();
-    if (res.ok) {
-      alert("Soumission réussie !");
-      console.log(result);
+    const result = await resp.json();
+
+    if (resp.ok) {
+      alert("✅ Soumission réussie : workflow GitHub déclenché.");
       form.reset();
     } else {
-      alert("Erreur : " + result.error);
+      console.error("Erreur:", result);
+      alert("❌ Échec : " + (result?.error?.message || JSON.stringify(result)));
     }
   } catch (err) {
-    console.error(err);
-    alert("Erreur lors de la soumission.");
+    console.error("Erreur réseau:", err);
+    alert("❌ Erreur réseau ou serveur.");
   }
 }
 function checkIfReadyToSubmit() {
@@ -279,33 +295,6 @@ function checkIfReadyToSubmit() {
  
 }
 
-async function submitToGitHub(prenom, nom, soumission) {
-  const repo = "chbroi/Pool-NHL-2025";
-  const token = "ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"; // remplace par ton PAT **local pour test**
-  const url = `https://api.github.com/repos/${repo}/actions/workflows/add-participant.yml/dispatches`;
-
-  const payload = {
-    ref: "main",
-    inputs: {
-      prenom,
-      nom,
-      soumission: soumission.toString()
-    }
-  };
-
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Authorization": `token ${token}`,
-      "Accept": "application/vnd.github+json"
-    },
-    body: JSON.stringify(payload)
-  });
-
-  if (!response.ok) {
-    throw new Error(`Erreur GitHub API : ${response.statusText}`);
-  }
-}
 
 function updateNomPrenom() {
   const participant = document.getElementById("participant").value;
