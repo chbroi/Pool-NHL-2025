@@ -49,7 +49,8 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ success: true });
   } catch (err) {
-    console.error("Erreur API submit :", err);
-    return res.status(500).json({ error: "Erreur serveur" });
-  }
+  console.error("Erreur API submit :", err);  // 👈 très important pour voir l'erreur complète dans les logs Vercel
+  return res.status(500).json({ error: "Erreur serveur", details: err.message });
+}
+ 
 }
