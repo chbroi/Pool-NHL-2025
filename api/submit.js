@@ -1,54 +1,46 @@
-export default async function handler(req, res) {
-  // 1. CORS headers
-  res.setHeader("Access-Control-Allow-Origin", "https://chbroi.github.io");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+import fs from 'fs';
+import path from 'path';
 
-  if (req.method === "OPTIONS") {
-    return res.status(200).end(); // Préflight OK
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.setHeader('Allow', ['POST']).status(405).json({ message: 'Method not allowed' });
   }
 
-  // 2. Lecture du body
-  const { prenom, nom, soumission } = req.body || {};
+  const body = req.body;
+
+  const prenom = body.prenom;
+  const nom = body.nom;
+  const soumission = parseInt(body.soumission, 10);
 
   if (!prenom || !nom || !soumission) {
-    return res.status(400).json({ message: "Missing fields" });
+    return res.status(400).json({ message: 'Missing required fields' });
   }
 
-  // 3. Appel à l’API GitHub
-  const workflowUrl = `https://api.github.com/repos/${process.env.GH_REPO}/actions/workflows/write-participant.yml/dispatches`;
+  // Les données de prédictions (tout le reste sauf prénom, nom, soumission)
+  const predictionData = { numero: soumission, ...body };
+  delete predictionData.prenom;
+  delete predictionData.nom;
+  delete predictionData.soumission;
 
-  const payload = {
-    ref: "main",
-    inputs: {
-      prenom,
-      nom,
-      soumission: String(soumission)
+  const filePath = path.join(process.cwd(), 'docs', 'data', 'participants.json');
+  const jsonData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+
+  let participant = jsonData.participants.find(
+    (p) => p.nom === nom && p.prenom === prenom
+  );
+
+  if (!participant) {
+    participant = { nom, prenom, soumissions: [predictionData] };
+    jsonData.participants.push(participant);
+  } else {
+    // Vérifie si cette soumission existe déjà
+    const existing = participant.soumissions.find((s) => s.numero === soumission);
+    if (existing) {
+      return res.status(409).json({ message: 'Soumission déjà existante pour ce participant.' });
     }
-  };
-
-  try {
-    const resp = await fetch(workflowUrl, {
-      method: "POST",
-      headers: {
-        "Accept": "application/vnd.github+json",
-        "Authorization": `Bearer ${process.env.GH_PAT}`,
-        "X-GitHub-Api-Version": "2022-11-28",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    });
-
-    const json = await resp.json().catch(() => ({}));
-
-    if (!resp.ok) {
-      console.error("GitHub dispatch failed:", json);
-      return res.status(resp.status).json({ success: false, error: json });
-    }
-
-    return res.status(200).json({ success: true });
-  } catch (err) {
-    console.error("Exception during workflow dispatch:", err);
-    return res.status(500).json({ message: "Internal error", error: err.message });
+    participant.soumissions.push(predictionData);
   }
+
+  fs.writeFileSync(filePath, JSON.stringify(jsonData, null, 2));
+  return res.status(200).json({ success: true });
 }
