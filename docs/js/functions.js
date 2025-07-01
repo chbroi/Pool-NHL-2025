@@ -335,28 +335,33 @@ async function loadParticipants() {
     console.error("Erreur chargement participants :", e);
   }
 }
-async function checkParticipantEligibility(nom, prenom, currentSubmission) {
-  // Soumission 1 : toujours permis
-  if (currentSubmission === 1) return true;
-
+async function checkParticipantEligibility(nom, prenom, soumission) {
   try {
-    const response = await fetch("https://pool-nhl-2025.vercel.app/api/participants");
-    const data = await response.json();
+    const resp = await fetch("https://pool-nhl-2025.vercel.app/api/participants");
+    const data = await resp.json();
+
+    if (!data || !Array.isArray(data.participants)) {
+      console.error("Structure inattendue du fichier participants.json :", data);
+      return false;
+    }
 
     const participant = data.participants.find(
-      p => p.Prenom === prenom && p.Nom === nom
+      p => p.Nom === nom && p.Prenom === prenom
     );
 
-    if (!participant) return false;
+    if (!participant) {
+      // Si c’est la première soumission, on permet à tout le monde
+      return soumission === 1;
+    }
 
-    const previousKey = String(currentSubmission - 1);
-    return participant.soumissions && participant.soumissions.hasOwnProperty(previousKey);
-  } catch (err) {
-    console.error("Erreur lors de la vérification du participant :", err);
-    return false; // Par défaut, bloquer si erreur
+    // Si le participant existe, il doit avoir soumis la soumission précédente
+    const previousSubmission = (soumission - 1).toString();
+    return participant.soumissions && participant.soumissions[previousSubmission];
+  } catch (e) {
+    console.error("Erreur lors de la vérification du participant :", e);
+    return false;
   }
 }
-
 
 function hasPreviousSubmission(nom, prenom, soumission) {
   // Vérifie qu'il y a une soumission précédente inférieure à 'soumission' pour ce nom/prenom
