@@ -25,6 +25,7 @@ function showRoundFromData(roundNumber, data) {
     }
   });
 }
+
 // Fonction pour obtenir les matchups en fonction de la ronde
 function getMatchupsForRound(roundNumber) {
   switch (roundNumber) {
