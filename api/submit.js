@@ -1,50 +1,50 @@
-import fetch from 'node-fetch';
-
 export default async function handler(req, res) {
-  // ✅ CORS HEADERS
+  // ✅ Step 1: Handle CORS
   res.setHeader("Access-Control-Allow-Origin", "https://chbroi.github.io");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  // ✅ Gérer préflight OPTIONS
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+  if (req.method === "OPTIONS") {
+    return res.status(200).end(); // preflight CORS check passes
   }
 
-  // ✅ Refuser toute méthode autre que POST
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
-  }
+  // ✅ Step 2: Parse body safely
+  const { prenom, nom, soumission } = req.body || {};
 
-  // ✅ Extraire et valider les données
-  const { prenom, nom, soumission } = req.body;
   if (!prenom || !nom || !soumission) {
-    return res.status(400).json({ message: 'Missing fields' });
+    return res.status(400).json({ message: "Missing fields" });
   }
 
+  // ✅ Step 3: Trigger GitHub workflow
   const workflowUrl = `https://api.github.com/repos/${process.env.GH_REPO}/actions/workflows/write-participant.yml/dispatches`;
 
   const payload = {
-    ref: 'main',
+    ref: "main",
     inputs: { prenom, nom, soumission: String(soumission) }
   };
 
-  const resp = await fetch(workflowUrl, {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/vnd.github+json',
-      'Authorization': `Bearer ${process.env.GH_PAT}`,
-      'X-GitHub-Api-Version': '2022-11-28',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  });
+  try {
+    const resp = await fetch(workflowUrl, {
+      method: "POST",
+      headers: {
+        "Accept": "application/vnd.github+json",
+        "Authorization": `Bearer ${process.env.GH_PAT}`,
+        "X-GitHub-Api-Version": "2022-11-28",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
 
-  if (resp.ok) {
+    const json = await resp.json().catch(() => ({}));
+
+    if (!resp.ok) {
+      console.error("GitHub dispatch failed:", json);
+      return res.status(resp.status).json({ success: false, error: json });
+    }
+
     return res.status(200).json({ success: true });
-  } else {
-    const error = await resp.json().catch(() => ({}));
-    console.error('Workflow dispatch failed:', error);
-    return res.status(resp.status).json({ success: false, error });
+  } catch (err) {
+    console.error("Exception during workflow dispatch:", err);
+    return res.status(500).json({ message: "Internal error", error: err.message });
   }
 }
