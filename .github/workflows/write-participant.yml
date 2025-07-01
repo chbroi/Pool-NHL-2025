@@ -1,46 +1,40 @@
-name: Write New Participant
+name: Write Participant
 
 on:
   workflow_dispatch:
     inputs:
       prenom:
-        description: 'Prénom'
         required: true
+        type: string
       nom:
-        description: 'Nom'
         required: true
+        type: string
       soumission:
-        description: 'Numéro de soumission'
         required: true
+        type: string
+      payload:
+        required: true
+        type: string
 
 jobs:
-  add-participant:
+  update-json:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          persist-credentials: false  # ❗️Important : on va utiliser notre propre token ensuite
+          node-version: 20
 
-      - name: Append new participant to JSON and push
+      - name: Update participants.json
         run: |
-          FILE="docs/data/participants.json"
-          NEW_ENTRY="{\"Prenom\": \"${{ github.event.inputs.prenom }}\", \"Nom\": \"${{ github.event.inputs.nom }}\", \"Soumission\": ${{ github.event.inputs.soumission }}}"
+          node .github/scripts/update-participants.js '${{ github.event.inputs.prenom }}' '${{ github.event.inputs.nom }}' '${{ github.event.inputs.soumission }}' '${{ github.event.inputs.payload }}'
 
-          # Lire les données actuelles
-          CONTENT=$(cat "$FILE")
-
-          # Ajouter le nouveau participant à la fin
-          echo "$CONTENT" | jq ".participants += [ $NEW_ENTRY ]" > "$FILE"
-
-          # Commit & push
-          git config --global user.name 'github-actions'
-          git config --global user.email 'github-actions@github.com'
-          git add "$FILE"
-          git commit -m "Ajout de ${{ github.event.inputs.prenom }} ${{ github.event.inputs.nom }} (Soumission ${{ github.event.inputs.soumission }})"
-
-          # 🔐 Auth via Personal Access Token
-          git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git
-          git push origin main
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      - name: Commit & Push
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add docs/data/participants.json
+          git commit -m "Update participant: ${{ github.event.inputs.nom }}, soumission ${{ github.event.inputs.soumission }}" || echo "No changes to commit"
+          git push
