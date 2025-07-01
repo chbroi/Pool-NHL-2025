@@ -1,7 +1,14 @@
-import fs from 'fs/promises';
-import path from 'path';
-
 export default async function handler(req, res) {
+  // Autoriser le domaine GitHub Pages
+  res.setHeader('Access-Control-Allow-Origin', 'https://chbroi.github.io');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // Répondre rapidement aux requêtes "preflight"
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Méthode non autorisée' });
   }
@@ -10,13 +17,15 @@ export default async function handler(req, res) {
     prenom,
     nom,
     soumission, // ex: 1, 2, etc.
-    ...payload // toutes les prédictions (filtrées côté client)
+    ...payload // toutes les prédictions
   } = req.body;
 
   if (!prenom || !nom || !soumission) {
     return res.status(400).json({ message: 'Champs manquants' });
   }
 
+  const fs = (await import('fs/promises')).default;
+  const path = (await import('path')).default;
   const filePath = path.resolve('./docs/data/participants.json');
 
   try {
@@ -34,10 +43,8 @@ export default async function handler(req, res) {
     );
 
     if (participantIndex !== -1) {
-      // Participant existe, mise à jour ou ajout de la soumission
       data.participants[participantIndex].soumissions[soumissionKey] = payload;
     } else {
-      // Nouveau participant
       data.participants.push({
         Prenom: prenom,
         Nom: nom,
