@@ -1,43 +1,55 @@
+import fs from 'fs/promises';
+import path from 'path';
+
 export default async function handler(req, res) {
+  // CORS headers pour autoriser GitHub Pages
+  res.setHeader("Access-Control-Allow-Origin", "https://chbroi.github.io");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  // Répondre immédiatement à une requête OPTIONS (pré-vol)
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
+    return res.status(405).json({ error: "Méthode non autorisée" });
   }
 
-  const { Prenom, Nom, soumission, ...predictions } = req.body;
-  if (!Prenom || !Nom || !soumission) {
-    return res.status(400).json({ message: 'Missing fields' });
-  }
+  try {
+    const {
+      prenom,
+      nom,
+      soumission, // ex: 1, 2, etc.
+      ...payload
+    } = req.body;
 
-  const workflowUrl = `https://api.github.com/repos/YOUR_GITHUB_USERNAME/Pool-NHL-2025/actions/workflows/write-participant.yml/dispatches`;
+    const filePath = path.join(process.cwd(), 'public', 'data', 'participants.json');
+    const file = await fs.readFile(filePath, 'utf-8');
+    const data = JSON.parse(file);
 
-  const payload = {
-    ref: 'main',
-    inputs: {
-      prenom: Prenom,
-      nom: Nom,
-      soumission: String(soumission),
-      payload: JSON.stringify(predictions)
+    const soumissionKey = String(soumission);
+    const participantIndex = data.participants.findIndex(
+      p => p.Prenom === prenom && p.Nom === nom
+    );
+
+    if (participantIndex !== -1) {
+      data.participants[participantIndex].soumissions[soumissionKey] = payload;
+    } else {
+      data.participants.push({
+        Prenom: prenom,
+        Nom: nom,
+        soumissions: {
+          [soumissionKey]: payload
+        }
+      });
     }
-  };
 
-  const ghToken = process.env.GH_PAT;
+    await fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf-8');
 
-  const ghResp = await fetch(workflowUrl, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${ghToken}`,
-      'Accept': 'application/vnd.github+json',
-      'X-GitHub-Api-Version': '2022-11-28',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(payload)
-  });
-
-  if (ghResp.ok) {
     return res.status(200).json({ success: true });
-  } else {
-    const error = await ghResp.json();
-    console.error(error);
-    return res.status(500).json({ success: false, error });
+  } catch (err) {
+    console.error("Erreur API submit :", err);
+    return res.status(500).json({ error: "Erreur serveur" });
   }
 }
