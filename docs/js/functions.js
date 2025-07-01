@@ -196,40 +196,115 @@ function fetchParticipants() {
 }
 
 async function submitPredictions() {
-  if (!confirm("Confirmer la soumission ?")) return;
+  checkIfReadyToSubmit();
+
+  const submitBtn = document.getElementById("submitBtn");
+  if (submitBtn.disabled) {
+    alert("Tous les champs requis ne sont pas remplis.");
+    return;
+  }
 
   const form = document.getElementById("predictionForm");
   const fd = new FormData(form);
   const data = Object.fromEntries(fd.entries());
 
-  const prenom = data["Prenom"];
-  const nom = data["Nom"];
+  const nom = data.Nom?.trim();
+  const prenom = data.Prenom?.trim();
+
+  if (!nom || !prenom) {
+    alert("Nom et prénom sont requis.");
+    return;
+  }
+
+  // Charger les participants existants
+  const res = await fetch("https://pool-nhl-2025.vercel.app/docs/data/participants.json");
+  const json = await res.json();
+  const participants = json.participants || [];
+
+  const existing = participants.find(p =>
+    p.nom?.toLowerCase() === nom.toLowerCase() &&
+    p.prenom?.toLowerCase() === prenom.toLowerCase()
+  );
+
+  // Si c’est une soumission 1, tout le monde peut participer
+  // Si c’est soumission 2+, il faut exister
+  if (currentSubmission > 1 && !existing) {
+    alert("Vous devez avoir déjà soumis une première prédiction pour continuer.");
+    return;
+  }
+
+  // Si la soumission courante existe déjà, confirmer écrasement
+  if (existing && existing[`soumission${currentSubmission}`]) {
+    const confirmUpdate = confirm(`Vous avez déjà une prédiction pour la soumission ${currentSubmission}. Voulez-vous la remplacer ?`);
+    if (!confirmUpdate) return;
+  }
+
+  // Construire dynamiquement les champs requis
+  const payload = {
+    prenom,
+    nom,
+    soumission: currentSubmission,
+    Conn_Smythe: data.Conn_Smythe,
+  };
+
+  const champsParSoumission = [];
+
+  if (currentSubmission <= 1) {
+    champsParSoumission.push(
+      "R1_EST_1_team", "R1_EST_1_games",
+      "R1_EST_2_team", "R1_EST_2_games",
+      "R1_EST_3_team", "R1_EST_3_games",
+      "R1_EST_4_team", "R1_EST_4_games",
+      "R1_WEST_1_team", "R1_WEST_1_games",
+      "R1_WEST_2_team", "R1_WEST_2_games",
+      "R1_WEST_3_team", "R1_WEST_3_games",
+      "R1_WEST_4_team", "R1_WEST_4_games"
+    );
+  }
+
+  if (currentSubmission <= 2) {
+    champsParSoumission.push(
+      "R2_EST_1_team", "R2_EST_1_games",
+      "R2_EST_2_team", "R2_EST_2_games",
+      "R2_WEST_1_team", "R2_WEST_1_games",
+      "R2_WEST_2_team", "R2_WEST_2_games"
+    );
+  }
+
+  if (currentSubmission <= 3) {
+    champsParSoumission.push(
+      "R3_EST_1_team", "R3_EST_1_games",
+      "R3_WEST_1_team", "R3_WEST_1_games"
+    );
+  }
+
+  if (currentSubmission <= 4) {
+    champsParSoumission.push("R4_final_team", "R4_final_games");
+  }
+
+  for (const field of champsParSoumission) {
+    if (data[field]) payload[field] = data[field];
+  }
 
   try {
     const resp = await fetch("https://pool-nhl-2025.vercel.app/api/submit", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        prenom,
-        nom,
-        soumission: currentSubmission
-      })
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
     });
 
     const result = await resp.json();
     if (result.success) {
       alert("Soumission réussie 🎉");
-      form.reset();
     } else {
-      alert("Erreur : " + (result.error?.message || "inconnue"));
+      console.error(result.error);
+      alert("Erreur lors de la soumission : " + (result.error?.message || JSON.stringify(result.error)));
     }
   } catch (err) {
+    console.error(err);
     alert("Erreur inattendue : " + err.message);
   }
 }
-
         
 function checkIfReadyToSubmit() {
   const requiredFields = ["Nom", "Prenom", "Conn_Smythe"];
