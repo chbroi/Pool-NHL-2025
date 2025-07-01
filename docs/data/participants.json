@@ -1,26 +1,88 @@
 {
   "participants": [
     {
-      "Nom": "Testeur",
-      "Prenom": "Alpha",
-      "Soumission": 1,
-      "R1_EST_1_team": "TOR",
-      "R1_EST_1_games": "7"
-    },
-    {
       "Prenom": "Charles",
       "Nom": "Brosseau",
-      "Soumission": 4
-    },
-    {
-      "Prenom": "Charles",
-      "Nom": "Brosseau",
-      "Soumission": 4
-    },
-    {
-      "Prenom": "David",
-      "Nom": "Brosseau",
-      "Soumission": 4
+      "soumissions": {
+        "1": {
+          "R1_EST_1_team": "TOR", "R1_EST_1_games": "6",
+          "R1_EST_2_team": "MTL", "R1_EST_2_games": "7",
+          "R1_EST_3_team": "BOS", "R1_EST_3_games": "5",
+          "R1_EST_4_team": "TBL", "R1_EST_4_games": "6",
+          "R1_WEST_1_team": "COL", "R1_WEST_1_games": "5",
+          "R1_WEST_2_team": "EDM", "R1_WEST_2_games": "6",
+          "R1_WEST_3_team": "VGK", "R1_WEST_3_games": "4",
+          "R1_WEST_4_team": "WPG", "R1_WEST_4_games": "7",
+          "R2_EST_1_team": "TOR", "R2_EST_1_games": "6",
+          "R2_EST_2_team": "BOS", "R2_EST_2_games": "7",
+          "R2_WEST_1_team": "COL", "R2_WEST_1_games": "5",
+          "R2_WEST_2_team": "EDM", "R2_WEST_2_games": "6",
+          "R3_EST_1_team": "TOR", "R3_EST_1_games": "6",
+          "R3_WEST_2_team": "EDM", "R3_WEST_2_games": "6",
+          "R4_final_1_team": "TOR", "R4_final_1_games": "6",
+          "Conn_Smythe": "Matthews"
+        },
+        "2": {
+          "R2_EST_1_team": "TOR", "R2_EST_1_games": "6",
+          "R2_EST_2_team": "BOS", "R2_EST_2_games": "7",
+          "R2_WEST_1_team": "COL", "R2_WEST_1_games": "5",
+          "R2_WEST_2_team": "EDM", "R2_WEST_2_games": "6",
+          "R3_EST_1_team": "TOR", "R3_EST_1_games": "6",
+          "R3_WEST_2_team": "EDM", "R3_WEST_2_games": "6",
+          "R4_final_1_team": "TOR", "R4_final_1_games": "6",
+          "Conn_Smythe": "Matthews"
+        },
+        "3": {
+          "R3_EST_1_team": "TOR", "R3_EST_1_games": "6",
+          "R3_WEST_2_team": "EDM", "R3_WEST_2_games": "6",
+          "R4_final_1_team": "TOR", "R4_final_1_games": "6",
+          "Conn_Smythe": "Matthews"
+      },
+        "4": {
+          "R4_final_1_team": "TOR", "R4_final_1_games": "6",
+          "Conn_Smythe": "Matthews"
+      } 
+    }
+  },
+  {
+      "Prenom": "Gabrielle",
+      "Nom": "Killoran",
+      "soumissions": {
+        "1": {
+          "R1_EST_1_team": "TOR", "R1_EST_1_games": "6",
+          "R1_EST_2_team": "MTL", "R1_EST_2_games": "7",
+          "R1_EST_3_team": "BOS", "R1_EST_3_games": "5",
+          "R1_EST_4_team": "TBL", "R1_EST_4_games": "6",
+          "R1_WEST_1_team": "COL", "R1_WEST_1_games": "5",
+          "R1_WEST_2_team": "EDM", "R1_WEST_2_games": "6",
+          "R1_WEST_3_team": "VGK", "R1_WEST_3_games": "4",
+          "R1_WEST_4_team": "WPG", "R1_WEST_4_games": "7",
+          "R2_EST_1_team": "TOR", "R2_EST_1_games": "6",
+          "R2_EST_2_team": "BOS", "R2_EST_2_games": "7",
+          "R2_WEST_1_team": "COL", "R2_WEST_1_games": "5",
+          "R2_WEST_2_team": "EDM", "R2_WEST_2_games": "6",
+          "R3_EST_1_team": "TOR", "R3_EST_1_games": "6",
+          "R3_WEST_2_team": "EDM", "R3_WEST_2_games": "6",
+          "R4_final_1_team": "TOR", "R4_final_1_games": "6",
+          "Conn_Smythe": "Matthews"
+        }
+        },
+        "2": {
+          "R2_EST_1_team": "TOR", "R2_EST_1_games": "6",
+          "R2_EST_2_team": "BOS", "R2_EST_2_games": "7",
+          "R2_WEST_1_team": "COL", "R2_WEST_1_games": "5",
+          "R2_WEST_2_team": "EDM", "R2_WEST_2_games": "6",
+          "R3_EST_1_team": "TOR", "R3_EST_1_games": "6",
+          "R3_WEST_2_team": "EDM", "R3_WEST_2_games": "6",
+          "R4_final_1_team": "TOR", "R4_final_1_games": "6",
+          "Conn_Smythe": "Matthews"
+        },
+        "3": {
+          "R3_EST_1_team": "TOR", "R3_EST_1_games": "6",
+          "R3_WEST_2_team": "EDM", "R3_WEST_2_games": "6",
+          "R4_final_1_team": "TOR", "R4_final_1_games": "6",
+          "Conn_Smythe": "Matthews"
+      } 
     }
   ]
 }
