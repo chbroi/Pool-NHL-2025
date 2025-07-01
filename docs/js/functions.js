@@ -201,31 +201,21 @@ async function submitPredictions() {
   const form = document.getElementById("predictionForm");
   const fd = new FormData(form);
   const data = Object.fromEntries(fd.entries());
-  data.soumission = currentSubmission;
 
-  try {
-await fetch("https://pool-nhl-2025.vercel.app/api/submit", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    prenom: data.get("Prenom"),
-    nom: data.get("Nom"),
-    soumission: currentSubmission
-  })
-});
-    const result = await resp.json();
-    if (result.success) {
-      alert("Soumission réussie 🎉, le fichier a été mis à jour.");
-      await savePredictions(data); // si tu utilises JSONBin aussi
-    } else {
-      console.error(result.error);
-      alert("Erreur lors de la soumission : " + (result.error.message || JSON.stringify(result.error)));
-    }
-  } catch (err) {
-    console.error(err);
-    alert("Erreur inattendue : " + err.message);
+  const response = await fetch("https://pool-nhl-2025.vercel.app/api/submit", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  });
+
+  const result = await response.json();
+  if (response.ok) {
+    alert("Soumission réussie !");
+  } else {
+    alert("Erreur : " + (result?.message || JSON.stringify(result)));
+    console.error("Soumission échouée :", result);
   }
 }
 function checkIfReadyToSubmit() {
