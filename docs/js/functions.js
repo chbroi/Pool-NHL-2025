@@ -208,11 +208,13 @@ async function submitPredictions() {
   const fd = new FormData(form);
   const data = Object.fromEntries(fd.entries());
 
-  const nom = data.Nom?.trim();
-  const prenom = data.Prenom?.trim();
+  console.log("Form data reçues :", data); // 🔍 Debug
+
+  const nom = data["Nom"]?.trim() || "";
+  const prenom = data["Prenom"]?.trim() || "";
 
   if (!nom || !prenom) {
-    alert("Nom et prénom sont requis.");
+    alert("Veuillez remplir votre prénom et nom.");
     return;
   }
 
