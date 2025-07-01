@@ -229,8 +229,8 @@ async function submitPredictions() {
     console.error(err);
     alert("Erreur inattendue : " + err.message);
   }
-}})
-});
+}
+
         
 function checkIfReadyToSubmit() {
   const requiredFields = ["Nom", "Prenom", "Conn_Smythe"];
