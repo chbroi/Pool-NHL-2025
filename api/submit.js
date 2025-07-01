@@ -1,46 +1,49 @@
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
-    return res.setHeader('Allow', ['POST']).status(405).json({ message: 'Method not allowed' });
+    return res.status(405).json({ message: 'Méthode non autorisée' });
   }
 
-  const body = req.body;
+  const {
+    prenom,
+    nom,
+    soumission, // ex: 1, 2, etc.
+    ...payload // toutes les prédictions ici
+  } = req.body;
 
-  const prenom = body.prenom;
-  const nom = body.nom;
-  const soumission = parseInt(body.soumission, 10);
+  const filePath = path.resolve('./docs/data/participants.json');
 
-  if (!prenom || !nom || !soumission) {
-    return res.status(400).json({ message: 'Missing required fields' });
-  }
+  try {
+    const file = await fs.readFile(filePath, 'utf-8');
+    const data = JSON.parse(file);
 
-  // Les données de prédictions (tout le reste sauf prénom, nom, soumission)
-  const predictionData = { numero: soumission, ...body };
-  delete predictionData.prenom;
-  delete predictionData.nom;
-  delete predictionData.soumission;
+    const participantIndex = data.participants.findIndex(
+      p => p.Prenom === prenom && p.Nom === nom
+    );
 
-  const filePath = path.join(process.cwd(), 'docs', 'data', 'participants.json');
-  const jsonData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    const soumissionKey = String(soumission);
 
-  let participant = jsonData.participants.find(
-    (p) => p.nom === nom && p.prenom === prenom
-  );
-
-  if (!participant) {
-    participant = { nom, prenom, soumissions: [predictionData] };
-    jsonData.participants.push(participant);
-  } else {
-    // Vérifie si cette soumission existe déjà
-    const existing = participant.soumissions.find((s) => s.numero === soumission);
-    if (existing) {
-      return res.status(409).json({ message: 'Soumission déjà existante pour ce participant.' });
+    if (participantIndex !== -1) {
+      // Participant existe, mise à jour de la soumission
+      data.participants[participantIndex].soumissions[soumissionKey] = payload;
+    } else {
+      // Nouveau participant
+      data.participants.push({
+        Prenom: prenom,
+        Nom: nom,
+        soumissions: {
+          [soumissionKey]: payload
+        }
+      });
     }
-    participant.soumissions.push(predictionData);
-  }
 
-  fs.writeFileSync(filePath, JSON.stringify(jsonData, null, 2));
-  return res.status(200).json({ success: true });
+    await fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf-8');
+
+    return res.status(200).json({ success: true });
+  } catch (err) {
+    console.error('Erreur:', err);
+    return res.status(500).json({ success: false, error: err.message });
+  }
 }
