@@ -204,15 +204,17 @@ async function submitPredictions() {
   data.soumission = currentSubmission;
 
   try {
-    const resp = await fetch('/api/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        prenom: data.Prenom,
-        nom: data.Nom,
-        soumission: data.soumission
-      })
-    });
+await fetch("https://pool-nhl-2025.vercel.app/api/submit", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    prenom: data.get("Prenom"),
+    nom: data.get("Nom"),
+    soumission: currentSubmission
+  })
+});
     const result = await resp.json();
     if (result.success) {
       alert("Soumission réussie 🎉, le fichier a été mis à jour.");
