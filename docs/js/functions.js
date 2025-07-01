@@ -196,51 +196,34 @@ function fetchParticipants() {
 }
 
 async function submitPredictions() {
-  const confirmation = window.confirm("Êtes-vous sûr de soumettre vos prédictions ?");
-  if (!confirmation) {
-    console.log("Soumission annulée.");
-    return;
-  }
+  if (!confirm("Confirmer la soumission ?")) return;
 
   const form = document.getElementById("predictionForm");
-  const formData = new FormData(form);
+  const fd = new FormData(form);
+  const data = Object.fromEntries(fd.entries());
+  data.soumission = currentSubmission;
 
-  const data = Object.fromEntries(formData.entries());
-  const prenom = data.Prenom?.trim();
-  const nom = data.Nom?.trim();
-  const soumission = currentSubmission;
-
-  if (!prenom || !nom) {
-    alert("Veuillez remplir le prénom et le nom.");
-    return;
-  }
-
-  // Envoi au backend sécurisé (API route)
   try {
-    const resp = await fetch("https://pool-nhl-2025.vercel.app/api/submit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+    const resp = await fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        prenom,
-        nom,
-        soumission
+        prenom: data.Prenom,
+        nom: data.Nom,
+        soumission: data.soumission
       })
     });
-
     const result = await resp.json();
-
-    if (resp.ok) {
-      alert("✅ Soumission réussie : workflow GitHub déclenché.");
-      form.reset();
+    if (result.success) {
+      alert("Soumission réussie 🎉, le fichier a été mis à jour.");
+      await savePredictions(data); // si tu utilises JSONBin aussi
     } else {
-      console.error("Erreur:", result);
-      alert("❌ Échec : " + (result?.error?.message || JSON.stringify(result)));
+      console.error(result.error);
+      alert("Erreur lors de la soumission : " + (result.error.message || JSON.stringify(result.error)));
     }
   } catch (err) {
-    console.error("Erreur réseau:", err);
-    alert("❌ Erreur réseau ou serveur.");
+    console.error(err);
+    alert("Erreur inattendue : " + err.message);
   }
 }
 function checkIfReadyToSubmit() {
