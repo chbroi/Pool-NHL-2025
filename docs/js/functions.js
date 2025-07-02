@@ -197,69 +197,29 @@ function fetchParticipants() {
 }
 
 async function submitPredictions() {
+  if (!confirm("Confirmer la soumission ?")) return;
+
   const form = document.getElementById("predictionForm");
-  const formData = new FormData(form);
-  const data = Object.fromEntries(formData.entries());
+  const data = Object.fromEntries(new FormData(form).entries());
+  const payload = JSON.stringify(data);
 
-  const nom = data.Nom?.trim();
-  const prenom = data.Prenom?.trim();
-  const connSmythe = data.Conn_Smythe?.trim();
-
-  if (!nom || !prenom || !connSmythe) {
-    alert("Nom, prénom ou Conn Smythe manquant.");
-    return;
-  }
-
-  // Vérification si l'utilisateur peut soumettre
-  const canSubmit = await checkParticipantEligibility(nom, prenom, currentSubmission);
-  if (!canSubmit) {
-    alert("Vous devez avoir déjà soumis une prédiction précédente pour continuer.");
-    return;
-  }
-
-  // Construction dynamique des prédictions selon le numéro de soumission
-  const predictions = {};
-  if (currentSubmission <= 1) {
-    addRoundPredictions(predictions, data, "R1", 4, ["EST", "WEST"]);
-  }
-  if (currentSubmission <= 2) {
-    addRoundPredictions(predictions, data, "R2", 2, ["EST", "WEST"]);
-  }
-  if (currentSubmission <= 3) {
-    addRoundPredictions(predictions, data, "R3", 1, ["EST", "WEST"]);
-  }
-  if (currentSubmission <= 4) {
-    predictions["R4_final_1_team"] = data.R4_final_team;
-    predictions["R4_final_1_games"] = data.R4_final_games;
-  }
-
-  predictions["Conn_Smythe"] = connSmythe;
-
-  const payload = {
-    Prenom: prenom,
-    Nom: nom,
-    soumission: currentSubmission,
-    ...predictions
-  };
-
-  // Soumission via fetch vers Vercel API
   try {
-    const response = await fetch("https://pool-nhl-2025.vercel.app/api/submit", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
+    const resp = await fetch('https://POOL-NHL-2025.vercel.app/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prenom: data.Prenom.trim(),
+        nom: data.Nom.trim(),
+        soumission: currentSubmission,
+        payload
+      })
     });
-
-    const result = await response.json();
-    if (result.success) {
-      alert("Soumission réussie !");
-    } else {
-      console.error("Erreur côté serveur:", result.error);
-      alert("Erreur lors de la soumission.");
-    }
+    const j = await resp.json();
+    if (j.success) alert("Soumission enregistrée !");
+    else alert("Erreur: " + JSON.stringify(j.error));
   } catch (err) {
-    console.error("Erreur réseau:", err);
-    alert("Erreur réseau. Veuillez réessayer.");
+    console.error("Erreur fetch:", err);
+    alert("Erreur réseau : " + err.message);
   }
 }
         
@@ -326,14 +286,20 @@ function updateNomPrenom() {
 
 let participants = [];
 
-async function loadParticipants() {
-  try {
-    const res = await fetch("data/participants.json");
-    const data = await res.json();
-    participants = data.participants || [];
-  } catch(e) {
-    console.error("Erreur chargement participants :", e);
-  }
+function loadParticipants() {
+  fetch('data/participants.json')
+    .then(response => {
+      if (!response.ok) throw new Error("Erreur chargement participants.json");
+      return response.json();
+    })
+    .then(data => {
+      console.log(data.participants); // tu peux ici afficher dynamiquement
+      // Par exemple :
+      renderParticipantsTable(data.participants);
+    })
+    .catch(error => {
+      console.error("Erreur chargement des participants :", error);
+    });
 }
 async function checkParticipantEligibility(nom, prenom, soumission) {
   try {
