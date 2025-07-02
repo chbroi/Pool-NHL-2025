@@ -343,4 +343,57 @@ function isNameRegistered(nom, prenom) {
     p.Nom.toLowerCase() === nom.toLowerCase().trim() &&
     p.Prenom.toLowerCase() === prenom.toLowerCase().trim()
   );
+
+function renderParticipantsTable(participants) {
+  const container = document.getElementById("participantsTable");
+  if (!container) return;
+
+  // Vide le contenu précédent
+  container.innerHTML = "";
+
+  if (!Array.isArray(participants) || participants.length === 0) {
+    container.textContent = "Aucune prédiction soumise.";
+    return;
+  }
+
+  // Crée un tableau HTML
+  const table = document.createElement("table");
+  table.border = "1";
+  table.style.borderCollapse = "collapse";
+  table.style.marginTop = "20px";
+
+  // Lignes d'en-tête
+  const headerRow = document.createElement("tr");
+  headerRow.innerHTML = `
+    <th>Prénom</th>
+    <th>Nom</th>
+    <th>Soumission</th>
+    <th>Clé</th>
+    <th>Valeur</th>
+  `;
+  table.appendChild(headerRow);
+
+  // Remplit le tableau
+  participants.forEach(participant => {
+    const { Prenom, Nom, soumissions } = participant;
+
+    if (!soumissions || typeof soumissions !== "object") return;
+
+    Object.entries(soumissions).forEach(([numSoumission, predictionObj]) => {
+      Object.entries(predictionObj).forEach(([key, value], i) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${Prenom}</td>
+          <td>${Nom}</td>
+          <td>${numSoumission}</td>
+          <td>${key}</td>
+          <td>${value}</td>
+        `;
+        table.appendChild(row);
+      });
+    });
+  });
+
+  container.appendChild(table);
+}      
 }
