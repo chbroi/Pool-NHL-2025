@@ -1,0 +1,47 @@
+name: Update Participants
+
+on:
+  workflow_dispatch:
+    inputs:
+      prenom:
+        description: "Prénom"
+        required: true
+      nom:
+        description: "Nom"
+        required: true
+      soumission:
+        description: "Numéro de soumission"
+        required: true
+      payload:
+        description: "Données JSON de la prédiction"
+        required: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Update participants.json
+        run: |
+          node updateParticipants.js \
+            "${{ github.event.inputs.prenom }}" \
+            "${{ github.event.inputs.nom }}" \
+            "${{ github.event.inputs.soumission }}" \
+            "${{ github.event.inputs.payload }}"
+
+      - name: Commit & push changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add docs/data/participants.json
+          git commit -m "Mise à jour prédiction ${{ github.event.inputs.prenom }} ${{ github.event.inputs.nom }} (soumission ${{ github.event.inputs.soumission }})" || echo "Rien à commit"
+          git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }} HEAD:main
