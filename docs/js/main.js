@@ -1,6 +1,6 @@
 //MAIN Script pour le pool
 
-
+import * as funcs from "./functions.js";
 import { auth, db, GoogleAuthProvider } from "./firebase.js";
 import { signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -24,7 +24,7 @@ onAuthStateChanged(auth, async (user) => {
     // reset possible ancien contenu
     document.getElementById("appContent").innerHTML = "";
     // Vérifier éligibilité
-    const eligible = await checkEligibility();
+    const eligible = await funcs.checkEligibility(db, currentUser, currentSubmission);
 
     const alreadyDone = await alreadySubmitted();
     
@@ -120,17 +120,17 @@ window.addEventListener("DOMContentLoaded", () => {
     document.getElementById('predictionForm').style.display = "block";
     document.getElementById('round1').style.display = "none";
     document.getElementById('round2').style.display = "block";
-    showRoundFromData(2, previousData); // Affiche les choix de la ronde 2
+    funcs.showRoundFromData(2, previousData); // Affiche les choix de la ronde 2
   }
   if (currentSubmission >= 3) {
     document.getElementById('round2').style.display = "none";
     document.getElementById('round3').style.display = "block";
-    showRoundFromData(3, previousData); // Affiche les choix de la ronde 3
+    funcs.showRoundFromData(3, previousData); // Affiche les choix de la ronde 3
   }
   if (currentSubmission >= 4) {
     document.getElementById('round3').style.display = "none";
     document.getElementById('round4').style.display = "block";
-    showRoundFromData(4, previousData); // Affiche les choix de la ronde 4
+    funcs.showRoundFromData(4, previousData); // Affiche les choix de la ronde 4
     updateConnSmytheList(previousData.R3_EST_1_team,previousData.R3_WEST_1_team);
   }
 }); 
