@@ -316,32 +316,6 @@ export async function loadParticipants() {
 }
 
 
-
-
-export async function checkEligibility(db, currentUser, currentSubmission) {
-
-  if (!currentUser) return false;
-
-  // ✅ Ronde 1 → toujours OK
-  if (currentSubmission === 1) {
-    return true;
-  }
-
-  // ✅ Vérifier la ronde précédente
-  const previousRound = currentSubmission - 1;
-
-  const q = query(
-    collection(db, "predictions"),
-    where("userId", "==", currentUser.uid),
-    where("round", "==", previousRound)
-  );
-
-  const snapshot = await getDocs(q);
-
-  return !snapshot.empty;
-}
-
-
 export function hasPreviousSubmission(nom, prenom, soumission) {
   // Vérifie qu'il y a une soumission précédente inférieure à 'soumission' pour ce nom/prenom
   return participants.some(p => 
