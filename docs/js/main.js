@@ -64,35 +64,6 @@ onAuthStateChanged(auth, async (user) => {
   
     return;
   }
-
-    
-sync function loadUserPicks() {
-
-  const q = query(
-    collection(db, "predictions"),
-    where("userId", "==", currentUser.uid),
-    where("round", "==", currentSubmission)
-  );
-
-  const snapshot = await getDocs(q);
-
-  if (snapshot.empty) return;
-
-  const data = snapshot.docs[0].data().picks;
-
-  // remplir le formulaire
-  Object.keys(data).forEach(key => {
-    const el = document.getElementById(key);
-    if (el) el.value = data[key];
-  });
-
-  // désactiver les champs (lecture seule)
-  document.querySelectorAll("#predictionForm select, #predictionForm input")
-    .forEach(el => el.disabled = true);
-}
-
-
-
     // UI normale
     document.getElementById("userInfo").innerText =
       "Connecté: " + user.displayName;
@@ -125,6 +96,31 @@ document.getElementById("logoutBtn").addEventListener("click", async () => {
 
   document.getElementById("userInfo").innerText = "";
 });
+
+sync function loadUserPicks() {
+
+  const q = query(
+    collection(db, "predictions"),
+    where("userId", "==", currentUser.uid),
+    where("round", "==", currentSubmission)
+  );
+
+  const snapshot = await getDocs(q);
+
+  if (snapshot.empty) return;
+
+  const data = snapshot.docs[0].data().picks;
+
+  // remplir le formulaire
+  Object.keys(data).forEach(key => {
+    const el = document.getElementById(key);
+    if (el) el.value = data[key];
+  });
+
+  // désactiver les champs (lecture seule)
+  document.querySelectorAll("#predictionForm select, #predictionForm input")
+    .forEach(el => el.disabled = true);
+}
 
 async function alreadySubmitted() {
 
