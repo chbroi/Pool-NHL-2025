@@ -52,7 +52,7 @@ export function getMatchupsForRound(roundNumber) {
 }
 
 // Met à jour dynamiquement la liste des joueurs disponibles pour le Conn Smythe
-export function updateConnSmytheList(team1, team2) {
+export function updateConnSmytheList(team1, team2,playersByTeam) {
   const list = [...(playersByTeam[team1] || []), ...(playersByTeam[team2] || [])];
   const connSmytheSelect = document.getElementById('Conn_Smythe');
 
@@ -78,16 +78,16 @@ connSmytheSelect.disabled = list.length === 0;
 }
 
 // Sur changement d'une des deux équipes finalistes
-export function updateConnSmytheField() {
+export function updateConnSmytheField(playersByTeam) {
     const team1 = document.getElementById('R3_EST_1_team').value;
     const team2 = document.getElementById('R3_WEST_1_team').value;
     if (team1 && team2) {
-        updateConnSmytheList(team1, team2);
+        updateConnSmytheList(team1, team2,playersByTeam);
     }
 }
 
     
-export function createRound2Matchups() {
+export function createRound2Matchups(currentSubmission, round1Ids) {
   if (currentSubmission > 1) return;
   const r2Matchups = [
     ['R1_EST_1_team', 'R1_EST_2_team', 'R2_EST_1_team', 'R2_EST_1_label'],
@@ -245,7 +245,7 @@ export async function submitPredictions() {
 
 
         
-export function checkIfReadyToSubmit() {
+export function checkIfReadyToSubmit(currentSubmission) {
   const requiredFields = ["Conn_Smythe"];
 
   if (currentSubmission <= 1) {
