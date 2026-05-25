@@ -5,7 +5,7 @@ import { auth, db, GoogleAuthProvider } from "./firebase.js";
 import { signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { currentSubmission, previousData, playersByTeam, round1Ids } from "./constants.js";
+import { currentSubmission, previousData, playersByTeam, round1Ids,SCORING } from "./constants.js";
 
 let currentUser = null;
 
@@ -138,6 +138,124 @@ async function alreadySubmitted() {
 
   return !snapshot.empty;
 }
+
+function getRoundFromKey(key) {
+  if (key.startsWith("R1")) return 1;
+  if (key.startsWith("R2")) return 2;
+  if (key.startsWith("R3")) return 3;
+  if (key.startsWith("R4")) return 4;
+  return 0;
+}
+
+function calculateSubmissionScore(picks, results) {
+
+  let score = 0;
+
+  Object.keys(picks).forEach(key => {
+
+    const resultValue = results[key];
+
+    // 🚫 ignorer si pas de résultat réel encore
+    if (!resultValue) return;
+
+    if (key.includes("_team")) {
+
+      const round = getRoundFromKey(key);
+      const multiplier = SCORING.roundMultiplier[round];
+
+      if (picks[key] === resultValue) {
+
+        score += SCORING.teamCorrect * multiplier;
+
+        const gamesKey = key.replace("_team", "_games");
+
+        if (results[gamesKey] &&
+            picks[gamesKey] === results[gamesKey]) {
+
+          score += SCORING.gamesCorrect * multiplier;
+        }
+      }
+    }
+
+    if (key === "Conn_Smythe") {
+
+      if (results[key] && picks[key] === results[key]) {
+        score += SCORING.connSmythe;
+      }
+    }
+
+  });
+
+  return score;
+}
+
+
+ction calculateTotalScore(predictions, results) {
+
+  let total = 0;
+
+  predictions.forEach(pred => {
+
+    const submissionNumber = pred.round;
+    const picks = pred.picks;
+
+    const filtered = {};
+
+    Object.keys(picks).forEach(key => {
+
+      const round = getRoundFromKey(key);
+
+      if (round >= submissionNumber || key === "Conn_Smythe") {
+        filtered[key] = picks[key];
+      }
+    });
+
+    total += calculateSubmissionScore(filtered, results);
+  });
+
+  return total;
+}
+
+
+async function computeLeaderboard() {
+
+  const snapshot = await getDocs(collection(db, "predictions"));
+
+  const users = {};
+
+  snapshot.forEach(doc => {
+    const data = doc.data();
+
+    if (!users[data.userId]) {
+      users[data.userId] = {
+        name: data.userName,
+        predictions: []
+      };
+    }
+
+    users[data.userId].predictions.push(data);
+  });
+
+  const leaderboard = [];
+
+  Object.values(users).forEach(user => {
+
+    const score = calculateTotalScore(user.predictions, previousData);
+
+    leaderboard.push({
+      name: user.name,
+      score: score
+    });
+  });
+
+  leaderboard.sort((a, b) => b.score - a.score);
+
+  console.log(leaderboard);
+
+  return leaderboard;
+}
+
+
 
 
 //loadParticipants()
