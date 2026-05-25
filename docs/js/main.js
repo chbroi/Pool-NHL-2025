@@ -16,21 +16,35 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
 
 // AUTO LOGIN/ LOGOUT
 
-onAuthStateChanged(auth, (user) => {
+
+nAuthStateChanged(auth, async (user) => {
+
   if (user) {
     currentUser = user;
 
+    // ✅ Vérifier éligibilité
+    const eligible = await checkEligibility();
+
+    if (!eligible) {
+      document.getElementById("appContent").innerHTML =
+        "<h2 style='text-align:center'> Tu n'es pas éligible pour cette ronde.</h2>";
+      document.getElementById("loginContainer").style.display = "none";
+      document.getElementById("appContent").style.display = "block";
+      return;
+    }
+
+    // ✅ UI normale
     document.getElementById("userInfo").innerText =
       "Connecté: " + user.displayName;
-
     document.getElementById("appContent").style.display = "block";
+    document.getElementById("loginContainer").style.display = "none";
     document.getElementById("loginBtn").style.display = "none";
     document.getElementById("logoutBtn").style.display = "inline-block";
 
   } else {
     currentUser = null;
-
     document.getElementById("appContent").style.display = "none";
+    document.getElementById("loginContainer").style.display = "block";
     document.getElementById("loginBtn").style.display = "inline-block";
     document.getElementById("logoutBtn").style.display = "none";
     document.getElementById("userInfo").innerText = "";
