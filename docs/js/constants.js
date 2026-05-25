@@ -1,6 +1,6 @@
 //Constantes nécessaires au foctionnement du Pool
 
-export const currentSubmission = 4; // à modifier pour 1, 2, 3, 4 selon le moment
+export const currentSubmission = 1; // à modifier pour 1, 2, 3, 4 selon le moment
 
 //Résultats jusqu'à présent
 export const previousData = {
