@@ -1,4 +1,28 @@
 //MAIN Script pour le pool
+
+import { auth, db, GoogleAuthProvider } from "./firebase.js";
+import { signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+let currentUser = null;
+
+// login
+document.getElementById("loginBtn").addEventListener("click", async () => {
+  const provider = new GoogleAuthProvider();
+  const result = await signInWithPopup(auth, provider);
+  currentUser = result.user;
+});
+
+// auto-login
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    currentUser = user;
+
+    document.getElementById("appContent").style.display = "block";
+    document.getElementById("loginContainer").style.display = "none";
+  }
+});
+
+
 //loadParticipants()
   // Affichage spécial si la soumission est 1
   if (currentSubmission === 1) {
