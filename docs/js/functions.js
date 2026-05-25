@@ -199,7 +199,7 @@ export function fetchParticipants() {
 
 
 
-async export function submitPredictions() {
+export async function submitPredictions() {
 
   if (!currentUser) {
     alert("Tu dois être connecté.");
