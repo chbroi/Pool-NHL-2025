@@ -198,10 +198,19 @@ function fetchParticipants() {
 
 
 
+
 async function submitPredictions() {
 
   if (!currentUser) {
     alert("Tu dois être connecté.");
+    return;
+  }
+
+  // ✅ CHECK DOUBLE SUBMISSION
+  const alreadyDone = await alreadySubmitted();
+
+  if (alreadyDone) {
+    alert(" Tu as déjà soumis pour cette ronde.");
     return;
   }
 
@@ -218,19 +227,21 @@ async function submitPredictions() {
   try {
     await addDoc(collection(db, "predictions"), {
       userId: currentUser.uid,
-      userName: currentUser.displayName, // ✅ auto
+      userName: currentUser.displayName,
       round: currentSubmission,
       picks: data,
       timestamp: Date.now()
     });
 
-    alert(`✅ Soumission enregistrée pour ${currentUser.displayName}`);
+    alert(" Prédictions soumises !");
+    document.getElementById("submitBtn").disabled = true;
 
   } catch (err) {
     console.error(err);
     alert("Erreur: " + err.message);
   }
 }
+
 
 
         
