@@ -1,26 +1,32 @@
 //MAIN Script pour le pool
 
+
 import { auth, db, GoogleAuthProvider } from "./firebase.js";
 import { signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 let currentUser = null;
 
-// login
+// LOGIN
 document.getElementById("loginBtn").addEventListener("click", async () => {
   const provider = new GoogleAuthProvider();
   const result = await signInWithPopup(auth, provider);
   currentUser = result.user;
 });
 
-// auto-login
+// AUTO LOGIN
 onAuthStateChanged(auth, (user) => {
   if (user) {
     currentUser = user;
 
     document.getElementById("appContent").style.display = "block";
     document.getElementById("loginContainer").style.display = "none";
+
+  } else {
+    document.getElementById("appContent").style.display = "none";
+    document.getElementById("loginContainer").style.display = "block";
   }
 });
+
 
 
 //loadParticipants()
@@ -118,17 +124,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     checkIfReadyToSubmit(); // Appel initial
   }
-  
-let currentUser = null;
 
-document.getElementById("loginBtn").addEventListener("click", async () => {
-  const provider = new firebase.GoogleAuthProvider();
-
-  const result = await firebase.signInWithPopup(firebase.auth, provider);
-  currentUser = result.user;
-
-  document.getElementById("userInfo").innerText =
-    "Connecté: " + currentUser.displayName;
 });
 
 });
