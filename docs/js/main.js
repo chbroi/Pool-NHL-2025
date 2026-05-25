@@ -4,6 +4,7 @@ import * as funcs from "./functions.js";
 import { auth, db, GoogleAuthProvider } from "./firebase.js";
 import { signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 let currentUser = null;
 
@@ -78,10 +79,6 @@ document.getElementById("logoutBtn").addEventListener("click", async () => {
 
   document.getElementById("userInfo").innerText = "";
 });
-
-
-
-import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 async function alreadySubmitted() {
 
