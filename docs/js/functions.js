@@ -316,7 +316,7 @@ export async function loadParticipants() {
 }
 
 
-import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
 
 export async function checkEligibility(db, currentUser, currentSubmission) {
 
