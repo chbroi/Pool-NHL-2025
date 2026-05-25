@@ -26,7 +26,7 @@ onAuthStateChanged(auth, async (user) => {
     // Vérifier éligibilité
     const eligible = await funcs.checkEligibility(db, currentUser, currentSubmission);
 
-    const alreadyDone = await alreadySubmitted();
+    const alreadyDone = await funcs.alreadySubmitted();
     
     if (alreadyDone) {
       document.getElementById("appContent").innerHTML =
@@ -46,7 +46,7 @@ onAuthStateChanged(auth, async (user) => {
       return;
     }
 
-    // ✅ UI normale
+    // UI normale
     document.getElementById("userInfo").innerText =
       "Connecté: " + user.displayName;
     document.getElementById("appContent").style.display = "block";
@@ -112,7 +112,7 @@ async function alreadySubmitted() {
     });
 
     // Lorsqu'on confirme l'engagement
-    confirmEngagement()
+    funcs.confirmEngagement()
 }
   // Affichage des rondes selon les soumissions
 window.addEventListener("DOMContentLoaded", () => {
@@ -131,7 +131,7 @@ window.addEventListener("DOMContentLoaded", () => {
     document.getElementById('round3').style.display = "none";
     document.getElementById('round4').style.display = "block";
     funcs.showRoundFromData(4, previousData); // Affiche les choix de la ronde 4
-    updateConnSmytheList(previousData.R3_EST_1_team,previousData.R3_WEST_1_team);
+    funcs.updateConnSmytheList(previousData.R3_EST_1_team,previousData.R3_WEST_1_team);
   }
 }); 
     
@@ -190,7 +190,7 @@ window.addEventListener("DOMContentLoaded", () => {
       el.addEventListener("change", checkIfReadyToSubmit);
     });
 
-    checkIfReadyToSubmit(); // Appel initial
+    funcs.checkIfReadyToSubmit(); // Appel initial
   }
 
 });
