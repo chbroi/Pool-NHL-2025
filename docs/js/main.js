@@ -26,9 +26,9 @@ onAuthStateChanged(auth, async (user) => {
     // reset possible ancien contenu
     document.getElementById("appContent").innerHTML = "";
     // Vérifier éligibilité
-    const eligible = await funcs.checkEligibility(db, currentUser, currentSubmission);
+    const eligible = await checkEligibility(db, currentUser, currentSubmission);
 
-    const alreadyDone = await funcs.alreadySubmitted();
+    const alreadyDone = await alreadySubmitted();
     
     if (alreadyDone) {
       document.getElementById("appContent").innerHTML =
@@ -139,6 +139,28 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+async function checkEligibility(db, currentUser, currentSubmission) {
+
+  if (!currentUser) return false;
+
+  // ✅ Ronde 1 → toujours OK
+  if (currentSubmission === 1) {
+    return true;
+  }
+
+  // ✅ Vérifier la ronde précédente
+  const previousRound = currentSubmission - 1;
+
+  const q = query(
+    collection(db, "predictions"),
+    where("userId", "==", currentUser.uid),
+    where("round", "==", previousRound)
+  );
+
+  const snapshot = await getDocs(q);
+
+  return !snapshot.empty;
+}
 
 
 
