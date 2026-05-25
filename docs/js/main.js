@@ -5,6 +5,7 @@ import { auth, db, GoogleAuthProvider } from "./firebase.js";
 import { signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { currentSubmission, previousData, playersByTeam, round1Ids } from "./constants.js";
 
 let currentUser = null;
 
