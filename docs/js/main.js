@@ -282,7 +282,7 @@ window.addEventListener("DOMContentLoaded", () => {
     
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("#predictionForm select, #predictionForm input").forEach(el => {
-    el.addEventListener("change", funcs.checkIfReadyToSubmit(currentSubmission);
+    el.addEventListener("change", funcs.checkIfReadyToSubmit(currentSubmission));
   });
 });
 
