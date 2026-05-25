@@ -94,4 +94,17 @@ window.addEventListener("DOMContentLoaded", () => {
 
     checkIfReadyToSubmit(); // Appel initial
   }
+  
+let currentUser = null;
+
+document.getElementById("loginBtn").addEventListener("click", async () => {
+  const provider = new firebase.GoogleAuthProvider();
+
+  const result = await firebase.signInWithPopup(firebase.auth, provider);
+  currentUser = result.user;
+
+  document.getElementById("userInfo").innerText =
+    "Connecté: " + currentUser.displayName;
+});
+
 });
