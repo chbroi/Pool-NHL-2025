@@ -3,6 +3,7 @@
 
 import { auth, db, GoogleAuthProvider } from "./firebase.js";
 import { signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 let currentUser = null;
 
@@ -13,19 +14,44 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
   currentUser = result.user;
 });
 
-// AUTO LOGIN
+// AUTO LOGIN/ LOGOUT
+
 onAuthStateChanged(auth, (user) => {
   if (user) {
     currentUser = user;
 
+    document.getElementById("userInfo").innerText =
+      "Connecté: " + user.displayName;
+
     document.getElementById("appContent").style.display = "block";
-    document.getElementById("loginContainer").style.display = "none";
+    document.getElementById("loginBtn").style.display = "none";
+    document.getElementById("logoutBtn").style.display = "inline-block";
 
   } else {
+    currentUser = null;
+
     document.getElementById("appContent").style.display = "none";
-    document.getElementById("loginContainer").style.display = "block";
+    document.getElementById("loginBtn").style.display = "inline-block";
+    document.getElementById("logoutBtn").style.display = "none";
+    document.getElementById("userInfo").innerText = "";
   }
 });
+
+
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+  await signOut(auth);
+
+  currentUser = null;
+
+  // reset UI
+  document.getElementById("appContent").style.display = "none";
+  document.getElementById("loginContainer").style.display = "block";
+  document.getElementById("logoutBtn").style.display = "none";
+  document.getElementById("loginBtn").style.display = "inline-block";
+
+  document.getElementById("userInfo").innerText = "";
+});
+
 
 
 
