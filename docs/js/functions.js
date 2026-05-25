@@ -1,6 +1,6 @@
 //Ensemble des fonctions utiliser pour le pool.
 
-function confirmEngagement() {
+export function confirmEngagement() {
       alert("Merci de vous être engagé. Vous pouvez maintenant soumettre vos prédictions.");
       document.getElementById('engagementContainer').style.display = 'none';
       document.getElementById('predictionForm').style.display = 'block';
@@ -9,7 +9,7 @@ function confirmEngagement() {
 
 // Fonction pour obtenir les matchs à afficher en fonction de la ronde
 // Fonction générique pour afficher les matchs selon les données précédentes
-function showRoundFromData(roundNumber, data) {
+export function showRoundFromData(roundNumber, data) {
   const matchups = getMatchupsForRound(roundNumber);
   matchups.forEach(([selectId, labelId, teamId1, teamId2]) => {
     const team1 = data[teamId1];
@@ -27,7 +27,7 @@ function showRoundFromData(roundNumber, data) {
 }
 
 // Fonction pour obtenir les matchups en fonction de la ronde
-function getMatchupsForRound(roundNumber) {
+export function getMatchupsForRound(roundNumber) {
   switch (roundNumber) {
     case 2:
       return [
@@ -52,7 +52,7 @@ function getMatchupsForRound(roundNumber) {
 }
 
 // Met à jour dynamiquement la liste des joueurs disponibles pour le Conn Smythe
-function updateConnSmytheList(team1, team2) {
+export function updateConnSmytheList(team1, team2) {
   const list = [...(playersByTeam[team1] || []), ...(playersByTeam[team2] || [])];
   const connSmytheSelect = document.getElementById('Conn_Smythe');
 
@@ -78,7 +78,7 @@ connSmytheSelect.disabled = list.length === 0;
 }
 
 // Sur changement d'une des deux équipes finalistes
-function updateConnSmytheField() {
+export function updateConnSmytheField() {
     const team1 = document.getElementById('R3_EST_1_team').value;
     const team2 = document.getElementById('R3_WEST_1_team').value;
     if (team1 && team2) {
@@ -87,7 +87,7 @@ function updateConnSmytheField() {
 }
 
     
-function createRound2Matchups() {
+export function createRound2Matchups() {
   if (currentSubmission > 1) return;
   const r2Matchups = [
     ['R1_EST_1_team', 'R1_EST_2_team', 'R2_EST_1_team', 'R2_EST_1_label'],
@@ -119,7 +119,7 @@ function createRound2Matchups() {
   document.getElementById('round2').style.display = 'block';
 }
 
-function createRound3Matchups() {
+export function createRound3Matchups() {
   if (currentSubmission > 2) return;
   const r3Matchups = [
     ['R2_EST_1_team', 'R2_EST_2_team', 'R3_EST_1_team', 'R3_EST_1_label'],
@@ -150,7 +150,7 @@ function createRound3Matchups() {
   document.getElementById('round3').style.display = 'block';
 }
 
-function createRound4Matchup() {
+export function createRound4Matchup() {
   if (currentSubmission > 3) return;
   const team1 = document.getElementById('R3_EST_1_team').value;
   const team2 = document.getElementById('R3_WEST_1_team').value;
@@ -169,7 +169,7 @@ function createRound4Matchup() {
   updateConnSmytheField();
 }
 
-function fetchParticipants() {
+export function fetchParticipants() {
   const url = `https://chbroi.github.io/Pool-NHL-2025/data/participants.json?t=${Date.now()}`;
   fetch(url)
     .then(response => response.json())
@@ -199,7 +199,7 @@ function fetchParticipants() {
 
 
 
-async function submitPredictions() {
+async export function submitPredictions() {
 
   if (!currentUser) {
     alert("Tu dois être connecté.");
@@ -245,7 +245,7 @@ async function submitPredictions() {
 
 
         
-function checkIfReadyToSubmit() {
+export function checkIfReadyToSubmit() {
   const requiredFields = ["Conn_Smythe"];
 
   if (currentSubmission <= 1) {
@@ -300,7 +300,7 @@ function checkIfReadyToSubmit() {
 let participants = [];
 
 import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-async function loadParticipants() {
+async export function loadParticipants() {
 
   const snapshot = await getDocs(collection(db, "predictions"));
 
@@ -319,7 +319,7 @@ async function loadParticipants() {
 
 import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-async function checkEligibility() {
+export async function checkEligibility(db, currentUser, currentSubmission) {
 
   if (!currentUser) return false;
 
@@ -343,7 +343,7 @@ async function checkEligibility() {
 }
 
 
-function hasPreviousSubmission(nom, prenom, soumission) {
+export function hasPreviousSubmission(nom, prenom, soumission) {
   // Vérifie qu'il y a une soumission précédente inférieure à 'soumission' pour ce nom/prenom
   return participants.some(p => 
     p.Nom.toLowerCase() === nom.toLowerCase().trim() &&
@@ -352,13 +352,13 @@ function hasPreviousSubmission(nom, prenom, soumission) {
   );
 }
 
-function isNameRegistered(nom, prenom) {
+export function isNameRegistered(nom, prenom) {
   return participants.some(p => 
     p.Nom.toLowerCase() === nom.toLowerCase().trim() &&
     p.Prenom.toLowerCase() === prenom.toLowerCase().trim()
   );
 
-function renderParticipantsTable(participants) {
+export function renderParticipantsTable(participants) {
   const container = document.getElementById("participantsTable");
   if (!container) return;
 
