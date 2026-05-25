@@ -19,54 +19,55 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
 // AUTO LOGIN/ LOGOUT
 
 
+
 onAuthStateChanged(auth, async (user) => {
 
   if (user) {
     currentUser = user;
-    // reset possible ancien contenu
+
     document.getElementById("appContent").innerHTML = "";
-    // Vérifier éligibilité
+
     const eligible = await checkEligibility(db, currentUser, currentSubmission);
 
-    const alreadyDone = await alreadySubmitted();
-    
-    if (alreadyDone) {
-      document.getElementById("appContent").innerHTML =
-        "<h2 style='text-align:center'> Tu as déjà soumis pour cette ronde.</h2>";
-    
+    if (!eligible) {
+
       document.getElementById("appContent").style.display = "block";
       document.getElementById("loginContainer").style.display = "none";
+
+      document.getElementById("userInfo").innerText =
+        "Connecté: " + user.displayName;
+
+      document.getElementById("submitBtn").disabled = true;
+
+      const msg = document.createElement("h2");
+      msg.innerText = " Lecture seule - non éligible";
+      msg.style.textAlign = "center";
+
+      document.getElementById("appContent").prepend(msg);
+
+      loadUserPicks();
+      return;
+    }
+
+    const alreadyDone = await alreadySubmitted();
+
+    
+    if (alreadyDone) {
+    
+      document.getElementById("appContent").innerHTML =
+        "<h2 style='text-align:center'>✅ Déjà soumis</h2>";
+    
+      const btn = document.getElementById("submitBtn");
+      if (btn) btn.disabled = true;
     
       return;
     }
 
-    
-  if (!eligible) {
-  
-    document.getElementById("appContent").style.display = "block";
-    document.getElementById("loginContainer").style.display = "none";
-  
-    document.getElementById("userInfo").innerText =
-      "Connecté: " + user.displayName;
-  
-    // désactiver submit
-    document.getElementById("submitBtn").disabled = true;
-  
-    // afficher message
-    const msg = document.createElement("h2");
-    msg.style.textAlign = "center";
-    msg.innerText = " Tu n'es pas éligible pour cette ronde (lecture seulement)";
-  
-    document.getElementById("appContent").prepend(msg);
-  
-    // charger ses picks
-    loadUserPicks();
-  
-    return;
-  }
+
     // UI normale
     document.getElementById("userInfo").innerText =
       "Connecté: " + user.displayName;
+
     document.getElementById("appContent").style.display = "block";
     document.getElementById("loginContainer").style.display = "none";
     document.getElementById("loginBtn").style.display = "none";
@@ -74,30 +75,13 @@ onAuthStateChanged(auth, async (user) => {
 
   } else {
     currentUser = null;
+
     document.getElementById("appContent").style.display = "none";
     document.getElementById("loginContainer").style.display = "block";
-    document.getElementById("loginBtn").style.display = "inline-block";
-    document.getElementById("logoutBtn").style.display = "none";
-    document.getElementById("userInfo").innerText = "";
   }
 });
 
-
-document.getElementById("logoutBtn").addEventListener("click", async () => {
-  await signOut(auth);
-
-  currentUser = null;
-
-  // reset UI
-  document.getElementById("appContent").style.display = "none";
-  document.getElementById("loginContainer").style.display = "block";
-  document.getElementById("logoutBtn").style.display = "none";
-  document.getElementById("loginBtn").style.display = "inline-block";
-
-  document.getElementById("userInfo").innerText = "";
-});
-
-sync function loadUserPicks() {
+async function loadUserPicks() {
 
   const q = query(
     collection(db, "predictions"),
@@ -120,6 +104,10 @@ sync function loadUserPicks() {
   // désactiver les champs (lecture seule)
   document.querySelectorAll("#predictionForm select, #predictionForm input")
     .forEach(el => el.disabled = true);
+  
+  const btn = document.getElementById("submitBtn");
+  if (btn) btn.disabled = true;
+
 }
 
 async function alreadySubmitted() {
@@ -186,7 +174,7 @@ function calculateSubmissionScore(picks, results) {
 }
 
 
-ction calculateTotalScore(predictions, results) {
+function calculateTotalScore(predictions, results) {
 
   let total = 0;
 
@@ -294,7 +282,7 @@ window.addEventListener("DOMContentLoaded", () => {
     
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("#predictionForm select, #predictionForm input").forEach(el => {
-    el.addEventListener("change", funcs.checkIfReadyToSubmit);
+    el.addEventListener("change", funcs.checkIfReadyToSubmit(currentSubmission);
   });
 });
 
@@ -342,22 +330,22 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 //Décommenter lorsque la première soumission est terminée*/
 
-document.getElementById('R3_EST_1_team').addEventListener('change', funcs.updateConnSmytheField(playersByTeam));
-document.getElementById('R3_WEST_1_team').addEventListener('change', funcs.updateConnSmytheField(playersByTeam));
+document.getElementById('R3_EST_1_team').addEventListener('change', () =>funcs.updateConnSmytheField(playersByTeam));
+document.getElementById('R3_WEST_1_team').addEventListener('change', () =>funcs.updateConnSmytheField(playersByTeam));
 round1Ids.forEach(id => {
-  document.getElementById(id).addEventListener('change', funcs.createRound2Matchups(currentSubmission, round1Ids));
+  document.getElementById(id).addEventListener('change',  () =>funcs.createRound2Matchups(currentSubmission, round1Ids));
 });
 
 [
   'R2_EST_1_team', 'R2_EST_2_team', 'R2_WEST_1_team', 'R2_WEST_2_team'
 ].forEach(id => {
-  document.getElementById(id).addEventListener('change', funcs.createRound3Matchups);
+  document.getElementById(id).addEventListener('change',  () =>funcs.createRound3Matchups());
 });
 
 [
   'R3_EST_1_team', 'R3_WEST_1_team'
 ].forEach(id => {
-  document.getElementById(id).addEventListener('change', funcs.createRound4Matchup);
+  document.getElementById(id).addEventListener('change', () =>funcs.createRound4Matchup());
 });
   
 window.addEventListener("DOMContentLoaded", () => {
