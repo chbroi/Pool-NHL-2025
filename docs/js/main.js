@@ -129,7 +129,7 @@ window.addEventListener("DOMContentLoaded", () => {
     document.getElementById('round3').style.display = "none";
     document.getElementById('round4').style.display = "block";
     funcs.showRoundFromData(4, previousData); // Affiche les choix de la ronde 4
-    funcs.updateConnSmytheList(previousData.R3_EST_1_team,previousData.R3_WEST_1_team);
+    funcs.updateConnSmytheList(previousData.R3_EST_1_team,previousData.R3_WEST_1_team, playersByTeam);
   }
 }); 
     
@@ -183,10 +183,10 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 //Décommenter lorsque la première soumission est terminée*/
 
-document.getElementById('R3_EST_1_team').addEventListener('change', funcs.updateConnSmytheField);
-document.getElementById('R3_WEST_1_team').addEventListener('change', funcs.updateConnSmytheField);
+document.getElementById('R3_EST_1_team').addEventListener('change', funcs.updateConnSmytheField(playersByTeam));
+document.getElementById('R3_WEST_1_team').addEventListener('change', funcs.updateConnSmytheField(playersByTeam));
 round1Ids.forEach(id => {
-  document.getElementById(id).addEventListener('change', funcs.createRound2Matchups);
+  document.getElementById(id).addEventListener('change', funcs.createRound2Matchups(currentSubmission, round1Ids));
 });
 
 [
@@ -206,11 +206,11 @@ window.addEventListener("DOMContentLoaded", () => {
 
   if (form) {
     form.querySelectorAll("input, select").forEach(el => {
-      el.addEventListener("input", funcs.checkIfReadyToSubmit);
-      el.addEventListener("change", funcs.checkIfReadyToSubmit);
+      el.addEventListener("input", funcs.checkIfReadyToSubmit(currentSubmission));
+      el.addEventListener("change", funcs.checkIfReadyToSubmit(currentSubmission));
     });
 
-    funcs.checkIfReadyToSubmit(); // Appel initial
+    funcs.checkIfReadyToSubmit(currentSubmission); // Appel initial
   }
 
 });
