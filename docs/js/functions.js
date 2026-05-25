@@ -196,35 +196,46 @@ function fetchParticipants() {
     });
 }
 
+
+
 async function submitPredictions() {
-  if (!confirm("Confirmer la soumission ?")) return;
+
+  if (!currentUser) {
+    alert("Tu dois être connecté.");
+    return;
+  }
+
+  if (!confirm("Confirmer la soumission?")) return;
 
   const form = document.getElementById("predictionForm");
-  const data = Object.fromEntries(new FormData(form).entries());
-  const payload = JSON.stringify(data);
+  const formData = new FormData(form);
+
+  const data = {};
+  formData.forEach((value, key) => {
+    data[key] = value;
+  });
 
   try {
-    const resp = await fetch('https://POOL-NHL-2025.vercel.app/api/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        prenom: data.Prenom.trim(),
-        nom: data.Nom.trim(),
-        soumission: currentSubmission,
-        payload
-      })
+    await addDoc(collection(db, "predictions"), {
+      userId: currentUser.uid,
+      userName: currentUser.displayName, // ✅ auto
+      round: currentSubmission,
+      picks: data,
+      timestamp: Date.now()
     });
-    const j = await resp.json();
-    if (j.success) alert("Soumission enregistrée !");
-    else alert("Erreur: " + JSON.stringify(j.error));
+
+    alert(`✅ Soumission enregistrée pour ${currentUser.displayName}`);
+
   } catch (err) {
-    console.error("Erreur fetch:", err);
-    alert("Erreur réseau : " + err.message);
+    console.error(err);
+    alert("Erreur: " + err.message);
   }
 }
+
+
         
 function checkIfReadyToSubmit() {
-  const requiredFields = ["Nom", "Prenom", "Conn_Smythe"];
+  const requiredFields = ["Conn_Smythe"];
 
   if (currentSubmission <= 1) {
     requiredFields.push(
@@ -275,59 +286,51 @@ function checkIfReadyToSubmit() {
  
 }
 
-
-function updateNomPrenom() {
-  const participant = document.getElementById("participant").value;
-  const [nom, prenom] = participant.split("|");
-
-  document.getElementById("Nom").value = nom || "";
-  document.getElementById("Prenom").value = prenom || "";
-}
-
 let participants = [];
 
-function loadParticipants() {
-  fetch('data/participants.json')
-    .then(response => {
-      if (!response.ok) throw new Error("Erreur chargement participants.json");
-      return response.json();
-    })
-    .then(data => {
-      console.log(data.participants); // tu peux ici afficher dynamiquement
-      // Par exemple :
-      renderParticipantsTable(data.participants);
-    })
-    .catch(error => {
-      console.error("Erreur chargement des participants :", error);
-    });
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+async function loadParticipants() {
+
+  const snapshot = await getDocs(collection(db, "predictions"));
+
+  const list = document.getElementById("participantsList");
+  list.innerHTML = "";
+
+  snapshot.forEach(doc => {
+    const p = doc.data();
+
+    const li = document.createElement("li");
+    li.textContent = `${p.userName} - Ronde ${p.round}`;
+    list.appendChild(li);
+  });
 }
-async function checkParticipantEligibility(nom, prenom, soumission) {
-  try {
-    const resp = await fetch("https://pool-nhl-2025.vercel.app/api/participants");
-    const data = await resp.json();
 
-    if (!data || !Array.isArray(data.participants)) {
-      console.error("Structure inattendue du fichier participants.json :", data);
-      return false;
-    }
 
-    const participant = data.participants.find(
-      p => p.Nom === nom && p.Prenom === prenom
-    );
+import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    if (!participant) {
-      // Si c’est la première soumission, on permet à tout le monde
-      return soumission === 1;
-    }
+async function checkEligibility() {
 
-    // Si le participant existe, il doit avoir soumis la soumission précédente
-    const previousSubmission = (soumission - 1).toString();
-    return participant.soumissions && participant.soumissions[previousSubmission];
-  } catch (e) {
-    console.error("Erreur lors de la vérification du participant :", e);
-    return false;
+  if (!currentUser) return false;
+
+  // ✅ Ronde 1 → toujours OK
+  if (currentSubmission === 1) {
+    return true;
   }
+
+  // ✅ Vérifier la ronde précédente
+  const previousRound = currentSubmission - 1;
+
+  const q = query(
+    collection(db, "predictions"),
+    where("userId", "==", currentUser.uid),
+    where("round", "==", previousRound)
+  );
+
+  const snapshot = await getDocs(q);
+
+  return !snapshot.empty;
 }
+
 
 function hasPreviousSubmission(nom, prenom, soumission) {
   // Vérifie qu'il y a une soumission précédente inférieure à 'soumission' pour ce nom/prenom
