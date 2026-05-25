@@ -69,3 +69,18 @@ export const round1Ids = [
       'R1_EST_1_team', 'R1_EST_2_team', 'R1_EST_3_team', 'R1_EST_4_team',
       'R1_WEST_1_team', 'R1_WEST_2_team', 'R1_WEST_3_team', 'R1_WEST_4_team'
     ];
+
+
+export const SCORING = {
+  teamCorrect: 2,
+  gamesCorrect: 1,
+
+  roundMultiplier: {
+    1: 1,
+    2: 2,
+    3: 3,
+    4: 5
+  },
+
+  connSmythe: 10
+};
