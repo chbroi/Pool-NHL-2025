@@ -40,13 +40,58 @@ onAuthStateChanged(auth, async (user) => {
       return;
     }
 
-    if (!eligible) {
-      document.getElementById("appContent").innerHTML =
-        "<h2 style='text-align:center'> Tu n'es pas éligible pour cette ronde.</h2>";
-      document.getElementById("loginContainer").style.display = "none";
-      document.getElementById("appContent").style.display = "block";
-      return;
-    }
+    
+  if (!eligible) {
+  
+    document.getElementById("appContent").style.display = "block";
+    document.getElementById("loginContainer").style.display = "none";
+  
+    document.getElementById("userInfo").innerText =
+      "Connecté: " + user.displayName;
+  
+    // désactiver submit
+    document.getElementById("submitBtn").disabled = true;
+  
+    // afficher message
+    const msg = document.createElement("h2");
+    msg.style.textAlign = "center";
+    msg.innerText = "❌ Tu n'es pas éligible pour cette ronde (lecture seulement)";
+  
+    document.getElementById("appContent").prepend(msg);
+  
+    // charger ses picks
+    loadUserPicks();
+  
+    return;
+  }
+
+    
+sync function loadUserPicks() {
+
+  const q = query(
+    collection(db, "predictions"),
+    where("userId", "==", currentUser.uid),
+    where("round", "==", currentSubmission)
+  );
+
+  const snapshot = await getDocs(q);
+
+  if (snapshot.empty) return;
+
+  const data = snapshot.docs[0].data().picks;
+
+  // remplir le formulaire
+  Object.keys(data).forEach(key => {
+    const el = document.getElementById(key);
+    if (el) el.value = data[key];
+  });
+
+  // désactiver les champs (lecture seule)
+  document.querySelectorAll("#predictionForm select, #predictionForm input")
+    .forEach(el => el.disabled = true);
+}
+
+
 
     // UI normale
     document.getElementById("userInfo").innerText =
