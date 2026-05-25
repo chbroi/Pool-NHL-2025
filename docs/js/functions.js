@@ -356,6 +356,7 @@ export function isNameRegistered(nom, prenom) {
     p.Nom.toLowerCase() === nom.toLowerCase().trim() &&
     p.Prenom.toLowerCase() === prenom.toLowerCase().trim()
   );
+}
 
 export function renderParticipantsTable(participants) {
   const container = document.getElementById("participantsTable");
@@ -408,5 +409,4 @@ export function renderParticipantsTable(participants) {
   });
 
   container.appendChild(table);
-}      
 }
