@@ -135,7 +135,7 @@ window.addEventListener("DOMContentLoaded", () => {
     
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("#predictionForm select, #predictionForm input").forEach(el => {
-    el.addEventListener("change", checkIfReadyToSubmit);
+    el.addEventListener("change", funcs.checkIfReadyToSubmit);
   });
 });
 
@@ -161,22 +161,22 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 //Décommenter lorsque la première soumission est terminée*/
 
-document.getElementById('R3_EST_1_team').addEventListener('change', updateConnSmytheField);
-document.getElementById('R3_WEST_1_team').addEventListener('change', updateConnSmytheField);
+document.getElementById('R3_EST_1_team').addEventListener('change', funcs.updateConnSmytheField);
+document.getElementById('R3_WEST_1_team').addEventListener('change', funcs.updateConnSmytheField);
 round1Ids.forEach(id => {
-  document.getElementById(id).addEventListener('change', createRound2Matchups);
+  document.getElementById(id).addEventListener('change', funcs.createRound2Matchups);
 });
 
 [
   'R2_EST_1_team', 'R2_EST_2_team', 'R2_WEST_1_team', 'R2_WEST_2_team'
 ].forEach(id => {
-  document.getElementById(id).addEventListener('change', createRound3Matchups);
+  document.getElementById(id).addEventListener('change', funcs.createRound3Matchups);
 });
 
 [
   'R3_EST_1_team', 'R3_WEST_1_team'
 ].forEach(id => {
-  document.getElementById(id).addEventListener('change', createRound4Matchup);
+  document.getElementById(id).addEventListener('change', funcs.createRound4Matchup);
 });
   
 window.addEventListener("DOMContentLoaded", () => {
@@ -184,8 +184,8 @@ window.addEventListener("DOMContentLoaded", () => {
 
   if (form) {
     form.querySelectorAll("input, select").forEach(el => {
-      el.addEventListener("input", checkIfReadyToSubmit);
-      el.addEventListener("change", checkIfReadyToSubmit);
+      el.addEventListener("input", funcs.checkIfReadyToSubmit);
+      el.addEventListener("change", funcs.checkIfReadyToSubmit);
     });
 
     funcs.checkIfReadyToSubmit(); // Appel initial
