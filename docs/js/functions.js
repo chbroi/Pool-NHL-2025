@@ -300,7 +300,7 @@ export function checkIfReadyToSubmit() {
 let participants = [];
 
 import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-async export function loadParticipants() {
+export async function loadParticipants() {
 
   const snapshot = await getDocs(collection(db, "predictions"));
 
