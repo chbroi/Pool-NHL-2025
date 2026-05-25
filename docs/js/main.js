@@ -37,7 +37,10 @@ onAuthStateChanged(auth, async (user) => {
       document.getElementById("userInfo").innerText =
         "Connecté: " + user.displayName;
 
-      document.getElementById("submitBtn").disabled = true;
+      
+      const btn = document.getElementById("submitBtn");
+      if (btn) btn.disabled = true;
+
 
       const msg = document.createElement("h2");
       msg.innerText = " Lecture seule - non éligible";
@@ -282,7 +285,8 @@ window.addEventListener("DOMContentLoaded", () => {
     
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("#predictionForm select, #predictionForm input").forEach(el => {
-    el.addEventListener("change", funcs.checkIfReadyToSubmit(currentSubmission));
+    el.addEventListener("input", () => funcs.checkIfReadyToSubmit(currentSubmission));
+    el.addEventListener("change", () => funcs.checkIfReadyToSubmit(currentSubmission))
   });
 });
 
@@ -353,11 +357,11 @@ window.addEventListener("DOMContentLoaded", () => {
 
   if (form) {
     form.querySelectorAll("input, select").forEach(el => {
-      el.addEventListener("input", funcs.checkIfReadyToSubmit(currentSubmission));
-      el.addEventListener("change", funcs.checkIfReadyToSubmit(currentSubmission));
+      el.addEventListener("input", () =>funcs.checkIfReadyToSubmit(currentSubmission));
+      el.addEventListener("change", () =>funcs.checkIfReadyToSubmit(currentSubmission));
     });
 
-    funcs.checkIfReadyToSubmit(currentSubmission); // Appel initial
+    () => funcs.checkIfReadyToSubmit(currentSubmission) // Appel initial
   }
 
 });
