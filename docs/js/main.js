@@ -17,13 +17,26 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
 // AUTO LOGIN/ LOGOUT
 
 
-nAuthStateChanged(auth, async (user) => {
+onAuthStateChanged(auth, async (user) => {
 
   if (user) {
     currentUser = user;
-
-    // ✅ Vérifier éligibilité
+    // reset possible ancien contenu
+    document.getElementById("appContent").innerHTML = "";
+    // Vérifier éligibilité
     const eligible = await checkEligibility();
+
+    const alreadyDone = await alreadySubmitted();
+    
+    if (alreadyDone) {
+      document.getElementById("appContent").innerHTML =
+        "<h2 style='text-align:center'> Tu as déjà soumis pour cette ronde.</h2>";
+    
+      document.getElementById("appContent").style.display = "block";
+      document.getElementById("loginContainer").style.display = "none";
+    
+      return;
+    }
 
     if (!eligible) {
       document.getElementById("appContent").innerHTML =
@@ -67,6 +80,21 @@ document.getElementById("logoutBtn").addEventListener("click", async () => {
 });
 
 
+
+import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+async function alreadySubmitted() {
+
+  const q = query(
+    collection(db, "predictions"),
+    where("userId", "==", currentUser.uid),
+    where("round", "==", currentSubmission)
+  );
+
+  const snapshot = await getDocs(q);
+
+  return !snapshot.empty;
+}
 
 
 //loadParticipants()
