@@ -1,9 +1,9 @@
 //Constantes nécessaires au foctionnement du Pool
 
-const currentSubmission = 4; // à modifier pour 1, 2, 3, 4 selon le moment
+export const currentSubmission = 4; // à modifier pour 1, 2, 3, 4 selon le moment
 
 //Résultats jusqu'à présent
-const previousData = {
+export const previousData = {
   // Ronde 1
   R1_EST_1_team: "TOR",
   R1_EST_2_team: "FLA",
@@ -30,7 +30,7 @@ const previousData = {
 };
 
 // Liste des joueurs par équipe
-const playersByTeam = {
+export const playersByTeam = {
         "CAR": ["Pyotr Kochetkov","Frederik Andersen","Sebastian Aho", "Seth Jarvis", , "Andrei Svechnikov", "Shayne Gostisbehere", "Jack Roslovic", "Jordan Staal", "Jordan Martinook", "Jackson Blake", "Jesperi Kotkaniemi", "Eric Robinson", "Brent Burns", "Dmitry Orlov", "Jaccob Slavin", "Taylor Hall", "Jalen Chatfield", "Sean Walker", "William Carrier", "Logan Stankoven", "Tyson Jost", "Jack Drury", "Mark Jankowski", "Mikko Rantanen", "Scott Morrow", "Juha Jaaska", "Justin Robidas", "Ty Smith", "Skyler Brind'Amour", "Bradly Nadeau", "Domenick Fensore", "Ryan Suzuki", "Riley Stillman"
 ],
         "COL": ["Mackenzie Blackwood","Scott Wedgewood","Nathan MacKinnon", "Cale Makar", "Artturi Lehkonen", "Devon Toews", "Jonathan Drouin", "Valeri Nichushkin", "Casey Mittelstadt", "Ross Colton", "Martin Necas", "Samuel Girard", "Joel Kiviranta", "Logan O'Connor", "Parker Kelly", "Josh Manson", "Sam Malinski", "Charlie Coyle", "Brock Nelson", "Jack Drury", "Nikolai Kovalenko", "Miles Wood", "Ivan Ivan", "Calvin de Haan", "Juuso Parssinen", "Oliver Kylington", "Ryan Lindgren", "John Ludvig", "Jimmy Vesey", "Erik Johnson", "Keaton Middleton", "Wyatt Aamodt", "Calum Ritchie", "T.J. Tynan", "Chris Wagner", "Jack Ahcan", "Chase Bradley", "Oskar Olausson", "Jason Polin", "Tye Felhaber", "Givani Smith", "Matt Stienburg", "Nikita Prishchepov", "Jere Innala"
@@ -65,7 +65,7 @@ const playersByTeam = {
 ],
     };
 
-const round1Ids = [
+export const round1Ids = [
       'R1_EST_1_team', 'R1_EST_2_team', 'R1_EST_3_team', 'R1_EST_4_team',
       'R1_WEST_1_team', 'R1_WEST_2_team', 'R1_WEST_3_team', 'R1_WEST_4_team'
     ];
