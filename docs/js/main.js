@@ -55,7 +55,7 @@ onAuthStateChanged(auth, async (user) => {
     // afficher message
     const msg = document.createElement("h2");
     msg.style.textAlign = "center";
-    msg.innerText = "❌ Tu n'es pas éligible pour cette ronde (lecture seulement)";
+    msg.innerText = " Tu n'es pas éligible pour cette ronde (lecture seulement)";
   
     document.getElementById("appContent").prepend(msg);
   
