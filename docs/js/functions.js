@@ -5,6 +5,7 @@ export function confirmEngagement() {
       document.getElementById('engagementContainer').style.display = 'none';
       document.getElementById('predictionForm').style.display = 'block';
       document.getElementById('round1').style.display = "block";
+      showTab("submit")
 }
 
 // Fonction pour obtenir les matchs à afficher en fonction de la ronde
@@ -119,7 +120,7 @@ export function createRound2Matchups(currentSubmission, round1Ids) {
   document.getElementById('round2').style.display = 'block';
 }
 
-export function createRound3Matchups() {
+export function createRound3Matchups(currentSubmission) {
   if (currentSubmission > 2) return;
   const r3Matchups = [
     ['R2_EST_1_team', 'R2_EST_2_team', 'R3_EST_1_team', 'R3_EST_1_label'],
@@ -150,7 +151,7 @@ export function createRound3Matchups() {
   document.getElementById('round3').style.display = 'block';
 }
 
-export function createRound4Matchup() {
+export function createRound4Matchup(currentSubmission) {
   if (currentSubmission > 3) return;
   const team1 = document.getElementById('R3_EST_1_team').value;
   const team2 = document.getElementById('R3_WEST_1_team').value;
