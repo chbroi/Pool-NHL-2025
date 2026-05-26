@@ -450,13 +450,13 @@ round1Ids.forEach(id => {
 [
   'R2_EST_1_team', 'R2_EST_2_team', 'R2_WEST_1_team', 'R2_WEST_2_team'
 ].forEach(id => {
-  document.getElementById(id).addEventListener('change',  () =>funcs.createRound3Matchups());
+  document.getElementById(id).addEventListener('change',  () =>funcs.createRound3Matchups(currentSubmission));
 });
 
 [
   'R3_EST_1_team', 'R3_WEST_1_team'
 ].forEach(id => {
-  document.getElementById(id).addEventListener('change', () =>funcs.createRound4Matchup());
+  document.getElementById(id).addEventListener('change', () =>funcs.createRound4Matchup(currentSubmission, playersByTeam));
 });
   
 window.addEventListener("DOMContentLoaded", () => {
@@ -513,24 +513,41 @@ async function hasSubmittedRound1() {
 }
 
 
+
 window.addEventListener("DOMContentLoaded", async () => {
+
+  const tabs = document.getElementById("tabs");
 
   if (currentSubmission === 1) {
 
     const alreadyEngaged = await hasSubmittedRound1();
 
     if (alreadyEngaged) {
+      if (tabs) tabs.style.display = "block";
       showTab("home");
       return;
     }
 
-    // sinon afficher règles
+    //  cacher les tabs
+    if (tabs) tabs.style.display = "none";
+    // afficher message
+    const msg = document.createElement("p");
+    msg.innerText = "Veuillez accepter les règlements pour accéder au pool.";
+    msg.style.textAlign = "center";
+    msg.style.fontWeight = "bold";
+    document.body.prepend(msg);
+
+    // afficher règles
     document.getElementById("rulesContainer").style.display = "block";
 
   } else {
+
+    // rounds 2+ → tabs visibles
+    if (tabs) tabs.style.display = "block";
     showTab("home");
   }
 });
+
 
 
 
