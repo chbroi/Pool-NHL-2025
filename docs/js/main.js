@@ -512,37 +512,54 @@ async function hasSubmittedRound1() {
   return !snapshot.empty;
 }
 
-
-
 window.addEventListener("DOMContentLoaded", async () => {
 
   const tabs = document.getElementById("tabs");
+  const rulesContainer = document.getElementById("rulesContainer");
+
+  // fonction utilitaire pour message
+  function showRulesMessage() {
+    if (!document.getElementById("rulesMsg")) {
+      const msg = document.createElement("p");
+      msg.id = "rulesMsg";
+      msg.innerText = "Veuillez accepter les règlements pour accéder au pool.";
+      msg.style.textAlign = "center";
+      msg.style.fontWeight = "bold";
+      document.body.prepend(msg);
+    }
+  }
+
+  function removeRulesMessage() {
+    const msg = document.getElementById("rulesMsg");
+    if (msg) msg.remove();
+  }
+
+  // LOGIQUE PRINCIPALE
 
   if (currentSubmission === 1) {
 
     const alreadyEngaged = await hasSubmittedRound1();
 
     if (alreadyEngaged) {
+      // user déjà engagé
+      removeRulesMessage();
       if (tabs) tabs.style.display = "block";
       showTab("home");
       return;
     }
 
-    //  cacher les tabs
+    // nouveau user
     if (tabs) tabs.style.display = "none";
-    // afficher message
-    const msg = document.createElement("p");
-    msg.innerText = "Veuillez accepter les règlements pour accéder au pool.";
-    msg.style.textAlign = "center";
-    msg.style.fontWeight = "bold";
-    document.body.prepend(msg);
 
-    // afficher règles
-    document.getElementById("rulesContainer").style.display = "block";
+    showRulesMessage();
+
+    if (rulesContainer) {
+      rulesContainer.style.display = "block";
+    }
 
   } else {
-
-    // rounds 2+ → tabs visibles
+    // round 2+
+    removeRulesMessage();
     if (tabs) tabs.style.display = "block";
     showTab("home");
   }
