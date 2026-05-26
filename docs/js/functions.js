@@ -1,16 +1,26 @@
 //Ensemble des fonctions utiliser pour le pool.
 
+
 export function confirmEngagement() {
-      alert("Merci de vous être engagé. Vous pouvez maintenant soumettre vos prédictions.");
-      document.getElementById('engagementContainer').style.display = 'none';
-      document.getElementById('predictionForm').style.display = 'block';
-      document.getElementById('round1').style.display = "block";
-      
-      // ✅ AFFICHER LES TABS
-      const tabs = document.getElementById("tabs");
-      if (tabs) tabs.style.display = "block";
-      showTab("submit")
+
+  alert("Merci de vous être engagé.");
+
+  document.getElementById('rulesContainer').style.display = 'none';
+  document.getElementById('engagementContainer').style.display = 'none';
+  document.getElementById('predictionForm').style.display = 'block';
+  document.getElementById('round1').style.display = "block";
+
+  // enlever message
+  const msg = document.getElementById("rulesMsg");
+  if (msg) msg.remove();
+
+  // afficher tabs
+  const tabs = document.getElementById("tabs");
+  if (tabs) tabs.style.display = "block";
+
+  showTab("submit");
 }
+
 
 // Fonction pour obtenir les matchs à afficher en fonction de la ronde
 // Fonction générique pour afficher les matchs selon les données précédentes
@@ -211,7 +221,7 @@ export async function submitPredictions() {
     return;
   }
 
-  // ✅ CHECK DOUBLE SUBMISSION
+  // CHECK DOUBLE SUBMISSION
   const alreadyDone = await alreadySubmitted();
 
   if (alreadyDone) {
@@ -240,6 +250,9 @@ export async function submitPredictions() {
 
     alert(" Prédictions soumises !");
     document.getElementById("submitBtn").disabled = true;
+        const tabs = document.getElementById("tabs");
+        if (tabs) tabs.style.display = "block";
+
 
   } catch (err) {
     console.error(err);
