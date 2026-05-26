@@ -8,7 +8,7 @@ import { collection, query, where, getDocs } from "https://www.gstatic.com/fireb
 import { currentSubmission, previousData, playersByTeam, round1Ids,SCORING } from "./constants.js";
 
 let currentUser = null;
-showTab("home");
+
 
 // LOGIN
 document.getElementById("loginBtn").addEventListener("click", async () => {
@@ -26,7 +26,6 @@ onAuthStateChanged(auth, async (user) => {
   if (user) {
     currentUser = user;
 
-    document.getElementById("appContent").innerHTML = "";
 
     const eligible = await checkEligibility(db, currentUser, currentSubmission);
 
@@ -59,7 +58,7 @@ onAuthStateChanged(auth, async (user) => {
     if (alreadyDone) {
     
       document.getElementById("appContent").innerHTML =
-        "<h2 style='text-align:center'>✅ Déjà soumis</h2>";
+        "<h2 style='text-align:center'> Déjà soumis</h2>";
     
       const btn = document.getElementById("submitBtn");
       if (btn) btn.disabled = true;
@@ -103,7 +102,7 @@ window.showTab = function(tabName) {
 };
 
 
-sync function renderHome() {
+async function renderHome() {
 
   const leaderboard = await computeLeaderboard();
 
@@ -130,12 +129,12 @@ sync function renderHome() {
 }
 
 
-sync function loadPredictionsDetails() {
+async function loadPredictionsDetails() {
 
   const snapshot = await getDocs(collection(db, "predictions"));
 
   const container = document.getElementById("resultsTab");
-  container.innerHTML = "<h2>📊 Résultats détaillés</h2>";
+  container.innerHTML = "<h2> Résultats détaillés</h2>";
 
   snapshot.forEach(doc => {
 
@@ -169,6 +168,7 @@ sync function loadPredictionsDetails() {
     container.appendChild(div);
   });
 }
+
 
 
 async function renderFullLeaderboard() {
@@ -391,9 +391,9 @@ window.addEventListener("DOMContentLoaded", () => {
 }); 
     
 document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll("#predictionForm select, #predictionForm input").forEach(el => {
-    el.addEventListener("input", () => funcs.checkIfReadyToSubmit(currentSubmission));
-    el.addEventListener("change", () => funcs.checkIfReadyToSubmit(currentSubmission))
+  document.querySelectorAll("#predictionForm select, #predictionForm input").forEach(el => {   
+  el.addEventListener("input", () => funcs.checkIfReadyToSubmit(currentSubmission));
+  el.addEventListener("change", () => funcs.checkIfReadyToSubmit(currentSubmission));
   });
 });
 
@@ -468,7 +468,12 @@ window.addEventListener("DOMContentLoaded", () => {
       el.addEventListener("change", () =>funcs.checkIfReadyToSubmit(currentSubmission));
     });
 
-    () => funcs.checkIfReadyToSubmit(currentSubmission) // Appel initial
+    funcs.checkIfReadyToSubmit(currentSubmission) // Appel initial
   }
 
 });
+
+window.addEventListener("DOMContentLoaded", () => {
+  showTab("home");
+});
+
