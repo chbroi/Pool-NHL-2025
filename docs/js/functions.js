@@ -214,7 +214,7 @@ export function fetchParticipants() {
 
 
 
-export async function submitPredictions() {
+export async function submitPredictions(currentUser) {
 
   if (!currentUser) {
     alert("Tu dois être connecté.");
