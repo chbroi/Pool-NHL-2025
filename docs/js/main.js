@@ -641,17 +641,18 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
+
 async function submitPredictions() {
+
   if (!currentUser) {
     alert("Tu dois être connecté.");
     return;
   }
 
-  // CHECK DOUBLE SUBMISSION
   const alreadyDone = await alreadySubmitted();
 
   if (alreadyDone) {
-    alert(" Tu as déjà soumis pour cette ronde.");
+    alert("Tu as déjà soumis pour cette ronde.");
     return;
   }
 
@@ -666,28 +667,30 @@ async function submitPredictions() {
   });
 
   try {
+
+    // ✅ 1. FIRESTORE (SEULEMENT DATA)
     await addDoc(collection(db, "predictions"), {
       userId: currentUser.uid,
       userName: currentUser.displayName,
       round: currentSubmission,
       picks: data,
       timestamp: Date.now()
-      
-      // ✅ bloquer le formulaire
-      document.querySelectorAll("#predictionForm select, #predictionForm input")
-        .forEach(el => el.disabled = true);
-      
-      // ✅ navigation vers accueil
-      showTab("home");
-
     });
 
-    alert(" Prédictions soumises !");
-    document.getElementById("submitBtn").disabled = true;
-        const tabs = document.getElementById("tabs");
-        hasSubmittedCurrentRound = true;
-        if (tabs) tabs.style.display = "block";
+    // ✅ 2. UI UPDATE (APRÈS)
+    alert("✅ Prédictions soumises !");
 
+    hasSubmittedCurrentRound = true;
+
+    document.getElementById("submitBtn").disabled = true;
+
+    document.querySelectorAll("#predictionForm select, #predictionForm input")
+      .forEach(el => el.disabled = true);
+
+    const tabs = document.getElementById("tabs");
+    if (tabs) tabs.style.display = "block";
+
+    showTab("home");
 
   } catch (err) {
     console.error(err);
