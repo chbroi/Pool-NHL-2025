@@ -8,6 +8,7 @@ import { collection, query, where, getDocs } from "https://www.gstatic.com/fireb
 import { currentSubmission, previousData, playersByTeam, round1Ids,SCORING } from "./constants.js";
 
 let currentUser = null;
+showTab("home");
 
 // LOGIN
 document.getElementById("loginBtn").addEventListener("click", async () => {
@@ -83,6 +84,110 @@ onAuthStateChanged(auth, async (user) => {
     document.getElementById("loginContainer").style.display = "block";
   }
 });
+
+
+window.showTab = function(tabName) {
+
+  const tabs = ["home", "submit", "results", "leaderboard", "rules"];
+
+  tabs.forEach(t => {
+    document.getElementById(t + "Tab").style.display = "none";
+  });
+
+  document.getElementById(tabName + "Tab").style.display = "block";
+
+  // charger contenu dynamique
+  if (tabName === "home") renderHome();
+  if (tabName === "results") loadPredictionsDetails();
+  if (tabName === "leaderboard") renderFullLeaderboard();
+};
+
+
+sync function renderHome() {
+
+  const leaderboard = await computeLeaderboard();
+
+  const container = document.getElementById("homeTab");
+  container.innerHTML = "<h2>🏆 Top 10</h2>";
+
+  leaderboard.slice(0,10).forEach((p, i) => {
+    const div = document.createElement("div");
+    div.innerHTML = `
+      <strong>#${i+1}</strong> ${p.name} — ${p.score} pts
+    `;
+    container.appendChild(div);
+  });
+
+  // ton score perso
+  if (currentUser) {
+    const user = leaderboard.find(p => p.name === currentUser.displayName);
+    if (user) {
+      const me = document.createElement("h3");
+      me.innerText = `Ton score : ${user.score}`;
+      container.appendChild(me);
+    }
+  }
+}
+
+
+sync function loadPredictionsDetails() {
+
+  const snapshot = await getDocs(collection(db, "predictions"));
+
+  const container = document.getElementById("resultsTab");
+  container.innerHTML = "<h2>📊 Résultats détaillés</h2>";
+
+  snapshot.forEach(doc => {
+
+    const data = doc.data();
+
+    const div = document.createElement("div");
+    div.style.border = "1px solid #ccc";
+    div.style.margin = "10px";
+    div.style.padding = "10px";
+
+    let html = `
+      <h3>${data.userName} (R${data.round})</h3>
+      <ul>
+    `;
+
+    Object.entries(data.picks).forEach(([key, value]) => {
+
+      const result = previousData[key];
+
+      let status = "⏳";
+      if (result) {
+        status = value === result ? "✅" : "❌";
+      }
+
+      html += `<li>${key}: ${value} ${status}</li>`;
+    });
+
+    html += "</ul>";
+
+    div.innerHTML = html;
+    container.appendChild(div);
+  });
+}
+
+
+async function renderFullLeaderboard() {
+
+  const data = await computeLeaderboard();
+
+  const container = document.getElementById("leaderboardTab");
+  container.innerHTML = "<h2>Classement complet</h2>";
+
+  data.forEach((p, i) => {
+    const row = document.createElement("div");
+    row.innerHTML = `#${i+1} - ${p.name} (${p.score} pts)`;
+    container.appendChild(row);
+  });
+}
+
+
+
+
 
 async function loadUserPicks() {
 
