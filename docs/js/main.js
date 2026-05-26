@@ -565,7 +565,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-asyncfunction submitPredictions() {
+async function submitPredictions() {
   if (!currentUser) {
     alert("Tu dois être connecté.");
     return;
