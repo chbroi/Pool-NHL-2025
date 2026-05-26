@@ -214,7 +214,7 @@ export function fetchParticipants() {
 
 
 
-export async function submitPredictions(currentUser) {
+export async function submitPredictions(currentUser,alreadySubmittedFn) {
 
   if (!currentUser) {
     alert("Tu dois être connecté.");
@@ -222,7 +222,7 @@ export async function submitPredictions(currentUser) {
   }
 
   // CHECK DOUBLE SUBMISSION
-  const alreadyDone = await alreadySubmitted();
+  const alreadyDone = await alreadySubmittedFn();
 
   if (alreadyDone) {
     alert(" Tu as déjà soumis pour cette ronde.");
