@@ -129,46 +129,64 @@ async function renderHome() {
 }
 
 
+
 async function loadPredictionsDetails() {
 
   const snapshot = await getDocs(collection(db, "predictions"));
-
   const container = document.getElementById("resultsTab");
-  container.innerHTML = "<h2> Résultats détaillés</h2>";
+
+  container.innerHTML = "<h2>📊 Détail des prédictions</h2>";
+
+  // regrouper par match
+  const matches = {};
 
   snapshot.forEach(doc => {
-
     const data = doc.data();
-
-    const div = document.createElement("div");
-    div.style.border = "1px solid #ccc";
-    div.style.margin = "10px";
-    div.style.padding = "10px";
-
-    let html = `
-      <h3>${data.userName} (R${data.round})</h3>
-      <ul>
-    `;
 
     Object.entries(data.picks).forEach(([key, value]) => {
 
-      const result = previousData[key];
+      if (!matches[key]) matches[key] = {};
 
-      let status = "⏳";
+      matches[key][data.userName] = value;
+    });
+  });
+
+  Object.keys(matches).forEach(matchKey => {
+
+    const row = document.createElement("div");
+    row.style.borderBottom = "1px solid #ccc";
+    row.style.padding = "8px";
+
+    let html = `<strong>${matchKey}</strong> | Résultat: ${previousData[matchKey] || "-"}`;
+
+    Object.entries(matches[matchKey]).forEach(([user, pick]) => {
+
+      const result = previousData[matchKey];
+      let color = "black";
+      let symbol = "⏳";
+
       if (result) {
-        status = value === result ? "✅" : "❌";
+        if (pick === result) {
+          color = "green";
+          symbol = "✅";
+        } else {
+          color = "red";
+          symbol = "❌";
+        }
       }
 
-      html += `<li>${key}: ${value} ${status}</li>`;
+      html += `
+        <span style="margin-left:10px; color:${color}">
+          ${user}: ${pick} ${symbol}
+        </span>
+      `;
     });
 
-    html += "</ul>";
-
-    div.innerHTML = html;
-    container.appendChild(div);
+    row.innerHTML = html;
+    container.appendChild(row);
   });
 }
-
+``
 
 
 async function renderFullLeaderboard() {
