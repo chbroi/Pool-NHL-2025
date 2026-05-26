@@ -8,6 +8,7 @@ import { collection, query, where, getDocs, addDoc } from "https://www.gstatic.c
 import { currentSubmission, previousData, playersByTeam, round1Ids,SCORING } from "./constants.js";
 
 let currentUser = null;
+let hasSubmittedCurrentRound = false;
 
 
 // LOGIN
@@ -53,16 +54,16 @@ onAuthStateChanged(auth, async (user) => {
     }
 
     const alreadyDone = await alreadySubmitted();
+    hasSubmittedCurrentRound = alreadyDone;
 
     
-    if (alreadyDone) {
-    
-      document.getElementById("appContent").innerHTML =
-        "<h2 style='text-align:center'> Déjà soumis</h2>";
-    
+    if (alreadyDone) {  
+      const msg = document.createElement("h2");
+      msg.innerText = "✅ Déjà soumis";
+      msg.style.textAlign = "center";
+      document.getElementById("appContent").prepend(msg);
       const btn = document.getElementById("submitBtn");
       if (btn) btn.disabled = true;
-    
       return;
     }
 
@@ -100,6 +101,18 @@ window.showTab = function(tabName) {
   if (tabName === "home") renderHome();
   if (tabName === "results") loadPredictionsDetails();
   if (tabName === "leaderboard") renderFullLeaderboard();
+  if (tabName === "submit") {
+    document.getElementById("predictionForm").style.display = "block";
+    if (hasSubmittedCurrentRound) {
+      loadUserPicks();
+      document.querySelectorAll("#predictionForm select, #predictionForm input")
+      .forEach(el => el.disabled = true);
+    } 
+    else {
+    document.querySelectorAll("#predictionForm select, #predictionForm input")
+      .forEach(el => el.disabled = false);
+  }
+}
 };
 ``
 
@@ -367,23 +380,24 @@ async function computeLeaderboard() {
 
   return leaderboard;
 }
+
 window.addEventListener("DOMContentLoaded", async () => {
-
   const tabs = document.getElementById("tabs");
-  const rulesContainer = document.getElementById("rulesContainer");
-  const form = document.getElementById("predictionForm");
-
-  // ===== MESSAGE =====
-  function showRulesMessage() {
-    if (!document.getElementById("rulesMsg")) {
-      const msg = document.createElement("p");
-      msg.id = "rulesMsg";
-      msg.innerText = "Veuillez accepter les règlements pour accéder au pool.";
-      msg.style.textAlign = "center";
-      msg.style.fontWeight = "bold";
-      document.body.prepend(msg);
+  if (currentSubmission === 1) {
+    const alreadyEngaged = await hasSubmittedRound1();
+    if (alreadyEngaged) {
+      tabs.style.display = "none"; // ✅ pas encore submit
+      showTab("submit");
+    } else {
+      tabs.style.display = "none";
+      document.getElementById("rulesContainer").style.display = "block";
     }
+  } else {
+    tabs.style.display = "block";
+    showTab("home");
   }
+});
+
 
   function removeRulesMessage() {
     const msg = document.getElementById("rulesMsg");
@@ -678,11 +692,20 @@ async function submitPredictions() {
       round: currentSubmission,
       picks: data,
       timestamp: Date.now()
+      
+      // ✅ bloquer le formulaire
+      document.querySelectorAll("#predictionForm select, #predictionForm input")
+        .forEach(el => el.disabled = true);
+      
+      // ✅ navigation vers accueil
+      showTab("home");
+
     });
 
     alert(" Prédictions soumises !");
     document.getElementById("submitBtn").disabled = true;
         const tabs = document.getElementById("tabs");
+        hasSubmittedCurrentRound = true;
         if (tabs) tabs.style.display = "block";
 
 
