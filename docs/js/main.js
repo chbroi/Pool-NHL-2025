@@ -4,7 +4,7 @@ import * as funcs from "./functions.js";
 import { auth, db, GoogleAuthProvider } from "./firebase.js";
 import { signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { collection, query, where, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { currentSubmission, previousData, playersByTeam, round1Ids,SCORING } from "./constants.js";
 
 let currentUser = null;
@@ -563,15 +563,16 @@ window.addEventListener("DOMContentLoaded", async () => {
     if (tabs) tabs.style.display = "block";
     showTab("home");
   }
-}
-function submitPredictions() {
+});
+
+asyncfunction submitPredictions() {
   if (!currentUser) {
     alert("Tu dois être connecté.");
     return;
   }
 
   // CHECK DOUBLE SUBMISSION
-  const alreadyDone = await alreadySubmittedFn();
+  const alreadyDone = await alreadySubmitted();
 
   if (alreadyDone) {
     alert(" Tu as déjà soumis pour cette ronde.");
@@ -607,10 +608,9 @@ function submitPredictions() {
     console.error(err);
     alert("Erreur: " + err.message);
   }
-}
+};
 
-
-                       );
+window.submitPredictions = submitPredictions;
 
 
 
