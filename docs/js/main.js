@@ -473,7 +473,64 @@ window.addEventListener("DOMContentLoaded", () => {
 
 });
 
-window.addEventListener("DOMContentLoaded", () => {
-  showTab("home");
+
+window.addEventListener("DOMContentLoaded", async () => {
+
+  if (currentSubmission === 1) {
+
+    // Vérifier si déjà soumis (donc déjà engagé implicite)
+    if (currentUser) {
+      const alreadyDone = await alreadySubmitted();
+      if (alreadyDone) {
+        showTab("home");
+        return;
+      }
+    }
+
+    // afficher les règles
+    document.getElementById("rulesContainer").style.display = "block";
+
+  } else {
+    showTab("home");
+  }
+
 });
+
+
+async function hasSubmittedRound1() {
+
+  if (!currentUser) return false;
+
+  const q = query(
+    collection(db, "predictions"),
+    where("userId", "==", currentUser.uid),
+    where("round", "==", 1)
+  );
+
+  const snapshot = await getDocs(q);
+
+  return !snapshot.empty;
+}
+
+
+window.addEventListener("DOMContentLoaded", async () => {
+
+  if (currentSubmission === 1) {
+
+    const alreadyEngaged = await hasSubmittedRound1();
+
+    if (alreadyEngaged) {
+      showTab("home");
+      return;
+    }
+
+    // sinon afficher règles
+    document.getElementById("rulesContainer").style.display = "block";
+
+  } else {
+    showTab("home");
+  }
+});
+
+
 
