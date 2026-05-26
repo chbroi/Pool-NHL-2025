@@ -260,7 +260,9 @@ async function computeLeaderboard() {
     });
 
     // Lorsqu'on confirme l'engagement
-    funcs.confirmEngagement()
+    
+document.getElementById('confirmEngagementButton')
+    .addEventListener('click', funcs.confirmEngagement);
 }
   // Affichage des rondes selon les soumissions
 window.addEventListener("DOMContentLoaded", () => {
