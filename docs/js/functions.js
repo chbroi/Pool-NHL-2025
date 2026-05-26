@@ -5,6 +5,10 @@ export function confirmEngagement() {
       document.getElementById('engagementContainer').style.display = 'none';
       document.getElementById('predictionForm').style.display = 'block';
       document.getElementById('round1').style.display = "block";
+      
+      // ✅ AFFICHER LES TABS
+      const tabs = document.getElementById("tabs");
+      if (tabs) tabs.style.display = "block";
       showTab("submit")
 }
 
@@ -151,7 +155,7 @@ export function createRound3Matchups(currentSubmission) {
   document.getElementById('round3').style.display = 'block';
 }
 
-export function createRound4Matchup(currentSubmission) {
+export function createRound4Matchup(currentSubmission,playersByTeam) {
   if (currentSubmission > 3) return;
   const team1 = document.getElementById('R3_EST_1_team').value;
   const team2 = document.getElementById('R3_WEST_1_team').value;
