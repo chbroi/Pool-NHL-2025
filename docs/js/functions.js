@@ -167,7 +167,7 @@ export function createRound4Matchup(currentSubmission) {
                       <option value="${team2}">${team2}</option>`;
 
   document.getElementById('round4').style.display = 'block';
-  updateConnSmytheField();
+  updateConnSmytheField(playersByTeam);
 }
 
 export function fetchParticipants() {
