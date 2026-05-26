@@ -85,6 +85,7 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 
+
 window.showTab = function(tabName) {
 
   const tabs = ["home", "submit", "results", "leaderboard", "rules"];
@@ -95,11 +96,13 @@ window.showTab = function(tabName) {
 
   document.getElementById(tabName + "Tab").style.display = "block";
 
-  // charger contenu dynamique
+  // 🔥 chargement dynamique
   if (tabName === "home") renderHome();
   if (tabName === "results") loadPredictionsDetails();
   if (tabName === "leaderboard") renderFullLeaderboard();
 };
+``
+
 
 
 async function renderHome() {
@@ -364,17 +367,105 @@ async function computeLeaderboard() {
 
   return leaderboard;
 }
+window.addEventListener("DOMContentLoaded", async () => {
 
+  const tabs = document.getElementById("tabs");
+  const rulesContainer = document.getElementById("rulesContainer");
+  const form = document.getElementById("predictionForm");
 
+  // ===== MESSAGE =====
+  function showRulesMessage() {
+    if (!document.getElementById("rulesMsg")) {
+      const msg = document.createElement("p");
+      msg.id = "rulesMsg";
+      msg.innerText = "Veuillez accepter les règlements pour accéder au pool.";
+      msg.style.textAlign = "center";
+      msg.style.fontWeight = "bold";
+      document.body.prepend(msg);
+    }
+  }
 
+  function removeRulesMessage() {
+    const msg = document.getElementById("rulesMsg");
+    if (msg) msg.remove();
+  }
 
-//loadParticipants()
-  // Affichage spécial si la soumission est 1
+  // ===== FLOW PRINCIPAL =====
   if (currentSubmission === 1) {
-    // Affiche les règlements au chargement
-    window.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('rulesContainer').style.display = 'block';
+
+    const alreadyEngaged = await hasSubmittedRound1();
+
+    if (alreadyEngaged) {
+
+      removeRulesMessage();
+      if (tabs) tabs.style.display = "block";
+
+      // afficher form directement
+      if (form) form.style.display = "block";
+      document.getElementById('round1').style.display = "block";
+
+      showTab("home");
+      return;
+    }
+
+    // nouveau user
+    if (tabs) tabs.style.display = "none";
+    showRulesMessage();
+
+    if (rulesContainer) {
+      rulesContainer.style.display = "block";
+    }
+
+  } else {
+
+    // rounds 2+
+    removeRulesMessage();
+    if (tabs) tabs.style.display = "block";
+
+    if (form) form.style.display = "block";
+
+    // affichage des rounds selon niveau
+    if (currentSubmission >= 2) {
+      document.getElementById('round1').style.display = "none";
+      document.getElementById('round2').style.display = "block";
+      funcs.showRoundFromData(2, previousData);
+    }
+
+    if (currentSubmission >= 3) {
+      document.getElementById('round2').style.display = "none";
+      document.getElementById('round3').style.display = "block";
+      funcs.showRoundFromData(3, previousData);
+    }
+
+    if (currentSubmission >= 4) {
+      document.getElementById('round3').style.display = "none";
+      document.getElementById('round4').style.display = "block";
+      funcs.showRoundFromData(4, previousData);
+
+      funcs.updateConnSmytheList(
+        previousData.R3_EST_1_team,
+        previousData.R3_WEST_1_team,
+        playersByTeam
+      );
+    }
+
+    showTab("home");
+  }
+
+  // ===== VALIDATION FORM =====
+  if (form) {
+    form.querySelectorAll("input, select").forEach(el => {
+      el.addEventListener("input", () => funcs.checkIfReadyToSubmit(currentSubmission));
+      el.addEventListener("change", () => funcs.checkIfReadyToSubmit(currentSubmission));
     });
+
+    funcs.checkIfReadyToSubmit(currentSubmission);
+  }
+
+});
+
+
+
 
     // Lorsqu'on accepte les règles
     document.getElementById('acceptRulesButton').addEventListener('click', () => {
@@ -382,38 +473,11 @@ async function computeLeaderboard() {
       document.getElementById('engagementContainer').style.display = 'block';
     });
 
-    // Lorsqu'on confirme l'engagement
-    
+    // Lorsqu'on confirme l'engagement  
 document.getElementById('confirmEngagementButton')
     .addEventListener('click', funcs.confirmEngagement);
-}
-  // Affichage des rondes selon les soumissions
-window.addEventListener("DOMContentLoaded", () => {
-  if (currentSubmission >= 2) {
-    document.getElementById('predictionForm').style.display = "block";
-    document.getElementById('round1').style.display = "none";
-    document.getElementById('round2').style.display = "block";
-    funcs.showRoundFromData(2, previousData); // Affiche les choix de la ronde 2
-  }
-  if (currentSubmission >= 3) {
-    document.getElementById('round2').style.display = "none";
-    document.getElementById('round3').style.display = "block";
-    funcs.showRoundFromData(3, previousData); // Affiche les choix de la ronde 3
-  }
-  if (currentSubmission >= 4) {
-    document.getElementById('round3').style.display = "none";
-    document.getElementById('round4').style.display = "block";
-    funcs.showRoundFromData(4, previousData); // Affiche les choix de la ronde 4
-    funcs.updateConnSmytheList(previousData.R3_EST_1_team,previousData.R3_WEST_1_team, playersByTeam);
-  }
-}); 
     
-document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll("#predictionForm select, #predictionForm input").forEach(el => {   
-  el.addEventListener("input", () => funcs.checkIfReadyToSubmit(currentSubmission));
-  el.addEventListener("change", () => funcs.checkIfReadyToSubmit(currentSubmission));
-  });
-});
+
 
 async function checkEligibility(db, currentUser, currentSubmission) {
 
