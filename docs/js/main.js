@@ -382,22 +382,21 @@ async function computeLeaderboard() {
 }
 
 window.addEventListener("DOMContentLoaded", async () => {
-  const tabs = document.getElementById("tabs");
-  if (currentSubmission === 1) {
-    const alreadyEngaged = await hasSubmittedRound1();
-    if (alreadyEngaged) {
-      tabs.style.display = "none"; // ✅ pas encore submit
-      showTab("submit");
-    } else {
-      tabs.style.display = "none";
-      document.getElementById("rulesContainer").style.display = "block";
-    }
-  } else {
-    tabs.style.display = "block";
-    showTab("home");
-  }
-});
 
+  const tabs = document.getElementById("tabs");
+  const form = document.getElementById("predictionForm");
+  const rulesContainer = document.getElementById("rulesContainer");
+
+  function showRulesMessage() {
+    if (!document.getElementById("rulesMsg")) {
+      const msg = document.createElement("p");
+      msg.id = "rulesMsg";
+      msg.innerText = "Veuillez accepter les règlements pour accéder au pool.";
+      msg.style.textAlign = "center";
+      msg.style.fontWeight = "bold";
+      document.body.prepend(msg);
+    }
+  }
 
   function removeRulesMessage() {
     const msg = document.getElementById("rulesMsg");
@@ -405,6 +404,7 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   // ===== FLOW PRINCIPAL =====
+
   if (currentSubmission === 1) {
 
     const alreadyEngaged = await hasSubmittedRound1();
@@ -412,33 +412,27 @@ window.addEventListener("DOMContentLoaded", async () => {
     if (alreadyEngaged) {
 
       removeRulesMessage();
-      if (tabs) tabs.style.display = "block";
+      tabs.style.display = "none";
 
-      // afficher form directement
       if (form) form.style.display = "block";
       document.getElementById('round1').style.display = "block";
 
-      showTab("home");
-      return;
-    }
+      showTab("submit");
 
-    // nouveau user
-    if (tabs) tabs.style.display = "none";
-    showRulesMessage();
+    } else {
 
-    if (rulesContainer) {
+      tabs.style.display = "none";
+      showRulesMessage();
       rulesContainer.style.display = "block";
     }
 
   } else {
 
-    // rounds 2+
     removeRulesMessage();
-    if (tabs) tabs.style.display = "block";
+    tabs.style.display = "block";
 
     if (form) form.style.display = "block";
 
-    // affichage des rounds selon niveau
     if (currentSubmission >= 2) {
       document.getElementById('round1').style.display = "none";
       document.getElementById('round2').style.display = "block";
@@ -467,10 +461,15 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 
   // ===== VALIDATION FORM =====
+
   if (form) {
     form.querySelectorAll("input, select").forEach(el => {
-      el.addEventListener("input", () => funcs.checkIfReadyToSubmit(currentSubmission));
-      el.addEventListener("change", () => funcs.checkIfReadyToSubmit(currentSubmission));
+      el.addEventListener("input", () =>
+        funcs.checkIfReadyToSubmit(currentSubmission)
+      );
+      el.addEventListener("change", () =>
+        funcs.checkIfReadyToSubmit(currentSubmission)
+      );
     });
 
     funcs.checkIfReadyToSubmit(currentSubmission);
@@ -517,25 +516,6 @@ async function checkEligibility(db, currentUser, currentSubmission) {
 }
 
 
-
-
-/*Décommenter lorsque la première soumission est terminée
-window.addEventListener('DOMContentLoaded', () => {
-  // Affiche uniquement le message de fin
-  document.getElementById('rulesContainer').style.display = 'none';
-  document.getElementById('engagementContainer').style.display = 'none';
-  document.getElementById('predictionForm').style.display = 'none';
-
-  const lateMessage = document.createElement('div');
-  lateMessage.style.padding = '1rem';
-  lateMessage.style.fontSize = '1.2rem';
-  lateMessage.style.textAlign = 'center';
-  lateMessage.style.fontWeight = 'bold';
-  lateMessage.innerText = "Il est désormais trop tard pour la première prédiction. Veuillez revenir sur cette page lors de la prochaine soumission avant le début de la  deuxième ronde! :)";
-
-  document.body.appendChild(lateMessage);
-});
-//Décommenter lorsque la première soumission est terminée*/
 
 document.getElementById('R3_EST_1_team').addEventListener('change', () =>funcs.updateConnSmytheField(playersByTeam));
 document.getElementById('R3_WEST_1_team').addEventListener('change', () =>funcs.updateConnSmytheField(playersByTeam));
@@ -640,7 +620,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       // user déjà engagé
       removeRulesMessage();
       if (tabs) tabs.style.display = "block";
-      showTab("home");
+      showTab("submit");
       return;
     }
 
