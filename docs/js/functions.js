@@ -211,58 +211,6 @@ export function fetchParticipants() {
     });
 }
 
-
-
-
-export async function submitPredictions(currentUser,alreadySubmittedFn) {
-
-  if (!currentUser) {
-    alert("Tu dois être connecté.");
-    return;
-  }
-
-  // CHECK DOUBLE SUBMISSION
-  const alreadyDone = await alreadySubmittedFn();
-
-  if (alreadyDone) {
-    alert(" Tu as déjà soumis pour cette ronde.");
-    return;
-  }
-
-  if (!confirm("Confirmer la soumission?")) return;
-
-  const form = document.getElementById("predictionForm");
-  const formData = new FormData(form);
-
-  const data = {};
-  formData.forEach((value, key) => {
-    data[key] = value;
-  });
-
-  try {
-    await addDoc(collection(db, "predictions"), {
-      userId: currentUser.uid,
-      userName: currentUser.displayName,
-      round: currentSubmission,
-      picks: data,
-      timestamp: Date.now()
-    });
-
-    alert(" Prédictions soumises !");
-    document.getElementById("submitBtn").disabled = true;
-        const tabs = document.getElementById("tabs");
-        if (tabs) tabs.style.display = "block";
-
-
-  } catch (err) {
-    console.error(err);
-    alert("Erreur: " + err.message);
-  }
-}
-
-
-
-        
 export function checkIfReadyToSubmit(currentSubmission) {
   const requiredFields = ["Conn_Smythe"];
 
