@@ -6,6 +6,7 @@ import { signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/fir
 import { signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { currentSubmission, previousData, playersByTeam, round1Ids,SCORING } from "./constants.js";
+window.submitPredictions = () => funcs.submitPredictions(currentUser);
 
 let currentUser = null;
 
