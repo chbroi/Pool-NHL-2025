@@ -7,10 +7,6 @@ import { signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-aut
 import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { currentSubmission, previousData, playersByTeam, round1Ids,SCORING } from "./constants.js";
 
-window.submitPredictions = () => 
-  funcs.submitPredictions(currentUser, alreadySubmitted);
-
-
 let currentUser = null;
 
 
@@ -567,7 +563,54 @@ window.addEventListener("DOMContentLoaded", async () => {
     if (tabs) tabs.style.display = "block";
     showTab("home");
   }
-});
+}
+function submitPredictions() {
+  if (!currentUser) {
+    alert("Tu dois être connecté.");
+    return;
+  }
+
+  // CHECK DOUBLE SUBMISSION
+  const alreadyDone = await alreadySubmittedFn();
+
+  if (alreadyDone) {
+    alert(" Tu as déjà soumis pour cette ronde.");
+    return;
+  }
+
+  if (!confirm("Confirmer la soumission?")) return;
+
+  const form = document.getElementById("predictionForm");
+  const formData = new FormData(form);
+
+  const data = {};
+  formData.forEach((value, key) => {
+    data[key] = value;
+  });
+
+  try {
+    await addDoc(collection(db, "predictions"), {
+      userId: currentUser.uid,
+      userName: currentUser.displayName,
+      round: currentSubmission,
+      picks: data,
+      timestamp: Date.now()
+    });
+
+    alert(" Prédictions soumises !");
+    document.getElementById("submitBtn").disabled = true;
+        const tabs = document.getElementById("tabs");
+        if (tabs) tabs.style.display = "block";
+
+
+  } catch (err) {
+    console.error(err);
+    alert("Erreur: " + err.message);
+  }
+}
+
+
+                       );
 
 
 
