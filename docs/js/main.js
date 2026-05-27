@@ -44,7 +44,7 @@ onAuthStateChanged(auth, async (user) => {
     document.getElementById("userInfo").innerText =
       "Connecté : " + user.displayName;
 
-    // ✅ reset visuel
+    // reset visuel
     rulesContainer.style.display = "none";
 
     const eligible = await checkEligibility(db, currentUser, currentSubmission);
@@ -63,7 +63,7 @@ onAuthStateChanged(auth, async (user) => {
     const alreadyDone = await alreadySubmitted();
     hasSubmittedCurrentRound = alreadyDone;
 
-    // ✅ FLOW
+    // FLOW
 
     if (currentSubmission === 1) {
 
@@ -73,7 +73,7 @@ onAuthStateChanged(auth, async (user) => {
         form.style.display = "none";
         rulesContainer.style.display = "block";
 
-        showTab("rules"); ✅
+        showTab("rules");
 
         document.getElementById("acceptRulesButton").style.display = "block";
         return;
@@ -95,7 +95,7 @@ onAuthStateChanged(auth, async (user) => {
         if (!document.getElementById("submittedMsg")) {
           const msg = document.createElement("h3");
           msg.id = "submittedMsg";
-          msg.innerText = "✅ Tu as déjà soumis. Voici ta prédiction";
+          msg.innerText = "Tu as déjà soumis. Voici ta prédiction";
           document.getElementById("submitTab").prepend(msg);
         }
 
@@ -128,7 +128,7 @@ window.showTab = function(tabName) {
     document.getElementById(t + "Tab").style.display = "none";
   });
 
-  // ✅ cacher les règles par défaut
+  // cacher les règles par défaut
   document.getElementById("rulesContainer").style.display = "none";
   document.getElementById(tabName + "Tab").style.display = "block";
   document.getElementById("predictionForm").style.display = "none";
@@ -148,7 +148,7 @@ window.showTab = function(tabName) {
   }
   if (tabName === "rules") {
     document.getElementById("rulesContainer").style.display = "block";
-    // ✅ cacher boutons
+    // cacher boutons
     document.getElementById("acceptRulesButton").style.display = "none";
     document.getElementById("engagementContainer").style.display = "none";
   }
@@ -207,14 +207,14 @@ async function loadPredictionsDetails() {
     let html = `<h2>Soumission ${round}</h2>`;
     html += `<table border="1" style="border-collapse: collapse;">`;
 
-    // ✅ header
+    // header
     html += "<tr><th>Match</th><th>Résultat</th>";
     users.forEach(user => {
       html += `<th>${user}</th>`;
     });
     html += "</tr>";
 
-    // ✅ lignes match
+    // lignes match
     MATCH_ORDER.forEach(matchKey => {
 
       if (matchKey === "Conn_Smythe") {
@@ -272,10 +272,10 @@ if (resultTeam) {
   let points = 0;
   const mult = SCORING.roundMultiplier[roundNum];
 
-  // ✅ bon gagnant
+  // bon gagnant
   if (pickTeam === resultTeam) {
 
-    // ✅ bon nombre de matchs
+    // bon nombre de matchs
     if (resultGames && Number(pickGames) === Number(resultGames)) {
 
       cell += " ✅✅"; // 🔥 parfait
@@ -293,7 +293,7 @@ if (resultTeam) {
     cell += " ❌"; // 🔥 mauvais gagnant
   }
 
-  // ✅ afficher points seulement si match terminé
+  // afficher points seulement si match terminé
   if (points > 0) {
     cell += ` (+${points})`;
   }
@@ -392,7 +392,7 @@ function calculateSubmissionScore(picks, results) {
 
     const resultValue = results[key];
 
-    // 🚫 ignorer si pas de résultat réel encore
+    // ignorer si pas de résultat réel encore
     if (!resultValue) return;
 
     if (key.includes("_team")) {
@@ -508,12 +508,12 @@ async function checkEligibility(db, currentUser, currentSubmission) {
 
   if (!currentUser) return false;
 
-  // ✅ Ronde 1 → toujours OK
+  // Ronde 1 → toujours OK
   if (currentSubmission === 1) {
     return true;
   }
 
-  // ✅ Vérifier la ronde précédente
+  // Vérifier la ronde précédente
   const previousRound = currentSubmission - 1;
 
   const q = query(
@@ -588,7 +588,7 @@ async function hasSubmittedRound1() {
 
   try {
 
-    // ✅ 1. FIRESTORE (SEULEMENT DATA)
+    // 1. FIRESTORE (SEULEMENT DATA)
     await addDoc(collection(db, "predictions"), {
       userId: currentUser.uid,
       userName: currentUser.displayName,
@@ -597,8 +597,8 @@ async function hasSubmittedRound1() {
       timestamp: Date.now()
     });
 
-    // ✅ 2. UI UPDATE (APRÈS)
-    alert("✅ Prédictions soumises !");
+    // 2. UI UPDATE (APRÈS)
+    alert("Prédictions soumises !");
 
     hasSubmittedCurrentRound = true;
 
