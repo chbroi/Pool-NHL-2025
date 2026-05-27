@@ -123,6 +123,15 @@ onAuthStateChanged(auth, async (user) => {
 
 
 window.showTab = function(tabName) {
+  
+  const helper = document.getElementById("helperMessage");
+  
+  if (["home", "submit", "myPicks"].includes(tabName)) {
+    helper.style.display = "block";
+  } else {
+    helper.style.display = "none";
+  }
+
 
   const tabs = ["home", "submit", "results", "leaderboard", "rules"];
 
@@ -257,7 +266,8 @@ async function loadPredictionsDetails() {
 
     // MATCHS
     MATCH_ORDER.forEach(matchKey => {
-
+      const teamKey = matchKey + "_team";
+      const gamesKey = matchKey + "_games";
       if (matchKey === "Conn_Smythe") {
 
         const result = previousData["Conn_Smythe"];
@@ -269,7 +279,7 @@ async function loadPredictionsDetails() {
           const pick = user.picks["Conn_Smythe"];
           let cell = pick || "";
 
-          if (isResultAvailable(teamKey) && pickTeam) {
+          if (isResultAvailable("Conn_Smythe") && pick) {
             if (pick === result) {
               cell += ` ✅✅ (+${SCORING.connSmythe})`;
             } else {
@@ -284,8 +294,7 @@ async function loadPredictionsDetails() {
         return;
       }
 
-      const teamKey = matchKey + "_team";
-      const gamesKey = matchKey + "_games";
+      
 
       const resultTeam = previousData[teamKey];
       const resultGames = previousData[gamesKey];
