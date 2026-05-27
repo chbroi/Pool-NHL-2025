@@ -68,9 +68,15 @@ onAuthStateChanged(auth, async (user) => {
 
       const msg = document.createElement("h2");
       msg.innerText = "🔒 Lecture seule - non éligible";
-
-      document.getElementById("appContent").prepend(msg);
-
+    
+      if (!document.getElementById("readonlyMsg")) {
+      
+        const msg = document.createElement("h2");
+        msg.id = "readonlyMsg";
+        msg.innerText = "🔒 Lecture seule - non éligible";
+      
+        document.getElementById("homeTab").prepend(msg); ✅
+      }
       loadUserPicks();
       return;
     }
@@ -137,6 +143,16 @@ onAuthStateChanged(auth, async (user) => {
 
 window.showTab = function(tabName) {
   
+  // mise en valeur de l'onglet actif
+  document.querySelectorAll("#tabs button").forEach(btn => {
+    btn.classList.remove("activeTab");
+  });
+  
+  // trouver le bouton cliqué
+  const clickedButton = document.querySelector(`#tabs button[onclick="showTab('${tabName}')"]`);
+  if (clickedButton) {
+    clickedButton.classList.add("activeTab");
+  }
   const helper = document.getElementById("helperMessage");
   
   if (["home", "submit", "myPicks"].includes(tabName)) {
@@ -177,27 +193,35 @@ window.showTab = function(tabName) {
       .forEach(el => el.disabled = true);
   }
 
-  
-if (tabName === "submit") {
-
-  document.getElementById("predictionForm").style.display = "block";
+  if (tabName === "submit") {
 
   if (hasSubmittedCurrentRound) {
 
     document.getElementById("predictionForm").style.display = "none";
 
-    const container = document.getElementById("submitTab");
-    container.innerHTML = `
-      <h3> Tu as déjà soumis</h3>
-      <p>Reviens lors de la prochaine ronde.</p>
+    document.getElementById("submitTab").innerHTML = `
+      <h3>✅ Déjà soumis</h3>
+      <p>Reviens à la prochaine ronde</p>
     `;
 
   } else {
 
-    // ✅ afficher le form
     document.getElementById("predictionForm").style.display = "block";
   }
 }
+  
+if (tabName === "myPicks") {
+
+  document.getElementById("predictionForm").style.display = "block";
+
+  loadUserPicks();
+
+  document.querySelectorAll("#predictionForm select").forEach(el => {
+    el.disabled = true;
+  });
+}
+
+
 
   if (tabName === "rules") {
     document.getElementById("rulesContainer").style.display = "block";
@@ -384,36 +408,26 @@ async function renderFullLeaderboard() {
 }
 
 
-
-
-
 async function loadUserPicks() {
 
   const q = query(
     collection(db, "predictions"),
-    where("userId", "==", currentUser.uid),
-    where("round", "==", currentSubmission)
+    where("userId", "==", currentUser.uid)
   );
 
   const snapshot = await getDocs(q);
 
   if (snapshot.empty) return;
 
-  const data = snapshot.docs[0].data().picks;
+  // dernière soumission
+  const data = snapshot.docs.sort((a,b) =>
+    b.data().round - a.data().round
+  )[0].data().picks;
 
-  // remplir le formulaire
   Object.keys(data).forEach(key => {
     const el = document.getElementById(key);
     if (el) el.value = data[key];
   });
-
-  // désactiver les champs (lecture seule)
-  document.querySelectorAll("#predictionForm select, #predictionForm input")
-    .forEach(el => el.disabled = true);
-  
-  const btn = document.getElementById("submitBtn");
-  if (btn) btn.disabled = true;
-
 }
 
 async function alreadySubmitted() {
@@ -781,8 +795,12 @@ async function generateRound(roundNumber) {
 
   matchups.forEach(match => {
 
-    // si pas encore connu → ne pas afficher
-    if (!match.team1 || !match.team2) return;
+  // si pas encore connu → ne pas afficher
+  const team1 = match.team1 || "";
+  const team2 = match.team2 || "";
+  
+  if (!team1 || !team2) return;
+
 
     html += `
       <div class="matchup">
