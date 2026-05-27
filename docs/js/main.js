@@ -260,7 +260,6 @@ async function renderHome() {
 async function loadPredictionsDetails() {
 
   const round1Map = await getRound1MatchMap();
-
   const snapshot = await getDocs(collection(db, "predictions"));
   const container = document.getElementById("resultsTab");
 
@@ -288,48 +287,6 @@ async function loadPredictionsDetails() {
     const users = Object.values(submissions[round]);
 
     let html = `<h3>Soumission ${round}</h3>`;
-    html += `<table>`;
-
-    html += `<tr><th>Match</th><th>Résultat</th>`;
-    users.forEach(u => {
-      html += `<th>${u.name}</th>`;
-    });
-    html += `</tr>`;
-
-    MATCH_ORDER.forEach(matchKey => {
-
-      let displayName = matchKey;
-
-      if (round1Map[matchKey]) {
-        displayName = round1Map[matchKey];
-      }
-
-      html += `<tr><td>${displayName}</td>`;
-
-      html += `<td>-</td>`; // résultat temporaire
-
-      users.forEach(user => {
-
-        const pick = user.picks[matchKey + "_team"];
-
-        html += `<td>${pick || ""}</td>`;
-      });
-
-      html += `</tr>`;
-    });
-
-    html += `</table>`;
-
-    container.innerHTML += html;
-  });
-}
-
-  // parcourir rounds
-  Object.keys(submissions).sort((a,b)=>a-b).forEach(round => {
-
-    const users = Object.values(submissions[round]);
-
-    let html = `<h3>Soumission ${round}</h3>`;
     html += `<div style="overflow-x:auto;">`;
     html += `<table style="border-collapse: collapse; min-width:800px;">`;
 
@@ -338,17 +295,14 @@ async function loadPredictionsDetails() {
       <th>Match</th>
       <th>Résultat</th>
     `;
-
     users.forEach(u => {
       html += `<th>${u.name}</th>`;
     });
-
     html += `</tr>`;
 
-    // MATCHS
     MATCH_ORDER.forEach(matchKey => {
-      const teamKey = matchKey + "_team";
-      const gamesKey = matchKey + "_games";
+
+      // ✅ Conn Smythe
       if (matchKey === "Conn_Smythe") {
 
         const result = previousData["Conn_Smythe"];
@@ -361,11 +315,7 @@ async function loadPredictionsDetails() {
           let cell = pick || "";
 
           if (isResultAvailable("Conn_Smythe") && pick) {
-            if (pick === result) {
-              cell += ` ✅✅ (+${SCORING.connSmythe})`;
-            } else {
-              cell += " ❌";
-            }
+            cell += (pick === result) ? ` ✅✅ (+${SCORING.connSmythe})` : " ❌";
           }
 
           html += `<td>${cell}</td>`;
@@ -375,33 +325,32 @@ async function loadPredictionsDetails() {
         return;
       }
 
-      
+      const teamKey = matchKey + "_team";
+      const gamesKey = matchKey + "_games";
 
       const resultTeam = previousData[teamKey];
       const resultGames = previousData[gamesKey];
       const roundNum = getRoundFromKey(matchKey);
 
-      
-      let displayName = matchKey;
-      
-      if (round1Map[matchKey]) {
-        displayName = round1Map[matchKey];
-      }
-      
-      html += `<tr><td>${displayName}</td><td>${resultTeam || "-"}</td>`;
-      ``
+      // ✅ Match name (TOR vs OTT)
+      let displayName = round1Map[matchKey] || matchKey;
 
+      html += `<tr><td>${displayName}</td>`;
+
+      // ✅ Résultat
+      let resultDisplay = resultTeam || "-";
+      if (isResultAvailable(gamesKey)) {
+        resultDisplay += ` (${resultGames})`;
+      }
+
+      html += `<td>${resultDisplay}</td>`;
 
       users.forEach(user => {
 
         const pickTeam = user.picks[teamKey];
         const pickGames = user.picks[gamesKey];
 
-        let cell = "";
-
-        if (pickTeam) {
-          cell = `${pickTeam} (${pickGames})`;
-        }
+        let cell = pickTeam ? `${pickTeam} (${pickGames})` : "";
 
         if (isResultAvailable(teamKey) && pickTeam) {
 
@@ -411,19 +360,15 @@ async function loadPredictionsDetails() {
           if (pickTeam === resultTeam) {
 
             if (isResultAvailable(gamesKey) && Number(pickGames) === Number(resultGames)) {
-
               cell += " ✅✅";
               points += SCORING.teamCorrect * mult;
               points += SCORING.gamesCorrect * mult;
-
             } else {
-
               cell += " ✅";
               points += SCORING.teamCorrect * mult;
             }
 
           } else {
-
             cell += " ❌";
           }
 
@@ -431,6 +376,7 @@ async function loadPredictionsDetails() {
             cell += ` (+${points})`;
           }
         }
+
         html += `<td style="text-align:center;">${cell}</td>`;
       });
 
@@ -438,13 +384,10 @@ async function loadPredictionsDetails() {
     });
 
     html += `</table></div><br>`;
-
     container.innerHTML += html;
-
   });
-
 }
-``
+
 
 async function renderFullLeaderboard() {
 
