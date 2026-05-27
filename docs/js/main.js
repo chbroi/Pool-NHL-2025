@@ -5,9 +5,11 @@ import { auth, db, GoogleAuthProvider } from "./firebase.js";
 import { signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { collection, query, where,doc, getDoc, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { currentSubmission, previousData, playersByTeam, round1Ids,SCORING } from "./constants.js";
+import { playersByTeam, round1Ids,SCORING } from "./constants.js";
 
 let currentUser = null;
+let currentSubmission=0;
+let previousData={};
 let hasSubmittedCurrentRound = false;
 
 const MATCH_ORDER = [
@@ -29,11 +31,11 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
 
 // AUTO LOGIN/ LOGOUT
 onAuthStateChanged(auth, async (user) => {
-
+  await loadAppConfig();
   const tabs = document.getElementById("tabs");
   const rulesContainer = document.getElementById("rulesContainer");
   const form = document.getElementById("predictionForm");
-  await loadHelperMessage();
+  
   if (user) {
 
     currentUser = user;
@@ -267,7 +269,7 @@ async function loadPredictionsDetails() {
           const pick = user.picks["Conn_Smythe"];
           let cell = pick || "";
 
-          if (result && pick) {
+          if (isResultAvailable(teamKey) && pickTeam) {
             if (pick === result) {
               cell += ` ✅✅ (+${SCORING.connSmythe})`;
             } else {
@@ -302,14 +304,14 @@ async function loadPredictionsDetails() {
           cell = `${pickTeam} (${pickGames})`;
         }
 
-        if (resultTeam && pickTeam) {
+        if (isResultAvailable(teamKey) && pickTeam) {
 
           let points = 0;
           const mult = SCORING.roundMultiplier[roundNum];
 
           if (pickTeam === resultTeam) {
 
-            if (resultGames && Number(pickGames) === Number(resultGames)) {
+            if (isResultAvailable(gamesKey) && Number(pickGames) === Number(resultGames)) {
 
               cell += " ✅✅";
               points += SCORING.teamCorrect * mult;
@@ -330,7 +332,7 @@ async function loadPredictionsDetails() {
             cell += ` (+${points})`;
           }
         }
-        html += `<td style="${style} text-align:center;">${cell}</td>`;
+        html += `<td style="text-align:center;">${cell}</td>`;
       });
 
       html += `</tr>`;
@@ -435,7 +437,7 @@ function calculateSubmissionScore(picks, results) {
 
         const gamesKey = key.replace("_team", "_games");
 
-        if (results[gamesKey] &&
+        if (isResultAvailable(gamesKey) &&
             Number(picks[gamesKey]) === Number(results[gamesKey])) {
 
           score += SCORING.gamesCorrect * multiplier;
@@ -648,22 +650,38 @@ async function hasSubmittedRound1() {
 };
 
 
-async function loadHelperMessage() {
+async function loadAppConfig() {
 
-  const ref = doc(db, "config", "ui");
-  const snap = await getDoc(ref);
+  // config UI
+  const configRef = doc(db, "config", "ui");
+  const configSnap = await getDoc(configRef);
 
-  if (!snap.exists()) return;
+  if (configSnap.exists()) {
+    const config = configSnap.data();
 
-  const data = snap.data();
+    currentSubmission = config.currentSubmission;
 
-  const helper = document.getElementById("helperMessage");
+    const helper = document.getElementById("helperMessage");
 
-  if (data.submissionOpen) {
-    helper.innerHTML = data.helperMessage;
-  } else {
-    helper.innerHTML = "⏳ Les soumissions sont fermées pour cette ronde";
+    if (config.submissionOpen) {
+      helper.innerHTML = config.helperMessage;
+    } else {
+      helper.innerHTML = "⏳ Les soumissions sont fermées pour cette ronde.";
+    }
   }
+
+  // résultats
+  const resultsRef = doc(db, "results", "current");
+  const resultsSnap = await getDoc(resultsRef);
+
+  if (resultsSnap.exists()) {
+    previousData = resultsSnap.data();
+  }
+}
+
+
+function isResultAvailable(key) {
+  return previousData[key] && previousData[key] !== "";
 }
 
 
