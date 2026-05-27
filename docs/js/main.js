@@ -699,7 +699,7 @@ function isResultAvailable(key) {
 }
 
 
-nc function generateRound(roundNumber) {
+async function generateRound(roundNumber) {
 
   const container = document.getElementById(`round${roundNumber}`);
   if (!container) return;
@@ -719,7 +719,7 @@ nc function generateRound(roundNumber) {
     matchups = [...data.EST, ...data.WEST];
   }
 
-  // ✅ RONDE 2
+  // RONDE 2
   else if (roundNumber === 2) {
     matchups = [
       { id: "R2_EST_1", team1: previousData["R1_EST_1_team"], team2: previousData["R1_EST_2_team"] },
@@ -729,7 +729,7 @@ nc function generateRound(roundNumber) {
     ];
   }
 
-  // ✅ RONDE 3
+  // RONDE 3
   else if (roundNumber === 3) {
     matchups = [
       { id: "R3_EST_1", team1: previousData["R2_EST_1_team"], team2: previousData["R2_EST_2_team"] },
@@ -737,7 +737,7 @@ nc function generateRound(roundNumber) {
     ];
   }
 
-  // ✅ RONDE 4
+  // RONDE 4
   else if (roundNumber === 4) {
     matchups = [
       { id: "R4_final", team1: previousData["R3_EST_1_team"], team2: previousData["R3_WEST_1_team"] }
