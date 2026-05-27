@@ -607,8 +607,10 @@ function attachRound3Listeners() {
     const el = document.getElementById(id);
     if (!el) return;
 
-    el.addEventListener('change funcs.createRound4Matchup(currentSubmission, playersByTeam)    el.addEventListener('change', () =>
-    );
+    el.addEventListener('change', () => {
+      funcs.createRound4Matchup(currentSubmission, playersByTeam);
+    });
+
   });
 }
 
