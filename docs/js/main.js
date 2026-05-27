@@ -10,6 +10,15 @@ import { currentSubmission, previousData, playersByTeam, round1Ids,SCORING } fro
 let currentUser = null;
 let hasSubmittedCurrentRound = false;
 
+const MATCH_ORDER = [
+  "R1_EST_1","R1_EST_2","R1_EST_3","R1_EST_4",
+  "R1_WEST_1","R1_WEST_2","R1_WEST_3","R1_WEST_4",
+  "R2_EST_1","R2_EST_2","R2_WEST_1","R2_WEST_2",
+  "R3_EST_1","R3_WEST_1",
+  "R4_final",
+  "Conn_Smythe"
+];
+
 
 // LOGIN
 document.getElementById("loginBtn").addEventListener("click", async () => {
@@ -20,6 +29,7 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
 
 // AUTO LOGIN/ LOGOUT
 onAuthStateChanged(auth, async (user) => {
+
   const tabs = document.getElementById("tabs");
   const rulesContainer = document.getElementById("rulesContainer");
   const form = document.getElementById("predictionForm");
@@ -34,6 +44,9 @@ onAuthStateChanged(auth, async (user) => {
     document.getElementById("userInfo").innerText =
       "Connecté : " + user.displayName;
 
+    // ✅ reset visuel
+    rulesContainer.style.display = "none";
+
     const eligible = await checkEligibility(db, currentUser, currentSubmission);
 
     if (!eligible) {
@@ -44,41 +57,52 @@ onAuthStateChanged(auth, async (user) => {
       document.getElementById("appContent").prepend(msg);
 
       loadUserPicks();
-
       return;
     }
 
     const alreadyDone = await alreadySubmitted();
     hasSubmittedCurrentRound = alreadyDone;
 
-    // ✅ ===== FLOW =====
+    // ✅ FLOW
 
     if (currentSubmission === 1) {
 
       if (!alreadyDone) {
-        // 👉 NOUVEAU USER
+
         tabs.style.display = "none";
-        form.style.display = "none"
+        form.style.display = "none";
         rulesContainer.style.display = "block";
+
+        showTab("rules"); ✅
+
+        document.getElementById("acceptRulesButton").style.display = "block";
         return;
       }
 
-      // 👉 DÉJÀ SOUMIS
       tabs.style.display = "block";
-      form.style.display = "block";
+      form.style.display = "none";
 
       showTab("home");
 
     } else {
 
-      // 👉 ROUNDS 2+
       tabs.style.display = "block";
 
       if (alreadyDone) {
+
         loadUserPicks();
-        showTab("home");
+
+        if (!document.getElementById("submittedMsg")) {
+          const msg = document.createElement("h3");
+          msg.id = "submittedMsg";
+          msg.innerText = "✅ Tu as déjà soumis. Voici ta prédiction";
+          document.getElementById("submitTab").prepend(msg);
+        }
+
+        showTab("submit");
 
       } else {
+
         showTab("submit");
       }
     }
@@ -106,8 +130,8 @@ window.showTab = function(tabName) {
 
   // ✅ cacher les règles par défaut
   document.getElementById("rulesContainer").style.display = "none";
-
   document.getElementById(tabName + "Tab").style.display = "block";
+  document.getElementById("predictionForm").style.display = "none";
 
   if (tabName === "rules") {
     document.getElementById("rulesContainer").style.display = "block";
@@ -116,11 +140,19 @@ window.showTab = function(tabName) {
   if (tabName === "home") renderHome();
   if (tabName === "results") loadPredictionsDetails();
   if (tabName === "leaderboard") renderFullLeaderboard();
-
+  if (tabName === "submit") {
+    document.getElementById("predictionForm").style.display = "block";
+    if (hasSubmittedCurrentRound) {
+      loadUserPicks();
+    }
+  }
+  if (tabName === "rules") {
+    document.getElementById("rulesContainer").style.display = "block";
+    // ✅ cacher boutons
+    document.getElementById("acceptRulesButton").style.display = "none";
+    document.getElementById("engagementContainer").style.display = "none";
+  }
 };
-
-
-
 
 async function renderHome() {
 
@@ -148,8 +180,6 @@ async function renderHome() {
   }
 }
 
-
-
 async function loadPredictionsDetails() {
 
   const snapshot = await getDocs(collection(db, "predictions"));
@@ -157,7 +187,7 @@ async function loadPredictionsDetails() {
 
   container.innerHTML = "<h2>📊 Résultats (vue tableau)</h2>";
 
-  // ✅ regrouper par soumission
+  // regrouper par soumission
   const submissions = {};
 
   snapshot.forEach(doc => {
