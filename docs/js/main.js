@@ -75,7 +75,7 @@ onAuthStateChanged(auth, async (user) => {
         msg.id = "readonlyMsg";
         msg.innerText = "🔒 Lecture seule - non éligible";
       
-        document.getElementById("homeTab").prepend(msg); ✅
+        document.getElementById("homeTab").prepend(msg);
       }
       loadUserPicks();
       return;
