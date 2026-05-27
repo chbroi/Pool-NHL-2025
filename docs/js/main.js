@@ -4,7 +4,7 @@ import * as funcs from "./functions.js";
 import { auth, db, GoogleAuthProvider } from "./firebase.js";
 import { signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { collection, query, where,doc, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { collection, query, where,doc, getDoc, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { currentSubmission, previousData, playersByTeam, round1Ids,SCORING } from "./constants.js";
 
 let currentUser = null;
