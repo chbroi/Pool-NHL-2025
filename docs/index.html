@@ -6,12 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
  <!-- TABS -->
 <div id="tabs">  
-  <button onclick="showTab('home')"data-tooltip="Page d'accueil du site">Accueil</button>
-  <button onclick="showTab('submit')">Soumettre</button>
-  <button onclick="showTab('myPicks')">Mes prédictions</button>
-  <button onclick="showTab('results')">Résultats</button>
-  <button onclick="showTab('leaderboard')">Classement</button>
-  <button onclick="showTab('rules')">Règlements</button>
+  <button onclick="showTab('home')"data-tooltip=" Onglet de la page d'accueil du site">Accueil</button>
+  <button onclick="showTab('submit')"data-tooltip=" Onglet pour soumettre ses prédictions">Soumettre</button>
+  <button onclick="showTab('myPicks')"data-tooltip=" Onglet pour consulter ses propres prédictions">Mes prédictions</button>
+  <button onclick="showTab('results')"data-tooltip=" Onglet pour consulter les résultats détaillés de tous les participants">Résultats</button>
+  <button onclick="showTab('leaderboard')"data-tooltip=" Onglet pour consulter le classement de tous les participants">Classement</button>
+  <button onclick="showTab('rules')"data-tooltip=" Onglet pour consulter les règlements du pool">>Règlements</button>
 </div>
 <div id="mainHeader">
   <h1>🏒 Pool des séries éliminatoires de la LNH</h1>
@@ -65,12 +65,37 @@
         .button:disabled {
             background-color: #ccc;
             cursor: not-allowed;
-          
+          }
         .activeTab {
             background-color: #007BFF;
             color: white;
           }
-
+        
+        #tabs button {
+          position: relative;
+        }
+        
+        #tabs button::after {
+          content: attr(data-tooltip);
+          position: absolute;
+          bottom: -30px;
+          left: 0;
+          background: black;
+          color: white;
+          padding: 5px;
+          font-size: 12px;
+          border-radius: 5px;
+          display: none;
+          white-space: nowrap;
+         }
+        #tabs button:hover::after {
+          display: block;
+          opacity: 1;
+        }
+        
+        #tabs button::after {
+          opacity: 0;
+          transition: 0.2s;
         }
   </style>
 </head>
@@ -128,9 +153,6 @@
         <p>Charles s'engage à vous envoyer le montant pour ceux finissant sur le podium tel que mentionné dans les règlements.</p>
         <button class="button" id="confirmEngagementButton">Je m'engage</button>
     </div>
-            
-
-
   <form id="predictionForm">    
     <div class="section" id="round1"></div>
     <div class="section" id="round2"></div>
