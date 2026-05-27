@@ -32,6 +32,11 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
 // AUTO LOGIN/ LOGOUT
 onAuthStateChanged(auth, async (user) => {
   await loadAppConfig();
+  for (let i = 1; i <= currentSubmission; i++) {
+    await generateRound(i);
+    attachRound1Listeners();
+  }
+
   const tabs = document.getElementById("tabs");
   const rulesContainer = document.getElementById("rulesContainer");
   const form = document.getElementById("predictionForm");
@@ -692,6 +697,99 @@ async function loadAppConfig() {
 function isResultAvailable(key) {
   return previousData[key] && previousData[key] !== "";
 }
+
+
+nc function generateRound(roundNumber) {
+
+  const container = document.getElementById(`round${roundNumber}`);
+  if (!container) return;
+
+  let matchups = [];
+
+  // ✅ RONDE 1 → Firestore
+  if (roundNumber === 1) {
+
+    const ref = doc(db, "matchups", "round1");
+    const snap = await getDoc(ref);
+
+    if (!snap.exists()) return;
+
+    const data = snap.data();
+
+    matchups = [...data.EST, ...data.WEST];
+  }
+
+  // ✅ RONDE 2
+  else if (roundNumber === 2) {
+    matchups = [
+      { id: "R2_EST_1", team1: previousData["R1_EST_1_team"], team2: previousData["R1_EST_2_team"] },
+      { id: "R2_EST_2", team1: previousData["R1_EST_3_team"], team2: previousData["R1_EST_4_team"] },
+      { id: "R2_WEST_1", team1: previousData["R1_WEST_1_team"], team2: previousData["R1_WEST_2_team"] },
+      { id: "R2_WEST_2", team1: previousData["R1_WEST_3_team"], team2: previousData["R1_WEST_4_team"] }
+    ];
+  }
+
+  // ✅ RONDE 3
+  else if (roundNumber === 3) {
+    matchups = [
+      { id: "R3_EST_1", team1: previousData["R2_EST_1_team"], team2: previousData["R2_EST_2_team"] },
+      { id: "R3_WEST_1", team1: previousData["R2_WEST_1_team"], team2: previousData["R2_WEST_2_team"] }
+    ];
+  }
+
+  // ✅ RONDE 4
+  else if (roundNumber === 4) {
+    matchups = [
+      { id: "R4_final", team1: previousData["R3_EST_1_team"], team2: previousData["R3_WEST_1_team"] }
+    ];
+  }
+
+  let html = `<h2>Ronde ${roundNumber}</h2>`;
+
+  matchups.forEach(match => {
+
+    // si pas encore connu → ne pas afficher
+    if (!match.team1 || !match.team2) return;
+
+    html += `
+      <div class="matchup">
+        <label>${match.team1} vs ${match.team2}</label>
+
+        <select name="${match.id}_team" id="${match.id}_team">
+          <option value="">Choisir</option>
+          <option value="${match.team1}">${match.team1}</option>
+          <option value="${match.team2}">${match.team2}</option>
+        </select>
+
+        <label>en</label>
+
+        <select name="${match.id}_games" id="${match.id}_games">
+          <option value="">Choisir</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+        </select> matchs
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+
+function attachRound1Listeners() {
+
+  round1Ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    el.addEventListener('change', () =>
+      funcs.createRound2Matchups(currentSubmission, round1Ids)
+    );
+  });
+
+}
+
 
 
 window.submitPredictions = submitPredictions;
