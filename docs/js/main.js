@@ -75,7 +75,9 @@ onAuthStateChanged(auth, async (user) => {
       tabs.style.display = "block";
 
       if (alreadyDone) {
+        loadUserPicks();
         showTab("home");
+
       } else {
         showTab("submit");
       }
@@ -93,6 +95,7 @@ onAuthStateChanged(auth, async (user) => {
 
 
 
+
 window.showTab = function(tabName) {
 
   const tabs = ["home", "submit", "results", "leaderboard", "rules"];
@@ -101,25 +104,21 @@ window.showTab = function(tabName) {
     document.getElementById(t + "Tab").style.display = "none";
   });
 
+  // ✅ cacher les règles par défaut
+  document.getElementById("rulesContainer").style.display = "none";
+
   document.getElementById(tabName + "Tab").style.display = "block";
 
-  // 🔥 chargement dynamique
+  if (tabName === "rules") {
+    document.getElementById("rulesContainer").style.display = "block";
+  }
+
   if (tabName === "home") renderHome();
   if (tabName === "results") loadPredictionsDetails();
   if (tabName === "leaderboard") renderFullLeaderboard();
-  if (tabName === "submit") {
-    if (hasSubmittedCurrentRound) {
-      loadUserPicks();
-      document.querySelectorAll("#predictionForm select, #predictionForm input")
-      .forEach(el => el.disabled = true);
-    } 
-    else {
-    document.querySelectorAll("#predictionForm select, #predictionForm input")
-      .forEach(el => el.disabled = false);
-  }
-}
+
 };
-``
+
 
 
 
@@ -156,56 +155,133 @@ async function loadPredictionsDetails() {
   const snapshot = await getDocs(collection(db, "predictions"));
   const container = document.getElementById("resultsTab");
 
-  container.innerHTML = "<h2>📊 Détail des prédictions</h2>";
+  container.innerHTML = "<h2>📊 Résultats (vue tableau)</h2>";
 
-  // regrouper par match
-  const matches = {};
+  // ✅ regrouper par soumission
+  const submissions = {};
 
   snapshot.forEach(doc => {
     const data = doc.data();
 
-    Object.entries(data.picks).forEach(([key, value]) => {
+    if (!submissions[data.round]) {
+      submissions[data.round] = {};
+    }
 
-      if (!matches[key]) matches[key] = {};
-
-      matches[key][data.userName] = value;
-    });
+    submissions[data.round][data.userName] = data.picks;
   });
 
-  Object.keys(matches).forEach(matchKey => {
+  Object.keys(submissions).sort((a,b)=>a-b).forEach(round => {
 
-    const row = document.createElement("div");
-    row.style.borderBottom = "1px solid #ccc";
-    row.style.padding = "8px";
+    const users = Object.keys(submissions[round]);
 
-    let html = `<strong>${matchKey}</strong> | Résultat: ${previousData[matchKey] || "-"}`;
+    let html = `<h2>Soumission ${round}</h2>`;
+    html += `<table border="1" style="border-collapse: collapse;">`;
 
-    Object.entries(matches[matchKey]).forEach(([user, pick]) => {
+    // ✅ header
+    html += "<tr><th>Match</th><th>Résultat</th>";
+    users.forEach(user => {
+      html += `<th>${user}</th>`;
+    });
+    html += "</tr>";
 
-      const result = previousData[matchKey];
-      let color = "black";
-      let symbol = "⏳";
+    // ✅ lignes match
+    MATCH_ORDER.forEach(matchKey => {
 
-      if (result) {
-        if (pick === result) {
-          color = "green";
-          symbol = "✅";
-        } else {
-          color = "red";
-          symbol = "❌";
-        }
+      if (matchKey === "Conn_Smythe") {
+
+        const result = previousData["Conn_Smythe"];
+
+        html += `<tr><td>Conn Smythe</td><td>${result || "-"}</td>`;
+
+        users.forEach(user => {
+
+          const pick = submissions[round][user]["Conn_Smythe"];
+
+          let cell = pick || "";
+
+          if (result) {
+
+            if (pick === result) {
+              cell += " ✅✅";
+              cell += ` (+${SCORING.connSmythe})`;
+            } else {
+              cell += " ❌";
+            }
+          
+          }
+          html += `<td>${cell}</td>`;
+        });
+
+        html += "</tr>";
+        return;
       }
 
-      html += `
-        <span style="margin-left:10px; color:${color}">
-          ${user}: ${pick} ${symbol}
-        </span>
-      `;
+      const teamKey = matchKey + "_team";
+      const gamesKey = matchKey + "_games";
+
+      const resultTeam = previousData[teamKey];
+      const resultGames = previousData[gamesKey];
+      const roundNum = getRoundFromKey(matchKey);
+
+      html += `<tr><td>${matchKey}</td><td>${resultTeam || "-"}</td>`;
+
+      users.forEach(user => {
+
+        const pickTeam = submissions[round][user][teamKey];
+        const pickGames = submissions[round][user][gamesKey];
+
+        let cell = "";
+
+        if (pickTeam) {
+          cell = `${pickTeam} (${pickGames})`;
+        }
+
+        
+if (resultTeam) {
+
+  let points = 0;
+  const mult = SCORING.roundMultiplier[roundNum];
+
+  // ✅ bon gagnant
+  if (pickTeam === resultTeam) {
+
+    // ✅ bon nombre de matchs
+    if (resultGames && Number(pickGames) === Number(resultGames)) {
+
+      cell += " ✅✅"; // 🔥 parfait
+      points += SCORING.teamCorrect * mult;
+      points += SCORING.gamesCorrect * mult;
+
+    } else {
+
+      cell += " ✅"; // 🔥 bon gagnant seulement
+      points += SCORING.teamCorrect * mult;
+    }
+
+  } else {
+
+    cell += " ❌"; // 🔥 mauvais gagnant
+  }
+
+  // ✅ afficher points seulement si match terminé
+  if (points > 0) {
+    cell += ` (+${points})`;
+  }
+}
+
+
+        html += `<td>${cell}</td>`;
+      });
+
+      html += "</tr>";
     });
 
-    row.innerHTML = html;
-    container.appendChild(row);
+    html += "</table>";
+
+    container.innerHTML += html;
+
   });
+
 }
 ``
 
