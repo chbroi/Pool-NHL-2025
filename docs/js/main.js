@@ -4,7 +4,7 @@ import * as funcs from "./functions.js";
 import { auth, db, GoogleAuthProvider } from "./firebase.js";
 import { signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { collection, query, where, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { collection, query, where,doc, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { currentSubmission, previousData, playersByTeam, round1Ids,SCORING } from "./constants.js";
 
 let currentUser = null;
@@ -33,7 +33,7 @@ onAuthStateChanged(auth, async (user) => {
   const tabs = document.getElementById("tabs");
   const rulesContainer = document.getElementById("rulesContainer");
   const form = document.getElementById("predictionForm");
-
+  await loadHelperMessage();
   if (user) {
 
     currentUser = user;
@@ -135,17 +135,46 @@ window.showTab = function(tabName) {
 
   if (tabName === "rules") {
     document.getElementById("rulesContainer").style.display = "block";
+    document.getElementById("acceptRulesButton").style.display = "none";
+    document.getElementById("engagementContainer").style.display = "none";
+
   }
 
   if (tabName === "home") renderHome();
   if (tabName === "results") loadPredictionsDetails();
-  if (tabName === "leaderboard") renderFullLeaderboard();
-  if (tabName === "submit") {
+  if (tabName === "leaderboard") renderFullLeaderboard(); 
+  if (tabName === "myPicks") {
+  
     document.getElementById("predictionForm").style.display = "block";
-    if (hasSubmittedCurrentRound) {
-      loadUserPicks();
-    }
+  
+    loadUserPicks();
+  
+    document.querySelectorAll("#predictionForm select, #predictionForm input")
+      .forEach(el => el.disabled = true);
   }
+
+  
+if (tabName === "submit") {
+
+  document.getElementById("predictionForm").style.display = "block";
+
+  if (hasSubmittedCurrentRound) {
+
+    document.getElementById("predictionForm").style.display = "none";
+
+    const container = document.getElementById("submitTab");
+    container.innerHTML = `
+      <h3> Tu as déjà soumis</h3>
+      <p>Reviens lors de la prochaine ronde.</p>
+    `;
+
+  } else {
+
+    // ✅ afficher le form
+    document.getElementById("predictionForm").style.display = "block";
+  }
+}
+
   if (tabName === "rules") {
     document.getElementById("rulesContainer").style.display = "block";
     // cacher boutons
@@ -185,11 +214,11 @@ async function loadPredictionsDetails() {
   const snapshot = await getDocs(collection(db, "predictions"));
   const container = document.getElementById("resultsTab");
 
-  container.innerHTML = "<h2>📊 Résultats (vue tableau)</h2>";
+  container.innerHTML = `<h2>📊 Résultats</h2>`;
 
-  // regrouper par soumission
   const submissions = {};
 
+  // regrouper par round + userId
   snapshot.forEach(doc => {
     const data = doc.data();
 
@@ -197,52 +226,59 @@ async function loadPredictionsDetails() {
       submissions[data.round] = {};
     }
 
-    submissions[data.round][data.userName] = data.picks;
+    submissions[data.round][data.userId] = {
+      name: data.userName,
+      picks: data.picks
+    };
   });
 
+  // parcourir rounds
   Object.keys(submissions).sort((a,b)=>a-b).forEach(round => {
 
-    const users = Object.keys(submissions[round]);
+    const users = Object.values(submissions[round]);
 
-    let html = `<h2>Soumission ${round}</h2>`;
-    html += `<table border="1" style="border-collapse: collapse;">`;
+    let html = `<h3>Soumission ${round}</h3>`;
+    html += `<div style="overflow-x:auto;">`;
+    html += `<table style="border-collapse: collapse; min-width:800px;">`;
 
-    // header
-    html += "<tr><th>Match</th><th>Résultat</th>";
-    users.forEach(user => {
-      html += `<th>${user}</th>`;
+    // HEADER
+    html += `<tr>
+      <th>Match</th>
+      <th>Résultat</th>
+    `;
+
+    users.forEach(u => {
+      html += `<th>${u.name}</th>`;
     });
-    html += "</tr>";
 
-    // lignes match
+    html += `</tr>`;
+
+    // MATCHS
     MATCH_ORDER.forEach(matchKey => {
 
       if (matchKey === "Conn_Smythe") {
 
         const result = previousData["Conn_Smythe"];
 
-        html += `<tr><td>Conn Smythe</td><td>${result || "-"}</td>`;
+        html += `<tr><td>🏆 Conn Smythe</td><td>${result || "-"}</td>`;
 
         users.forEach(user => {
 
-          const pick = submissions[round][user]["Conn_Smythe"];
-
+          const pick = user.picks["Conn_Smythe"];
           let cell = pick || "";
 
-          if (result) {
-
+          if (result && pick) {
             if (pick === result) {
-              cell += " ✅✅";
-              cell += ` (+${SCORING.connSmythe})`;
+              cell += ` ✅✅ (+${SCORING.connSmythe})`;
             } else {
               cell += " ❌";
             }
-          
           }
+
           html += `<td>${cell}</td>`;
         });
 
-        html += "</tr>";
+        html += `</tr>`;
         return;
       }
 
@@ -257,8 +293,8 @@ async function loadPredictionsDetails() {
 
       users.forEach(user => {
 
-        const pickTeam = submissions[round][user][teamKey];
-        const pickGames = submissions[round][user][gamesKey];
+        const pickTeam = user.picks[teamKey];
+        const pickGames = user.picks[gamesKey];
 
         let cell = "";
 
@@ -266,47 +302,41 @@ async function loadPredictionsDetails() {
           cell = `${pickTeam} (${pickGames})`;
         }
 
-        
-if (resultTeam) {
+        if (resultTeam && pickTeam) {
 
-  let points = 0;
-  const mult = SCORING.roundMultiplier[roundNum];
+          let points = 0;
+          const mult = SCORING.roundMultiplier[roundNum];
 
-  // bon gagnant
-  if (pickTeam === resultTeam) {
+          if (pickTeam === resultTeam) {
 
-    // bon nombre de matchs
-    if (resultGames && Number(pickGames) === Number(resultGames)) {
+            if (resultGames && Number(pickGames) === Number(resultGames)) {
 
-      cell += " ✅✅"; // 🔥 parfait
-      points += SCORING.teamCorrect * mult;
-      points += SCORING.gamesCorrect * mult;
+              cell += " ✅✅";
+              points += SCORING.teamCorrect * mult;
+              points += SCORING.gamesCorrect * mult;
 
-    } else {
+            } else {
 
-      cell += " ✅"; // 🔥 bon gagnant seulement
-      points += SCORING.teamCorrect * mult;
-    }
+              cell += " ✅";
+              points += SCORING.teamCorrect * mult;
+            }
 
-  } else {
+          } else {
 
-    cell += " ❌"; // 🔥 mauvais gagnant
-  }
+            cell += " ❌";
+          }
 
-  // afficher points seulement si match terminé
-  if (points > 0) {
-    cell += ` (+${points})`;
-  }
-}
-
-
-        html += `<td>${cell}</td>`;
+          if (points > 0) {
+            cell += ` (+${points})`;
+          }
+        }
+        html += `<td style="${style} text-align:center;">${cell}</td>`;
       });
 
-      html += "</tr>";
+      html += `</tr>`;
     });
 
-    html += "</table>";
+    html += `</table></div><br>`;
 
     container.innerHTML += html;
 
@@ -314,7 +344,6 @@ if (resultTeam) {
 
 }
 ``
-
 
 async function renderFullLeaderboard() {
 
@@ -407,7 +436,7 @@ function calculateSubmissionScore(picks, results) {
         const gamesKey = key.replace("_team", "_games");
 
         if (results[gamesKey] &&
-            picks[gamesKey] === results[gamesKey]) {
+            Number(picks[gamesKey]) === Number(results[gamesKey])) {
 
           score += SCORING.gamesCorrect * multiplier;
         }
@@ -617,6 +646,26 @@ async function hasSubmittedRound1() {
     alert("Erreur: " + err.message);
   }
 };
+
+
+async function loadHelperMessage() {
+
+  const ref = doc(db, "config", "ui");
+  const snap = await getDoc(ref);
+
+  if (!snap.exists()) return;
+
+  const data = snap.data();
+
+  const helper = document.getElementById("helperMessage");
+
+  if (data.submissionOpen) {
+    helper.innerHTML = data.helperMessage;
+  } else {
+    helper.innerHTML = "⏳ Les soumissions sont fermées pour cette ronde";
+  }
+}
+
 
 window.submitPredictions = submitPredictions;
 
