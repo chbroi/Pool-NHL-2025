@@ -31,11 +31,19 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
 
 // AUTO LOGIN/ LOGOUT
 onAuthStateChanged(auth, async (user) => {
+
   await loadAppConfig();
+  
   for (let i = 1; i <= currentSubmission; i++) {
     await generateRound(i);
-    attachRound1Listeners();
   }
+  
+  // attacher listeners APRÈS génération
+  attachRound1Listeners();
+  attachRound2Listeners();
+  attachRound3Listeners();
+  attachConnSmytheListeners();
+
 
   const tabs = document.getElementById("tabs");
   const rulesContainer = document.getElementById("rulesContainer");
@@ -573,25 +581,48 @@ async function checkEligibility(db, currentUser, currentSubmission) {
 }
 
 
+function attachRound2Listeners() {
 
-document.getElementById('R3_EST_1_team').addEventListener('change', () =>funcs.updateConnSmytheField(playersByTeam));
-document.getElementById('R3_WEST_1_team').addEventListener('change', () =>funcs.updateConnSmytheField(playersByTeam));
-round1Ids.forEach(id => {
-  document.getElementById(id).addEventListener('change',  () =>funcs.createRound2Matchups(currentSubmission, round1Ids));
-});
+  [
+    'R2_EST_1_team', 'R2_EST_2_team',
+    'R2_WEST_1_team', 'R2_WEST_2_team'
+  ].forEach(id => {
 
-[
-  'R2_EST_1_team', 'R2_EST_2_team', 'R2_WEST_1_team', 'R2_WEST_2_team'
-].forEach(id => {
-  document.getElementById(id).addEventListener('change',  () =>funcs.createRound3Matchups(currentSubmission));
-});
+    const el = document.getElementById(id);
+    if (!el) return;
 
-[
-  'R3_EST_1_team', 'R3_WEST_1_team'
-].forEach(id => {
-  document.getElementById(id).addEventListener('change', () =>funcs.createRound4Matchup(currentSubmission, playersByTeam));
-});
-  
+    el.addEventListener('change', () =>
+      funcs.createRound3Matchups(currentSubmission)
+    );
+  });
+}
+
+function attachRound3Listeners() {
+
+  [
+    'R3_EST_1_team',
+    'R3_WEST_1_team'
+  ].forEach(id => {
+
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    el.addEventListener('change funcs.createRound4Matchup(currentSubmission, playersByTeam)    el.addEventListener('change', () =>
+    );
+  });
+}
+
+
+function attachConnSmytheListeners() {
+
+  const est = document.getElementById('R3_EST_1_team');
+  const west = document.getElementById('R3_WEST_1_team');
+
+  if (est) est.addEventListener('change', () => funcs.updateConnSmytheField(playersByTeam));
+  if (west) west.addEventListener('change', () => funcs.updateConnSmytheField(playersByTeam));
+}
+
+
 async function hasSubmittedRound1() {
 
   if (!currentUser) return false;
