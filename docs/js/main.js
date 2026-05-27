@@ -259,6 +259,8 @@ async function renderHome() {
 
 async function loadPredictionsDetails() {
 
+  const round1Map = await getRound1MatchMap();
+
   const snapshot = await getDocs(collection(db, "predictions"));
   const container = document.getElementById("resultsTab");
 
@@ -266,7 +268,7 @@ async function loadPredictionsDetails() {
 
   const submissions = {};
 
-  // regrouper par round + userId
+  // ✅ regrouper
   snapshot.forEach(doc => {
     const data = doc.data();
 
@@ -279,6 +281,48 @@ async function loadPredictionsDetails() {
       picks: data.picks
     };
   });
+
+  // ✅ parcourir
+  Object.keys(submissions).sort((a,b)=>a-b).forEach(round => {
+
+    const users = Object.values(submissions[round]);
+
+    let html = `<h3>Soumission ${round}</h3>`;
+    html += `<table>`;
+
+    html += `<tr><th>Match</th><th>Résultat</th>`;
+    users.forEach(u => {
+      html += `<th>${u.name}</th>`;
+    });
+    html += `</tr>`;
+
+    MATCH_ORDER.forEach(matchKey => {
+
+      let displayName = matchKey;
+
+      if (round1Map[matchKey]) {
+        displayName = round1Map[matchKey];
+      }
+
+      html += `<tr><td>${displayName}</td>`;
+
+      html += `<td>-</td>`; // résultat temporaire
+
+      users.forEach(user => {
+
+        const pick = user.picks[matchKey + "_team"];
+
+        html += `<td>${pick || ""}</td>`;
+      });
+
+      html += `</tr>`;
+    });
+
+    html += `</table>`;
+
+    container.innerHTML += html;
+  });
+}
 
   // parcourir rounds
   Object.keys(submissions).sort((a,b)=>a-b).forEach(round => {
@@ -337,7 +381,16 @@ async function loadPredictionsDetails() {
       const resultGames = previousData[gamesKey];
       const roundNum = getRoundFromKey(matchKey);
 
-      html += `<tr><td>${matchKey}</td><td>${resultTeam || "-"}</td>`;
+      
+      let displayName = matchKey;
+      
+      if (round1Map[matchKey]) {
+        displayName = round1Map[matchKey];
+      }
+      
+      html += `<tr><td>${displayName}</td><td>${resultTeam || "-"}</td>`;
+      ``
+
 
       users.forEach(user => {
 
@@ -408,7 +461,13 @@ async function renderFullLeaderboard() {
 }
 
 
+
 async function loadUserPicks() {
+
+  if (!currentUser) return;
+
+  const container = document.getElementById("myPicksTab");
+  container.innerHTML = "<h2>Mes prédictions</h2>";
 
   const q = query(
     collection(db, "predictions"),
@@ -419,16 +478,23 @@ async function loadUserPicks() {
 
   if (snapshot.empty) return;
 
-  // dernière soumission
   const data = snapshot.docs.sort((a,b) =>
     b.data().round - a.data().round
   )[0].data().picks;
 
   Object.keys(data).forEach(key => {
-    const el = document.getElementById(key);
-    if (el) el.value = data[key];
+
+    const cleanKey = key
+      .replaceAll("_team", "")
+      .replaceAll("_games", " matchs")
+      .replaceAll("_", " ");
+
+    container.innerHTML += `
+      <div><strong>${cleanKey}</strong> : ${data[key]}</div>
+    `;
   });
 }
+
 
 async function alreadySubmitted() {
 
@@ -841,7 +907,24 @@ function attachRound1Listeners() {
 
 }
 
+async function getRound1MatchMap() {
 
+  const ref = doc(db, "results", "round1");
+  const snap = await getDoc(ref);
+
+  if (!snap.exists()) return {};
+
+  const data = snap.data();
+
+  const map = {};
+
+  [...data.EST, ...data.WEST].forEach(match => {
+    map[match.id] = `${match.team1} vs ${match.team2}`;
+  });
+
+  return map;
+}
+``
 
 window.submitPredictions = submitPredictions;
 
