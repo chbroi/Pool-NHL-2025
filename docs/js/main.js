@@ -183,15 +183,15 @@ window.showTab = function(tabName) {
   if (tabName === "home") renderHome();
   if (tabName === "results") loadPredictionsDetails();
   if (tabName === "leaderboard") renderFullLeaderboard(); 
-  if (tabName === "myPicks") {
+    if (tabName === "myPicks") {
   
-    document.getElementById("predictionForm").style.display = "block";
-  
+    // ne PAS afficher le form
+    document.getElementById("predictionForm").style.display = "none";
+    // afficher uniquement tes picks
     loadUserPicks();
-  
-    document.querySelectorAll("#predictionForm select, #predictionForm input")
-      .forEach(el => el.disabled = true);
+    return;
   }
+
 
   if (tabName === "submit") {
 
@@ -209,21 +209,7 @@ window.showTab = function(tabName) {
     document.getElementById("predictionForm").style.display = "block";
   }
 }
-  
-if (tabName === "myPicks") {
-
-  document.getElementById("predictionForm").style.display = "block";
-
-  loadUserPicks();
-
-  document.querySelectorAll("#predictionForm select").forEach(el => {
-    el.disabled = true;
-  });
-}
-
-
-
-  if (tabName === "rules") {
+if (tabName === "rules") {
     document.getElementById("rulesContainer").style.display = "block";
     // cacher boutons
     document.getElementById("acceptRulesButton").style.display = "none";
@@ -333,7 +319,21 @@ async function loadPredictionsDetails() {
       const roundNum = getRoundFromKey(matchKey);
 
       // ✅ Match name (TOR vs OTT)
-      let displayName = round1Map[matchKey] || matchKey;
+      
+      let displayName = round1Map[matchKey];
+      
+      if (!displayName) {
+      
+        const t1 = previousData[getParentMatch(matchKey, 1)];
+        const t2 = previousData[getParentMatch(matchKey, 2)];
+      
+        if (t1 && t2) {
+          displayName = `${t1} vs ${t2}`;
+        } else {
+          displayName = matchKey;
+        }
+      }
+
 
       html += `<tr><td>${displayName}</td>`;
 
@@ -418,26 +418,47 @@ async function loadUserPicks() {
   );
 
   const snapshot = await getDocs(q);
-
   if (snapshot.empty) return;
 
-  const data = snapshot.docs.sort((a,b) =>
+  const picks = snapshot.docs.sort((a,b)=>
     b.data().round - a.data().round
   )[0].data().picks;
 
-  Object.keys(data).forEach(key => {
+  const round1Map = await getRound1MatchMap();
 
-    const cleanKey = key
-      .replaceAll("_team", "")
-      .replaceAll("_games", " matchs")
-      .replaceAll("_", " ");
+  MATCH_ORDER.forEach(matchKey => {
+
+    if (matchKey === "Conn_Smythe") {
+      container.innerHTML += `<div>🏆 Conn Smythe : ${picks[matchKey] || ""}</div>`;
+      return;
+    }
+
+    const teamKey = matchKey + "_team";
+    const gamesKey = matchKey + "_games";
+
+    let team = picks[teamKey];
+    let games = picks[gamesKey];
+
+    if (!team) return;
+
+    let display = round1Map[matchKey] || matchKey;
+
+    // reconstruire R2+ dynamiquement
+    if (!round1Map[matchKey]) {
+
+      const t1 = picks[getParentMatch(matchKey, 1)];
+      const t2 = picks[getParentMatch(matchKey, 2)];
+
+      if (t1 && t2) {
+        display = `${t1} vs ${t2}`;
+      }
+    }
 
     container.innerHTML += `
-      <div><strong>${cleanKey}</strong> : ${data[key]}</div>
+      <div><strong>${display}</strong> → ${team} (${games})</div>
     `;
   });
 }
-
 
 async function alreadySubmitted() {
 
@@ -756,7 +777,8 @@ function isResultAvailable(key) {
 
 
 async function generateRound(roundNumber) {
-
+  if (!picks || Object.keys(picks).length === 0) return
+  const picks = Object.fromEntries(new FormData(document.getElementById("predictionForm")));
   const container = document.getElementById(`round${roundNumber}`);
   if (!container) return;
 
@@ -778,27 +800,32 @@ async function generateRound(roundNumber) {
   // RONDE 2
   else if (roundNumber === 2) {
     matchups = [
-      { id: "R2_EST_1", team1: previousData["R1_EST_1_team"], team2: previousData["R1_EST_2_team"] },
-      { id: "R2_EST_2", team1: previousData["R1_EST_3_team"], team2: previousData["R1_EST_4_team"] },
-      { id: "R2_WEST_1", team1: previousData["R1_WEST_1_team"], team2: previousData["R1_WEST_2_team"] },
-      { id: "R2_WEST_2", team1: previousData["R1_WEST_3_team"], team2: previousData["R1_WEST_4_team"] }
+      { id: "R2_EST_1", team1: picks["R1_EST_1_team"], team2: picks["R1_EST_2_team"] },
+      { id: "R2_EST_2", team1: picks["R1_EST_3_team"], team2: picks["R1_EST_4_team"] },
+      { id: "R2_WEST_1", team1: picks["R1_WEST_1_team"], team2: picks["R1_WEST_2_team"] },
+      { id: "R2_WEST_2", team1: picks["R1_WEST_3_team"], team2: picks["R1_WEST_4_team"] }
     ];
   }
+
 
   // RONDE 3
+  
   else if (roundNumber === 3) {
     matchups = [
-      { id: "R3_EST_1", team1: previousData["R2_EST_1_team"], team2: previousData["R2_EST_2_team"] },
-      { id: "R3_WEST_1", team1: previousData["R2_WEST_1_team"], team2: previousData["R2_WEST_2_team"] }
+      { id: "R3_EST_1", team1: picks["R2_EST_1_team"], team2: picks["R2_EST_2_team"] },
+      { id: "R3_WEST_1", team1: picks["R2_WEST_1_team"], team2: picks["R2_WEST_2_team"] }
     ];
   }
 
+
   // RONDE 4
+  
   else if (roundNumber === 4) {
     matchups = [
-      { id: "R4_final", team1: previousData["R3_EST_1_team"], team2: previousData["R3_WEST_1_team"] }
+      { id: "R4_final", team1: picks["R3_EST_1_team"], team2: picks["R3_WEST_1_team"] }
     ];
   }
+
 
   let html = `<h2>Ronde ${roundNumber}</h2>`;
 
@@ -867,7 +894,24 @@ async function getRound1MatchMap() {
 
   return map;
 }
-``
+
+function getParentMatch(matchKey, teamNb) {
+
+  const map = {
+    R2_EST_1: ["R1_EST_1_team", "R1_EST_2_team"],
+    R2_EST_2: ["R1_EST_3_team", "R1_EST_4_team"],
+    R2_WEST_1: ["R1_WEST_1_team", "R1_WEST_2_team"],
+    R2_WEST_2: ["R1_WEST_3_team", "R1_WEST_4_team"],
+
+    R3_EST_1: ["R2_EST_1_team", "R2_EST_2_team"],
+    R3_WEST_1: ["R2_WEST_1_team", "R2_WEST_2_team"],
+
+    R4_final: ["R3_EST_1_team", "R3_WEST_1_team"]
+  };
+
+  return map[matchKey] ? map[matchKey][teamNb-1] : null;
+}
+
 
 window.submitPredictions = submitPredictions;
 
