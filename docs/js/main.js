@@ -64,7 +64,6 @@ if (!previousData || Object.keys(previousData).length === 0) {
 
   const tabs = document.getElementById("tabs");
   const rulesContainer = document.getElementById("rulesContainer");
-  const form = document.getElementById("predictionForm");
   
   if (user) {
 
