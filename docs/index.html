@@ -97,6 +97,54 @@
           opacity: 0;
           transition: 0.2s;
         }
+        .resultsTable {
+      border-collapse: collapse;
+      min-width: 900px;
+    }
+    
+    .resultsTable th,
+    .resultsTable td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      text-align: center;
+    }
+    
+    /* Sticky header */
+    .resultsTable th {
+      position: sticky;
+      top: 0;
+      background: #eee;
+      z-index: 2;
+    }
+    
+    /* Match column sticky */
+    .resultsTable th:first-child,
+    .resultsTable td:first-child {
+      position: sticky;
+      left: 0;
+      background: #f9f9f9;
+      text-align: left;
+      z-index: 2;
+    }
+    
+    /* Result column sticky */
+    .resultsTable th:nth-child(2),
+    .resultsTable td:nth-child(2) {
+      position: sticky;
+      left: 120px;
+      background: #f1f1f1;
+      z-index: 2;
+    }
+    
+    .roundHeader {
+      background: #ddd;
+      font-weight: bold;
+      text-align: left;
+    }
+    
+    .scoreRow {
+      background: #f5f5f5;
+    }
   </style>
 </head>
 <body>
