@@ -1,5 +1,5 @@
 
- Pool de séries NHL (Web App)
+# Pool de séries NHL (Web App)
 
 Application web permettant de gérer un pool de séries éliminatoires avec :
 
