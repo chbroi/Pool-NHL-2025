@@ -738,7 +738,7 @@ function attachRound2Listeners() {
     if (!el) return;
 
     el.addEventListener('change', () => {
-      createRound3Matchups(currentSubmission); 
+      funcs.createRound3Matchups(currentSubmission); 
     });
 
   });
