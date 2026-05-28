@@ -103,7 +103,7 @@ export function updateConnSmytheField(playersByTeam) {
 
     
 export function createRound2Matchups(currentSubmission, round1Ids) {
-  if (currentSubmission > 1) return;
+  if (currentSubmission >= 2) return;
   const r2Matchups = [
     ['R1_EST_1_team', 'R1_EST_2_team', 'R2_EST_1_team', 'R2_EST_1_label'],
     ['R1_EST_3_team', 'R1_EST_4_team', 'R2_EST_2_team', 'R2_EST_2_label'],
@@ -136,7 +136,7 @@ export function createRound2Matchups(currentSubmission, round1Ids) {
 
 export function createRound3Matchups(currentSubmission) {
 
-  if (currentSubmission !== 2) return;
+  if (currentSubmission >=3 ) return;
 
   const r3Matchups = [
     ['R2_EST_1_team', 'R2_EST_2_team', 'R3_EST_1_team', 'R3_EST_1_label'],
