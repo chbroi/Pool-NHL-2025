@@ -751,8 +751,8 @@ function attachRound2Listeners() {
 }
 
 
-function attachRound3Listeners() {
 
+function attachRound3Listeners() {
   [
     'R3_EST_1_team',
     'R3_WEST_1_team'
@@ -761,21 +761,20 @@ function attachRound3Listeners() {
     const el = document.getElementById(id);
     if (!el) return;
 
-    el.addEventListener('change', async ()=> { 
+    el.addEventListener('change', async () => { 
 
       const data = Object.fromEntries(
         new FormData(document.getElementById('predictionForm'))
       );
+
       await generateRound(4);
 
       funcs.showRoundFromData(4, data);
       funcs.createRound4Matchup();
       funcs.updateConnSmytheField(playersByTeam);
 
-    };
-  });
-}
-
+    });
+  })
 
 
 function attachConnSmytheListeners() {
