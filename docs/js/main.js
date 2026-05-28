@@ -721,6 +721,7 @@ function attachRound1Listeners() {
 
     el.addEventListener('change', () => {
       funcs.createRound2Matchups(currentSubmission, round1Ids);
+      funcs.checkIfReadyToSubmit(currentSubmission);
     });
   });
 }
@@ -744,6 +745,7 @@ function attachRound2Listeners() {
       await generateRound(3);
       funcs.showRoundFromData(3, data);
       attachRound3Listeners()
+      funcs.checkIfReadyToSubmit(currentSubmission);
     });
 
 
@@ -768,6 +770,7 @@ function attachRound3Listeners() {
       document.getElementById('round4').style.display = 'block';
 
       funcs.updateConnSmytheField(playersByTeam);
+      funcs.checkIfReadyToSubmit(currentSubmission);
 
     });
 
