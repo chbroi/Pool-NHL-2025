@@ -739,6 +739,7 @@ function attachRound2Listeners() {
 
     el.addEventListener('change', () => {
     const data = Object.fromEntries(new FormData(document.getElementById('predictionForm')));
+    await generateRound(3);
     funcs.showRoundFromData(3, data)
 
     });
@@ -759,6 +760,7 @@ function attachRound3Listeners() {
 
     el.addEventListener('change', () => {
     const data = Object.fromEntries(new FormData(document.getElementById('predictionForm')));
+    await generateRound(4);
     funcs.showRoundFromData(4, data);
 
     });
