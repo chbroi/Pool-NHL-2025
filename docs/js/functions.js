@@ -1,5 +1,5 @@
 //Ensemble des fonctions utiliser pour le pool.
-
+let participants = [];
 
 export function confirmEngagement() {
 
@@ -258,19 +258,12 @@ export function fetchParticipants() {
 }
 
 export function checkIfReadyToSubmit(currentSubmission) {
-  const requiredFields = ["Conn_Smythe"];
 
-  if (currentSubmission <= 1) {
-    requiredFields.push(
-      "R1_EST_1_team", "R1_EST_1_games",
-      "R1_EST_2_team", "R1_EST_2_games",
-      "R1_EST_3_team", "R1_EST_3_games",
-      "R1_EST_4_team", "R1_EST_4_games",
-      "R1_WEST_1_team", "R1_WEST_1_games",
-      "R1_WEST_2_team", "R1_WEST_2_games",
-      "R1_WEST_3_team", "R1_WEST_3_games",
-      "R1_WEST_4_team", "R1_WEST_4_games"
-    );
+  const requiredFields = [];
+
+  // ✅ seulement les rounds visibles
+  if (currentSubmission === 1) {
+    requiredFields.push(...round1Ids);
   }
 
   if (currentSubmission <= 2) {
@@ -289,27 +282,22 @@ export function checkIfReadyToSubmit(currentSubmission) {
     );
   }
 
-  if (currentSubmission <=  4) {
-    requiredFields.push(
-      "R4_final_team", "R4_final_games"
-    );
-  }
+  const dynamicFields = ["R4_final_team", "R4_final_games", "Conn_Smythe"];
 
-  const allFilled = requiredFields.every(id => {
+  const allFilled = [...requiredFields, ...dynamicFields].every(id => {
+
     const el = document.getElementById(id);
+
     if (!el) return true;
-    const value = el.value.trim();
+
+    const value = el.value?.trim();
     return value !== "";
   });
 
-  const submitBtn = document.getElementById("submitBtn");
-  if (submitBtn) {
-    submitBtn.disabled = !allFilled;
-  }
- 
+  document.getElementById("submitBtn").disabled = !allFilled;
 }
 
-let participants = [];
+
 
 export async function loadParticipants() {
 
