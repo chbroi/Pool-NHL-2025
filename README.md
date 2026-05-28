@@ -73,6 +73,6 @@ Voir `IMPROVEMENTS.md`
 
 ---
 
-## 👨‍💻 Auteur
+## Auteur
 
 Charles Brosseau
