@@ -52,7 +52,15 @@ if (!previousData || Object.keys(previousData).length === 0) {
   attachRound2Listeners();
   attachRound3Listeners();
   attachConnSmytheListeners();
-
+  const form = document.getElementById("predictionForm");
+  
+  if (form && !form.hasListener) {
+    form.addEventListener("change", () => {
+      funcs.checkIfReadyToSubmit(currentSubmission);
+    });
+  
+    form.hasListener = true;
+  }
 
   const tabs = document.getElementById("tabs");
   const rulesContainer = document.getElementById("rulesContainer");
