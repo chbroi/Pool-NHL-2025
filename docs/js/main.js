@@ -290,7 +290,7 @@ async function loadPredictionsDetails() {
 
     MATCH_ORDER.forEach(matchKey => {
 
-      // ✅ Conn Smythe
+      // Conn Smythe
       if (matchKey === "Conn_Smythe") {
 
         const result = previousData["Conn_Smythe"];
@@ -808,16 +808,16 @@ async function generateRound(roundNumber) {
     matchups = [...data.EST, ...data.WEST];
   }
 
-  // ✅ SOURCE FIX
+  // SOURCE FIX
   let source = {};
 
   if (roundNumber <= currentSubmission) {
-    source = previousData;  ✅✅✅
+    source = previousData; 
   } else {
     source = picks;
   }
 
-  // ✅ Ronde 2
+  // Ronde 2
   if (roundNumber === 2) {
     matchups = [
       { id: "R2_EST_1", team1: source["R1_EST_1_team"], team2: source["R1_EST_2_team"] },
