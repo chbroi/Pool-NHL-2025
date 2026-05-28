@@ -777,8 +777,8 @@ function isResultAvailable(key) {
 
 
 async function generateRound(roundNumber) {
-  if (!picks || Object.keys(picks).length === 0) return
   const picks = Object.fromEntries(new FormData(document.getElementById("predictionForm")));
+  if (!picks || Object.keys(picks).length === 0) return
   const container = document.getElementById(`round${roundNumber}`);
   if (!container) return;
 
