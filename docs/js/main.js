@@ -775,7 +775,7 @@ function attachRound3Listeners() {
 
     });
   })
-
+}
 
 function attachConnSmytheListeners() {
 
