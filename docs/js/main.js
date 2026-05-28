@@ -727,30 +727,32 @@ function attachRound1Listeners() {
 
 
 
-function attachRound2Listeners() {
+
+unction attachRound3Listeners() {
 
   [
-    'R2_EST_1_team', 'R2_EST_2_team',
-    'R2_WEST_1_team', 'R2_WEST_2_team'
+    'R3_EST_1_team',
+    'R3_WEST_1_team'
   ].forEach(id => {
 
     const el = document.getElementById(id);
     if (!el) return;
 
-    
-    el.addEventListener('change', async () => {
-    
+    el.addEventListener('change', async ()=> { 
+
       const data = Object.fromEntries(
         new FormData(document.getElementById('predictionForm'))
       );
-      await generateRound(3);
-      funcs.showRoundFromData(3, data);
-      attachRound3Listeners()
-    });
+      await generateRound(4);
 
+      funcs.showRoundFromData(4, data);
+      funcs.createRound4Matchup();
+      funcs.updateConnSmytheField(playersByTeam);
 
+    };
   });
 }
+
 
 
 
