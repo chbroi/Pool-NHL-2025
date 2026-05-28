@@ -345,21 +345,42 @@ async function loadPredictionsDetails() {
         }
 
         // sinon fallback générique
-        if (!displayName) {
-
-          if (matchKey.startsWith("R2")) {
-            displayName = "EST/WEST Match";
-          } 
-          else if (matchKey.startsWith("R3")) {
-            displayName = "Finale de conférence";
-          } 
-          else if (matchKey.startsWith("R4")) {
-            displayName = "Finale Coupe Stanley";
-          } 
-          else {
-            displayName = round1Map[matchKey] || matchKey;
-          }
+        
+      if (!displayName) {
+      
+        // RONDE 2 (divisions)
+        if (matchKey === "R2_EST_1") {
+          displayName = "ATL 1 vs ATL 2";
         }
+        else if (matchKey === "R2_EST_2") {
+          displayName = "MET 1 vs MET 2";
+        }
+        else if (matchKey === "R2_WEST_1") {
+          displayName = "CEN 1 vs CEN 2";
+        }
+        else if (matchKey === "R2_WEST_2") {
+          displayName = "PAC 1 vs PAC 2";
+        }
+      
+        // RONDE 3 (conférences)
+        else if (matchKey === "R3_EST_1") {
+          displayName = "Finale de conférence Est";
+        }
+        else if (matchKey === "R3_WEST_1") {
+          displayName = "Finale de conférence Ouest";
+        }
+      
+        // RONDE 4 (finale)
+        else if (matchKey === "R4_final") {
+          displayName = "Finale de la Coupe Stanley";
+        }
+      
+        // fallback R1
+        else {
+          displayName = round1Map[matchKey] || matchKey;
+        }
+      }
+
 
         html += `<tr><td>${displayName}</td>`;
 
@@ -691,6 +712,21 @@ async function checkEligibility(db, currentUser, currentSubmission) {
 }
 
 
+function attachRound1Listeners() {
+
+  round1Ids.forEach(id => {
+
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    el.addEventListener('change', () => {
+      funcs.createRound2Matchups(currentSubmission, round1Ids);
+    });
+  });
+}
+
+
+
 function attachRound2Listeners() {
 
   [
@@ -701,11 +737,13 @@ function attachRound2Listeners() {
     const el = document.getElementById(id);
     if (!el) return;
 
-    el.addEventListener('change', () =>
-      funcs.createRound3Matchups(currentSubmission)
-    );
+    el.addEventListener('change', () => {
+      createRound3Matchups(currentSubmission); 
+    });
+
   });
 }
+
 
 function attachRound3Listeners() {
 
