@@ -157,6 +157,16 @@ window.showTab = function(tabName) {
     btn.classList.remove("activeTab");
   });
   
+for (let i = 1; i <= 4; i++) {
+  const roundDiv = document.getElementById(`round${i}`);
+  if (!roundDiv) continue;
+
+  if (i === currentSubmission || i === currentSubmission + 1) {
+    roundDiv.style.display = "block"; ✅
+  } else {
+    roundDiv.style.display = "none"; ❌
+  }
+}  
   // trouver le bouton cliqué
   const clickedButton = document.querySelector(`#tabs button[onclick="showTab('${tabName}')"]`);
   if (clickedButton) {
