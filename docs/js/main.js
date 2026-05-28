@@ -40,7 +40,7 @@ if (!previousData || Object.keys(previousData).length === 0) {
   console.warn("previousData vide ❌");
 } else {
 
-  for (let i = 1; i <= currentSubmission; i++) {
+  for (let i = 1; i <= 4; i++) {
     await generateRound(i);
   }
 
