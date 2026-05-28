@@ -10,6 +10,7 @@ import { playersByTeam, round1Ids,SCORING } from "./constants.js";
 let currentUser = null;
 let currentSubmission=0;
 let previousData={};
+let sourceData={};
 let hasSubmittedCurrentRound = false;
 
 const MATCH_ORDER = [
@@ -170,6 +171,7 @@ window.showTab = function(tabName) {
 
   // cacher les règles par défaut
   document.getElementById("rulesContainer").style.display = "none";
+  document.getElementById("myPicksTab").innerHTML = "";
   document.getElementById(tabName + "Tab").style.display = "block";
   document.getElementById("predictionForm").style.display = "none";
 
@@ -403,8 +405,6 @@ async function renderFullLeaderboard() {
   });
 }
 
-
-
 async function loadUserPicks() {
 
   if (!currentUser) return;
@@ -420,45 +420,56 @@ async function loadUserPicks() {
   const snapshot = await getDocs(q);
   if (snapshot.empty) return;
 
-  const picks = snapshot.docs.sort((a,b)=>
-    b.data().round - a.data().round
-  )[0].data().picks;
+  const docs = snapshot.docs.sort((a,b)=>
+    a.data().round - b.data().round
+  );
 
   const round1Map = await getRound1MatchMap();
 
-  MATCH_ORDER.forEach(matchKey => {
+  docs.forEach((doc, index) => {
 
-    if (matchKey === "Conn_Smythe") {
-      container.innerHTML += `<div>🏆 Conn Smythe : ${picks[matchKey] || ""}</div>`;
-      return;
-    }
+    const picks = doc.data().picks;
 
-    const teamKey = matchKey + "_team";
-    const gamesKey = matchKey + "_games";
+    container.innerHTML += `<h3>🔹 Prédiction ${index+1}</h3>`;
 
-    let team = picks[teamKey];
-    let games = picks[gamesKey];
+    MATCH_ORDER.forEach(matchKey => {
 
-    if (!team) return;
-
-    let display = round1Map[matchKey] || matchKey;
-
-    // reconstruire R2+ dynamiquement
-    if (!round1Map[matchKey]) {
-
-      const t1 = picks[getParentMatch(matchKey, 1)];
-      const t2 = picks[getParentMatch(matchKey, 2)];
-
-      if (t1 && t2) {
-        display = `${t1} vs ${t2}`;
+      if (matchKey === "Conn_Smythe") {
+        container.innerHTML += `<div>🏆 Conn Smythe : ${picks[matchKey] || ""}</div>`;
+        return;
       }
-    }
 
-    container.innerHTML += `
-      <div><strong>${display}</strong> → ${team} (${games})</div>
-    `;
+      const teamKey = matchKey + "_team";
+      const gamesKey = matchKey + "_games";
+
+      let team = picks[teamKey];
+      let games = picks[gamesKey];
+
+      if (!team) return;
+
+      let display = round1Map[matchKey];
+
+      if (!display) {
+
+        const t1 = picks[getParentMatch(matchKey, 1)];
+        const t2 = picks[getParentMatch(matchKey, 2)];
+
+        if (t1 && t2) {
+          display = `${t1} vs ${t2}`;
+        } else {
+          return;
+        }
+      }
+
+      container.innerHTML += `
+        <div><strong>${display}</strong> → ${team} (${games})</div>
+      `;
+    });
+
   });
 }
+
+
 
 async function alreadySubmitted() {
 
@@ -777,14 +788,16 @@ function isResultAvailable(key) {
 
 
 async function generateRound(roundNumber) {
-  const picks = Object.fromEntries(new FormData(document.getElementById("predictionForm")));
-  if (!picks || Object.keys(picks).length === 0) return
+
   const container = document.getElementById(`round${roundNumber}`);
   if (!container) return;
 
+  const form = document.getElementById("predictionForm");
+  const picks = form ? Object.fromEntries(new FormData(form)) : {};
+
   let matchups = [];
 
-  // ✅ RONDE 1 → Firestore
+  // ✅ RONDE 1 → Firestore (toujours affichée)
   if (roundNumber === 1) {
 
     const ref = doc(db, "matchups", "round1");
@@ -793,59 +806,71 @@ async function generateRound(roundNumber) {
     if (!snap.exists()) return;
 
     const data = snap.data();
-
     matchups = [...data.EST, ...data.WEST];
   }
 
-  // RONDE 2
-  else if (roundNumber === 2) {
+  // ✅ déterminer la source
+  let source = {};
+
+  if (roundNumber < currentSubmission) {
+    // ✅ rounds déjà joués → résultats réels
+    source = previousData;
+  } else {
+    // ✅ ronde actuelle → picks utilisateur (live)
+    source = picks;
+  }
+
+  // ✅ RONDE 2
+  if (roundNumber === 2) {
     matchups = [
-      { id: "R2_EST_1", team1: picks["R1_EST_1_team"], team2: picks["R1_EST_2_team"] },
-      { id: "R2_EST_2", team1: picks["R1_EST_3_team"], team2: picks["R1_EST_4_team"] },
-      { id: "R2_WEST_1", team1: picks["R1_WEST_1_team"], team2: picks["R1_WEST_2_team"] },
-      { id: "R2_WEST_2", team1: picks["R1_WEST_3_team"], team2: picks["R1_WEST_4_team"] }
+      { id: "R2_EST_1", team1: source["R1_EST_1_team"], team2: source["R1_EST_2_team"] },
+      { id: "R2_EST_2", team1: source["R1_EST_3_team"], team2: source["R1_EST_4_team"] },
+      { id: "R2_WEST_1", team1: source["R1_WEST_1_team"], team2: source["R1_WEST_2_team"] },
+      { id: "R2_WEST_2", team1: source["R1_WEST_3_team"], team2: source["R1_WEST_4_team"] }
     ];
   }
 
-
-  // RONDE 3
-  
-  else if (roundNumber === 3) {
+  // ✅ RONDE 3
+  if (roundNumber === 3) {
     matchups = [
-      { id: "R3_EST_1", team1: picks["R2_EST_1_team"], team2: picks["R2_EST_2_team"] },
-      { id: "R3_WEST_1", team1: picks["R2_WEST_1_team"], team2: picks["R2_WEST_2_team"] }
+      { id: "R3_EST_1", team1: source["R2_EST_1_team"], team2: source["R2_EST_2_team"] },
+      { id: "R3_WEST_1", team1: source["R2_WEST_1_team"], team2: source["R2_WEST_2_team"] }
     ];
   }
 
-
-  // RONDE 4
-  
-  else if (roundNumber === 4) {
+  // ✅ RONDE 4
+  if (roundNumber === 4) {
     matchups = [
-      { id: "R4_final", team1: picks["R3_EST_1_team"], team2: picks["R3_WEST_1_team"] }
+      { id: "R4_final", team1: source["R3_EST_1_team"], team2: source["R3_WEST_1_team"] }
     ];
   }
-
 
   let html = `<h2>Ronde ${roundNumber}</h2>`;
 
   matchups.forEach(match => {
 
-  // si pas encore connu → ne pas afficher
-  const team1 = match.team1 || "";
-  const team2 = match.team2 || "";
-  
-  if (!team1 || !team2) return;
+    const team1 = match.team1 || "";
+    const team2 = match.team2 || "";
 
+    // ✅ si inconnu → afficher placeholder (important)
+    if (!team1 || !team2) {
+
+      html += `
+        <div class="matchup">
+          <label>Match à venir</label>
+        </div>
+      `;
+      return;
+    }
 
     html += `
       <div class="matchup">
-        <label>${match.team1} vs ${match.team2}</label>
+        <label>${team1} vs ${team2}</label>
 
         <select name="${match.id}_team" id="${match.id}_team">
           <option value="">Choisir</option>
-          <option value="${match.team1}">${match.team1}</option>
-          <option value="${match.team2}">${match.team2}</option>
+          <option value="${team1}">${team1}</option>
+          <option value="${team2}">${team2}</option>
         </select>
 
         <label>en</label>
