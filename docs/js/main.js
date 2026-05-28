@@ -744,14 +744,14 @@ function attachRound2Listeners() {
         new FormData(document.getElementById('predictionForm'))
       );
       await generateRound(3);
-    
       funcs.showRoundFromData(3, data);
-    
+      attachRound3Listeners()
     });
 
 
   });
 }
+
 
 
 function attachRound3Listeners() {
@@ -764,23 +764,21 @@ function attachRound3Listeners() {
     const el = document.getElementById(id);
     if (!el) return;
 
-    
-el.addEventListener('change', async () => {
+    el.onchange = async () => { 
 
-  const data = Object.fromEntries(
-    new FormData(document.getElementById('predictionForm'))
-  );
+      const data = Object.fromEntries(
+        new FormData(document.getElementById('predictionForm'))
+      );
 
-  await generateRound(4);
+      await generateRound(4);
 
-  funcs.showRoundFromData(4, data);
+      funcs.showRoundFromData(4, data);
+      funcs.updateConnSmytheField(playersByTeam);
 
-  funcs.updateConnSmytheField(playersByTeam);
-});
-
-
+    };
   });
 }
+
 
 
 function attachConnSmytheListeners() {
