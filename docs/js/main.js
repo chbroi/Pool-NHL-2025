@@ -975,19 +975,6 @@ async function generateRound(roundNumber) {
   container.innerHTML = html;
 }
 
-function attachRound1Listeners() {
-
-  round1Ids.forEach(id => {
-    const el = document.getElementById(id);
-    if (!el) return;
-
-    el.addEventListener('change', () =>
-      funcs.createRound2Matchups(currentSubmission, round1Ids)
-    );
-  });
-
-}
-
 async function getRound1MatchMap() {
 
   const ref = doc(db, "results", "round1");
