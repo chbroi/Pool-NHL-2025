@@ -273,7 +273,7 @@ async function loadPredictionsDetails() {
 
   const submissions = {};
 
-  // regrouper
+  // regrouper par soumission
   snapshot.forEach(doc => {
     const data = doc.data();
 
@@ -287,14 +287,22 @@ async function loadPredictionsDetails() {
     };
   });
 
-  // parcourir
+  // structure des rondes
+  const rounds = {
+    1: MATCH_ORDER.filter(k => k.startsWith("R1")),
+    2: MATCH_ORDER.filter(k => k.startsWith("R2")),
+    3: MATCH_ORDER.filter(k => k.startsWith("R3")),
+    4: MATCH_ORDER.filter(k => k.startsWith("R4"))
+  };
+
+  // parcourir les soumissions
   Object.keys(submissions).sort((a,b)=>a-b).forEach(round => {
 
     const users = Object.values(submissions[round]);
 
     let html = `<h3>Soumission ${round}</h3>`;
     html += `<div style="overflow-x:auto;">`;
-    html += `<table style="border-collapse: collapse; min-width:800px;">`;
+    html += `<table style="border-collapse: collapse; min-width:900px;">`;
 
     // HEADER
     html += `<tr>
@@ -306,105 +314,134 @@ async function loadPredictionsDetails() {
     });
     html += `</tr>`;
 
-    MATCH_ORDER.forEach(matchKey => {
+    // CHAQUE RONDE SÉPARÉE
+    Object.keys(rounds).forEach(r => {
 
-      // Conn Smythe
-      if (matchKey === "Conn_Smythe") {
+      html += `<tr>
+        <td colspan="${users.length + 2}" 
+            style="background:#ddd; font-weight:bold;">
+          Ronde ${r}
+        </td>
+      </tr>`;
 
-        const result = previousData["Conn_Smythe"];
+      rounds[r].forEach(matchKey => {
 
-        html += `<tr><td>🏆 Conn Smythe</td><td>${result || "-"}</td>`;
+        const teamKey = matchKey + "_team";
+        const gamesKey = matchKey + "_games";
 
+        const resultTeam = previousData[teamKey];
+        const resultGames = previousData[gamesKey];
+        const roundNum = getRoundFromKey(matchKey);
+
+        // NOM DU MATCH (intelligent)
+        let displayName;
+
+        // si résultat connu → vraies équipes
+        const t1 = previousData[getParentMatch(matchKey, 1)];
+        const t2 = previousData[getParentMatch(matchKey, 2)];
+
+        if (t1 && t2) {
+          displayName = `${t1} vs ${t2}`;
+        }
+
+        // sinon fallback générique
+        if (!displayName) {
+
+          if (matchKey.startsWith("R2")) {
+            displayName = "EST/WEST Match";
+          } 
+          else if (matchKey.startsWith("R3")) {
+            displayName = "Finale de conférence";
+          } 
+          else if (matchKey.startsWith("R4")) {
+            displayName = "Finale Coupe Stanley";
+          } 
+          else {
+            displayName = round1Map[matchKey] || matchKey;
+          }
+        }
+
+        html += `<tr><td>${displayName}</td>`;
+
+        // afficher résultat
+        let resultDisplay = resultTeam || "-";
+        if (isResultAvailable(gamesKey)) {
+          resultDisplay += ` (${resultGames})`;
+        }
+
+        html += `<td>${resultDisplay}</td>`;
+
+        // picks des utilisateurs
         users.forEach(user => {
 
-          const pick = user.picks["Conn_Smythe"];
-          let cell = pick || "";
+          const pickTeam = user.picks[teamKey];
+          const pickGames = user.picks[gamesKey];
 
-          if (isResultAvailable("Conn_Smythe") && pick) {
-            cell += (pick === result) ? ` ✅✅ (+${SCORING.connSmythe})` : " ❌";
+          let cell = pickTeam ? `${pickTeam} (${pickGames})` : "";
+
+          if (isResultAvailable(teamKey) && pickTeam) {
+
+            let points = 0;
+            const mult = SCORING.roundMultiplier[roundNum];
+
+            if (pickTeam === resultTeam) {
+
+              if (isResultAvailable(gamesKey) &&
+                  Number(pickGames) === Number(resultGames)) {
+
+                cell += " ✅✅";
+                points += SCORING.teamCorrect * mult;
+                points += SCORING.gamesCorrect * mult;
+
+              } else {
+
+                cell += " ✅";
+                points += SCORING.teamCorrect * mult;
+              }
+
+            } else {
+
+              cell += " ❌";
+            }
+
+            if (points > 0) {
+              cell += ` (+${points})`;
+            }
           }
 
-          html += `<td>${cell}</td>`;
+          html += `<td style="text-align:center;">${cell}</td>`;
         });
 
         html += `</tr>`;
-        return;
-      }
-
-      const teamKey = matchKey + "_team";
-      const gamesKey = matchKey + "_games";
-
-      const resultTeam = previousData[teamKey];
-      const resultGames = previousData[gamesKey];
-      const roundNum = getRoundFromKey(matchKey);
-
-      // Match name (TOR vs OTT)
-      
-      let displayName = round1Map[matchKey];
-      
-      if (!displayName) {
-      
-        const t1 = previousData[getParentMatch(matchKey, 1)];
-        const t2 = previousData[getParentMatch(matchKey, 2)];
-      
-        if (t1 && t2) {
-          displayName = `${t1} vs ${t2}`;
-        } else {
-          displayName = matchKey;
-        }
-      }
-
-
-      html += `<tr><td>${displayName}</td>`;
-
-      // Résultat
-      let resultDisplay = resultTeam || "-";
-      if (isResultAvailable(gamesKey)) {
-        resultDisplay += ` (${resultGames})`;
-      }
-
-      html += `<td>${resultDisplay}</td>`;
-
-      users.forEach(user => {
-
-        const pickTeam = user.picks[teamKey];
-        const pickGames = user.picks[gamesKey];
-
-        let cell = pickTeam ? `${pickTeam} (${pickGames})` : "";
-
-        if (isResultAvailable(teamKey) && pickTeam) {
-
-          let points = 0;
-          const mult = SCORING.roundMultiplier[roundNum];
-
-          if (pickTeam === resultTeam) {
-
-            if (isResultAvailable(gamesKey) && Number(pickGames) === Number(resultGames)) {
-              cell += " ✅✅";
-              points += SCORING.teamCorrect * mult;
-              points += SCORING.gamesCorrect * mult;
-            } else {
-              cell += " ✅";
-              points += SCORING.teamCorrect * mult;
-            }
-
-          } else {
-            cell += " ❌";
-          }
-
-          if (points > 0) {
-            cell += ` (+${points})`;
-          }
-        }
-
-        html += `<td style="text-align:center;">${cell}</td>`;
       });
 
-      html += `</tr>`;
     });
+
+    // Conn Smythe
+    html += `<tr>
+      <td>🏆 Conn Smythe</td>
+      <td>${previousData["Conn_Smythe"] || "-"}</td>
+    `;
+
+    users.forEach(user => {
+
+      const pick = user.picks["Conn_Smythe"];
+      let cell = pick || "";
+
+      if (isResultAvailable("Conn_Smythe") && pick) {
+        cell += (pick === previousData["Conn_Smythe"])
+          ? ` ✅✅ (+${SCORING.connSmythe})`
+          : " ❌";
+      }
+
+      html += `<td>${cell}</td>`;
+    });
+
+    html += `</tr>`;
 
     html += `</table></div><br>`;
     container.innerHTML += html;
+
   });
 }
 
