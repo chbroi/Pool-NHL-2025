@@ -161,7 +161,7 @@ for (let i = 1; i <= 4; i++) {
   const roundDiv = document.getElementById(`round${i}`);
   if (!roundDiv) continue;
 
-  if (i === currentSubmission || i === currentSubmission + 1 || ) {
+  if (i === currentSubmission || i === currentSubmission + 1) {
     roundDiv.style.display = "block";
   } else {
     roundDiv.style.display = "none";
