@@ -340,6 +340,7 @@ async function loadPredictionsDetails() {
     // Rounds
     Object.keys(rounds).forEach(r => {
 
+      if (Number(r) < Number(round)) return;
       html += `<tr class="roundHeader">
         <td colspan="${allUsers.length + 2}">Ronde ${r}</td>
       </tr>`;
