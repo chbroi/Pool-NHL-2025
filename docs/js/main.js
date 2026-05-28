@@ -35,9 +35,17 @@ onAuthStateChanged(auth, async (user) => {
 
   await loadAppConfig();
   
+// ✅ sécuriser que previousData est prêt
+if (!previousData || Object.keys(previousData).length === 0) {
+  console.warn("previousData vide ❌");
+} else {
+
   for (let i = 1; i <= currentSubmission; i++) {
     await generateRound(i);
   }
+
+}
+
   
   // attacher listeners APRÈS génération
   attachRound1Listeners();
@@ -760,6 +768,7 @@ async function loadAppConfig() {
 
   if (configSnap.exists()) {
     const config = configSnap.data();
+    
 
     currentSubmission = config.currentSubmission;
 
@@ -773,11 +782,12 @@ async function loadAppConfig() {
   }
 
   // résultats
-  const resultsRef = doc(db, "results", "current");
+  const resultsRef = doc(db, "results", "Current");
   const resultsSnap = await getDoc(resultsRef);
 
   if (resultsSnap.exists()) {
     previousData = resultsSnap.data();
+    console.log("previousData loaded:", previousData);
   }
 }
 
