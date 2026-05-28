@@ -161,7 +161,7 @@ for (let i = 1; i <= 4; i++) {
   const roundDiv = document.getElementById(`round${i}`);
   if (!roundDiv) continue;
 
-  if (i === currentSubmission || i === currentSubmission + 1) {
+  if (i === currentSubmission || i === currentSubmission + 1 || ) {
     roundDiv.style.display = "block";
   } else {
     roundDiv.style.display = "none";
@@ -750,8 +750,6 @@ function attachRound2Listeners() {
   });
 }
 
-
-
 function attachRound3Listeners() {
 
   [
@@ -764,11 +762,13 @@ function attachRound3Listeners() {
 
     el.addEventListener('change', async () => {
 
-      // juste générer la ronde 4 dynamiquement
       await generateRound(4);
 
-      // mettre à jour Conn Smythe
+      // forcer affichage
+      document.getElementById('round4').style.display = 'block';
+
       funcs.updateConnSmytheField(playersByTeam);
+
     });
 
   });
@@ -943,6 +943,7 @@ async function generateRound(roundNumber) {
 
   // Ronde 4
   if (roundNumber === 4) {
+    container.style.display = "block";
     matchups = [
       { id: "R4_final", team1: source["R3_EST_1_team"], team2: source["R3_WEST_1_team"] }
     ];
