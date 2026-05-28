@@ -280,7 +280,7 @@ async function loadPredictionsDetails() {
 
   const submissions = {};
 
-  // regrouper par soumission
+  // Regrouper les données
   snapshot.forEach(doc => {
     const data = doc.data();
 
@@ -294,7 +294,21 @@ async function loadPredictionsDetails() {
     };
   });
 
-  // structure des rondes
+  // ✅ Tous les utilisateurs uniques
+  const allUsersMap = {};
+
+  Object.values(submissions).forEach(roundUsers => {
+    Object.entries(roundUsers).forEach(([userId, user]) => {
+      allUsersMap[userId] = user.name;
+    });
+  });
+
+  const allUsers = Object.entries(allUsersMap).map(([id, name]) => ({
+    id,
+    name
+  }));
+
+  // Structure des rounds
   const rounds = {
     1: MATCH_ORDER.filter(k => k.startsWith("R1")),
     2: MATCH_ORDER.filter(k => k.startsWith("R2")),
@@ -302,31 +316,36 @@ async function loadPredictionsDetails() {
     4: MATCH_ORDER.filter(k => k.startsWith("R4"))
   };
 
-  // parcourir les soumissions
-  Object.keys(submissions).sort((a,b)=>a-b).forEach(round => {
+  // ✅ TOTAL GLOBAL
+  const globalScores = {};
 
-    const users = Object.values(submissions[round]);
+  // Parcours des soumissions
+  Object.keys(submissions).sort((a,b)=>a-b).forEach(round => {
 
     let html = `<h3>Soumission ${round}</h3>`;
     html += `<div style="overflow-x:auto;">`;
-    html += `<table style="border-collapse: collapse; min-width:900px;">`;
+    html += `<table class="resultsTable">`;
 
     // HEADER
     html += `<tr>
       <th>Match</th>
       <th>Résultat</th>
     `;
-    users.forEach(u => {
+
+    allUsers.forEach(u => {
       html += `<th>${u.name}</th>`;
     });
+
     html += `</tr>`;
 
-    // CHAQUE RONDE SÉPARÉE
+    // ✅ score par soumission
+    const submissionScores = {};
+
+    // Rounds internes
     Object.keys(rounds).forEach(r => {
 
-      html += `<tr>
-        <td colspan="${users.length + 2}" 
-            style="background:#ddd; font-weight:bold;">
+      html += `<tr class="roundHeader">
+        <td colspan="${allUsers.length + 2}">
           Ronde ${r}
         </td>
       </tr>`;
@@ -340,95 +359,55 @@ async function loadPredictionsDetails() {
         const resultGames = previousData[gamesKey];
         const roundNum = getRoundFromKey(matchKey);
 
-        // NOM DU MATCH (intelligent)
-        let displayName;
+        // NOM MATCH
+        let displayName = round1Map[matchKey];
 
-        // si résultat connu → vraies équipes
-        const t1 = previousData[getParentMatch(matchKey, 1)];
-        const t2 = previousData[getParentMatch(matchKey, 2)];
-
-        if (t1 && t2) {
-          displayName = `${t1} vs ${t2}`;
+        if (!displayName) {
+          const t1 = previousData[getParentMatch(matchKey, 1)];
+          const t2 = previousData[getParentMatch(matchKey, 2)];
+          if (t1 && t2) displayName = `${t1} vs ${t2}`;
+          else displayName = matchKey;
         }
-
-        // sinon fallback générique
-        
-      if (!displayName) {
-      
-        // RONDE 2 (divisions)
-        if (matchKey === "R2_EST_1") {
-          displayName = "ATL 1 vs ATL 2";
-        }
-        else if (matchKey === "R2_EST_2") {
-          displayName = "MET 1 vs MET 2";
-        }
-        else if (matchKey === "R2_WEST_1") {
-          displayName = "CEN 1 vs CEN 2";
-        }
-        else if (matchKey === "R2_WEST_2") {
-          displayName = "PAC 1 vs PAC 2";
-        }
-      
-        // RONDE 3 (conférences)
-        else if (matchKey === "R3_EST_1") {
-          displayName = "Finale de conférence Est";
-        }
-        else if (matchKey === "R3_WEST_1") {
-          displayName = "Finale de conférence Ouest";
-        }
-      
-        // RONDE 4 (finale)
-        else if (matchKey === "R4_final") {
-          displayName = "Finale de la Coupe Stanley";
-        }
-      
-        // fallback R1
-        else {
-          displayName = round1Map[matchKey] || matchKey;
-        }
-      }
-
 
         html += `<tr><td>${displayName}</td>`;
 
-        // afficher résultat
+        // résultat
         let resultDisplay = resultTeam || "-";
         if (isResultAvailable(gamesKey)) {
           resultDisplay += ` (${resultGames})`;
         }
-
         html += `<td>${resultDisplay}</td>`;
 
-        // picks des utilisateurs
-        users.forEach(user => {
+        // ✅ UTILISATEURS FIXES
+        allUsers.forEach(user => {
 
-          const pickTeam = user.picks[teamKey];
-          const pickGames = user.picks[gamesKey];
+          const userData = submissions[round]?.[user.id];
 
-          let cell = pickTeam ? `${pickTeam} (${pickGames})` : "";
+          const pickTeam = userData?.picks?.[teamKey];
+          const pickGames = userData?.picks?.[gamesKey];
 
-          if (isResultAvailable(teamKey) && pickTeam) {
+          let cell = pickTeam ? `${pickTeam} (${pickGames})` : "-";
 
-            let points = 0;
-            const mult = SCORING.roundMultiplier[roundNum];
+          let points = 0;
+          const mult = SCORING.roundMultiplier[roundNum];
+
+          if (pickTeam && isResultAvailable(teamKey)) {
 
             if (pickTeam === resultTeam) {
 
-              if (isResultAvailable(gamesKey) &&
-                  Number(pickGames) === Number(resultGames)) {
+              points += SCORING.teamCorrect * mult;
 
-                cell += " ✅✅";
-                points += SCORING.teamCorrect * mult;
+              if (
+                isResultAvailable(gamesKey) &&
+                Number(pickGames) === Number(resultGames)
+              ) {
                 points += SCORING.gamesCorrect * mult;
-
+                cell += " ✅✅";
               } else {
-
                 cell += " ✅";
-                points += SCORING.teamCorrect * mult;
               }
 
             } else {
-
               cell += " ❌";
             }
 
@@ -437,7 +416,11 @@ async function loadPredictionsDetails() {
             }
           }
 
-          html += `<td style="text-align:center;">${cell}</td>`;
+          // accumulateur scores
+          submissionScores[user.id] = (submissionScores[user.id] || 0) + points;
+          globalScores[user.id] = (globalScores[user.id] || 0) + points;
+
+          html += `<td>${cell}</td>`;
         });
 
         html += `</tr>`;
@@ -445,32 +428,32 @@ async function loadPredictionsDetails() {
 
     });
 
-    // Conn Smythe
-    html += `<tr>
-      <td>🏆 Conn Smythe</td>
-      <td>${previousData["Conn_Smythe"] || "-"}</td>
-    `;
+    // ✅ LIGNE SCORE SOUMISSION
+    html += `<tr class="scoreRow">
+      <td colspan="2"><strong>Total Soumission</strong></td>`;
 
-    users.forEach(user => {
-
-      const pick = user.picks["Conn_Smythe"];
-      let cell = pick || "";
-
-      if (isResultAvailable("Conn_Smythe") && pick) {
-        cell += (pick === previousData["Conn_Smythe"])
-          ? ` ✅✅ (+${SCORING.connSmythe})`
-          : " ❌";
-      }
-
-      html += `<td>${cell}</td>`;
+    allUsers.forEach(user => {
+      html += `<td><strong>${submissionScores[user.id] || 0}</strong></td>`;
     });
 
     html += `</tr>`;
 
     html += `</table></div><br>`;
     container.innerHTML += html;
-
   });
+
+  // ✅ TABLEAU GLOBAL FINAL
+  let totalHtml = `<h3>Total global</h3>`;
+  totalHtml += `<table class="resultsTable">`;
+  totalHtml += `<tr><th>Nom</th><th>Points</th></tr>`;
+
+  Object.entries(globalScores).forEach(([id, score]) => {
+    totalHtml += `<tr><td>${allUsersMap[id]}</td><td>${score}</td></tr>`;
+  });
+
+  totalHtml += `</table>`;
+
+  container.innerHTML += totalHtml;
 }
 
 
