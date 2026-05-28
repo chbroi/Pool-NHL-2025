@@ -35,10 +35,11 @@ Application web permettant de gérer un pool de séries éliminatoires avec :
 ---
 
 ## Structure
-/main.js        → logique principale / UI
-/functions.js   → logique métier
-/constants.js   → constantes (teams, scoring, etc.)
-/firebase.js    → configuration Firebase
+
+- /main.js        → logique principale / UI
+- /functions.js   → logique métier
+- /constants.js   → constantes (teams, scoring, etc.)
+- /firebase.js    → configuration Firebase
 ---
 
 
