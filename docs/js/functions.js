@@ -135,17 +135,21 @@ export function createRound2Matchups(currentSubmission, round1Ids) {
 }
 
 export function createRound3Matchups(currentSubmission) {
-  if (currentSubmission > 2) return;
+
+  if (currentSubmission !== 2) return;
+
   const r3Matchups = [
     ['R2_EST_1_team', 'R2_EST_2_team', 'R3_EST_1_team', 'R3_EST_1_label'],
     ['R2_WEST_1_team', 'R2_WEST_2_team', 'R3_WEST_1_team', 'R3_WEST_1_label']
   ];
 
   let allFilled = true;
+
   for (const [id1, id2] of r3Matchups) {
+
     const el1 = document.getElementById(id1);
     const el2 = document.getElementById(id2);
-    
+
     if (!el1 || !el2 || !el1.value || !el2.value) {
       allFilled = false;
     }
@@ -154,43 +158,63 @@ export function createRound3Matchups(currentSubmission) {
   if (!allFilled) return;
 
   r3Matchups.forEach(([id1, id2, selectId, labelId]) => {
+
     const team1 = document.getElementById(id1).value;
     const team2 = document.getElementById(id2).value;
+
     const select = document.getElementById(selectId);
     const label = document.getElementById(labelId);
-    
+
     if (!select || !label) return;
-    
+
     label.textContent = `${team1} vs ${team2}`;
+
     select.innerHTML = `
       <option value="">Choisir</option>
       <option value="${team1}">${team1}</option>
       <option value="${team2}">${team2}</option>
     `;
-
   });
 
   document.getElementById('round3').style.display = 'block';
+  const est = document.getElementById("R3_EST_1_team");
+  const west = document.getElementById("R3_WEST_1_team");
+  
+  if (est) {
+    est.onchange = createRound4Matchup;
+  }
+  
+  if (west) {
+    west.onchange = createRound4Matchup;
+  }
 }
 
-export function createRound4Matchup(currentSubmission,playersByTeam) {
-  if (currentSubmission > 3) return;
-  const team1 = document.getElementById('R3_EST_1_team').value;
-  const team2 = document.getElementById('R3_WEST_1_team').value;
+export function createRound4Matchup() {
 
-  if (!team1 || !team2) return;
+  const est = document.getElementById("R3_EST_1_team");
+  const west = document.getElementById("R3_WEST_1_team");
 
-  const select = document.getElementById('R4_final_team');
-  const label = document.getElementById('R4_final_label');
+  if (!est || !west || !est.value || !west.value) return;
+
+  const team1 = est.value;
+  const team2 = west.value;
+
+  const label = document.getElementById("R4_final_label");
+  const select = document.getElementById("R4_final_team");
+
+  if (!label || !select) return;
 
   label.textContent = `${team1} vs ${team2}`;
-  select.innerHTML = `<option value="">Choisir</option>
-                      <option value="${team1}">${team1}</option>
-                      <option value="${team2}">${team2}</option>`;
 
-  document.getElementById('round4').style.display = 'block';
-  updateConnSmytheField(playersByTeam);
+  select.innerHTML = `
+    <option value="">Choisir</option>
+    <option value="${team1}">${team1}</option>
+    <option value="${team2}">${team2}</option>
+  `;
+
+  document.getElementById("round4").style.display = "block";
 }
+
 
 export function fetchParticipants() {
   const url = `https://chbroi.github.io/Pool-NHL-2025/data/participants.json?t=${Date.now()}`;
