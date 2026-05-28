@@ -143,7 +143,10 @@ export function createRound3Matchups(currentSubmission) {
 
   let allFilled = true;
   for (const [id1, id2] of r3Matchups) {
-    if (!document.getElementById(id1).value || !document.getElementById(id2).value) {
+    const el1 = document.getElementById(id1);
+    const el2 = document.getElementById(id2);
+    
+    if (!el1 || !el2 || !el1.value || !el2.value) {
       allFilled = false;
     }
   }
@@ -155,11 +158,16 @@ export function createRound3Matchups(currentSubmission) {
     const team2 = document.getElementById(id2).value;
     const select = document.getElementById(selectId);
     const label = document.getElementById(labelId);
-
+    
+    if (!select || !label) return;
+    
     label.textContent = `${team1} vs ${team2}`;
-    select.innerHTML = `<option value="">Choisir</option>
-                        <option value="${team1}">${team1}</option>
-                        <option value="${team2}">${team2}</option>`;
+    select.innerHTML = `
+      <option value="">Choisir</option>
+      <option value="${team1}">${team1}</option>
+      <option value="${team2}">${team2}</option>
+    `;
+
   });
 
   document.getElementById('round3').style.display = 'block';
