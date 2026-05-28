@@ -40,7 +40,7 @@ if (!previousData || Object.keys(previousData).length === 0) {
   console.warn("previousData vide ❌");
 } else {
 
-  for (let i = 1; i <= 4; i++) {
+  for (let i = 1; i <= currentSubmission; i++) {
     await generateRound(i);
   }
 
@@ -738,7 +738,9 @@ function attachRound2Listeners() {
     if (!el) return;
 
     el.addEventListener('change', () => {
-      funcs.createRound3Matchups(currentSubmission); 
+    const data = Object.fromEntries(new FormData(document.getElementById('predictionForm')));
+    funcs.showRoundFromData(3, data)
+
     });
 
   });
@@ -756,7 +758,9 @@ function attachRound3Listeners() {
     if (!el) return;
 
     el.addEventListener('change', () => {
-      funcs.createRound4Matchup(currentSubmission, playersByTeam);
+    const data = Object.fromEntries(new FormData(document.getElementById('predictionForm')));
+    funcs.showRoundFromData(4, data);
+
     });
 
   });
