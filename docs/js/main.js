@@ -753,6 +753,7 @@ function attachRound2Listeners() {
 
 
 function attachRound3Listeners() {
+
   [
     'R3_EST_1_team',
     'R3_WEST_1_team'
@@ -761,20 +762,16 @@ function attachRound3Listeners() {
     const el = document.getElementById(id);
     if (!el) return;
 
-    el.addEventListener('change', async () => { 
+    el.addEventListener('change', async () => {
 
-      const data = Object.fromEntries(
-        new FormData(document.getElementById('predictionForm'))
-      );
-
+      // juste générer la ronde 4 dynamiquement
       await generateRound(4);
 
-      funcs.showRoundFromData(4, data);
-      funcs.createRound4Matchup();
+      // mettre à jour Conn Smythe
       funcs.updateConnSmytheField(playersByTeam);
-
     });
-  })
+
+  });
 }
 
 function attachConnSmytheListeners() {
@@ -906,7 +903,7 @@ async function generateRound(roundNumber) {
 
   let matchups = [];
 
-  // ✅ Ronde 1
+  // Ronde 1
   if (roundNumber === 1) {
 
     const ref = doc(db, "matchups", "round1");
