@@ -24,22 +24,36 @@ export function confirmEngagement() {
 
 // Fonction pour obtenir les matchs à afficher en fonction de la ronde
 // Fonction générique pour afficher les matchs selon les données précédentes
+
 export function showRoundFromData(roundNumber, data) {
+
   const matchups = getMatchupsForRound(roundNumber);
+
   matchups.forEach(([selectId, labelId, teamId1, teamId2]) => {
+
     const team1 = data[teamId1];
     const team2 = data[teamId2];
+
     const select = document.getElementById(selectId);
     const label = document.getElementById(labelId);
 
+    // CRUCIAL
+    if (!select || !label) return;
+
     if (team1 && team2) {
+
       label.textContent = `${team1} vs ${team2}`;
-      select.innerHTML = `<option value="">Choisir</option>
-                          <option value="${team1}">${team1}</option>
-                          <option value="${team2}">${team2}</option>`;
+
+      select.innerHTML = `
+        <option value="">Choisir</option>
+        <option value="${team1}">${team1}</option>
+        <option value="${team2}">${team2}</option>
+      `;
     }
+
   });
 }
+
 
 // Fonction pour obtenir les matchups en fonction de la ronde
 export function getMatchupsForRound(roundNumber) {
