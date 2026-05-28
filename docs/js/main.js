@@ -280,7 +280,7 @@ async function loadPredictionsDetails() {
 
   const submissions = {};
 
-  // Regrouper les données
+  // Regrouper
   snapshot.forEach(doc => {
     const data = doc.data();
 
@@ -294,12 +294,12 @@ async function loadPredictionsDetails() {
     };
   });
 
-  // ✅ Tous les utilisateurs uniques
+  // ✅ Tous les users
   const allUsersMap = {};
 
   Object.values(submissions).forEach(roundUsers => {
-    Object.entries(roundUsers).forEach(([userId, user]) => {
-      allUsersMap[userId] = user.name;
+    Object.entries(roundUsers).forEach(([id, user]) => {
+      allUsersMap[id] = user.name;
     });
   });
 
@@ -308,7 +308,6 @@ async function loadPredictionsDetails() {
     name
   }));
 
-  // Structure des rounds
   const rounds = {
     1: MATCH_ORDER.filter(k => k.startsWith("R1")),
     2: MATCH_ORDER.filter(k => k.startsWith("R2")),
@@ -316,10 +315,8 @@ async function loadPredictionsDetails() {
     4: MATCH_ORDER.filter(k => k.startsWith("R4"))
   };
 
-  // ✅ TOTAL GLOBAL
   const globalScores = {};
 
-  // Parcours des soumissions
   Object.keys(submissions).sort((a,b)=>a-b).forEach(round => {
 
     let html = `<h3>Soumission ${round}</h3>`;
@@ -338,16 +335,13 @@ async function loadPredictionsDetails() {
 
     html += `</tr>`;
 
-    // ✅ score par soumission
     const submissionScores = {};
 
-    // Rounds internes
+    // Rounds
     Object.keys(rounds).forEach(r => {
 
       html += `<tr class="roundHeader">
-        <td colspan="${allUsers.length + 2}">
-          Ronde ${r}
-        </td>
+        <td colspan="${allUsers.length + 2}">Ronde ${r}</td>
       </tr>`;
 
       rounds[r].forEach(matchKey => {
@@ -359,30 +353,26 @@ async function loadPredictionsDetails() {
         const resultGames = previousData[gamesKey];
         const roundNum = getRoundFromKey(matchKey);
 
-        // NOM MATCH
         let displayName = round1Map[matchKey];
 
         if (!displayName) {
           const t1 = previousData[getParentMatch(matchKey, 1)];
           const t2 = previousData[getParentMatch(matchKey, 2)];
-          if (t1 && t2) displayName = `${t1} vs ${t2}`;
-          else displayName = matchKey;
+          displayName = (t1 && t2) ? `${t1} vs ${t2}` : matchKey;
         }
 
         html += `<tr><td>${displayName}</td>`;
 
-        // résultat
         let resultDisplay = resultTeam || "-";
         if (isResultAvailable(gamesKey)) {
           resultDisplay += ` (${resultGames})`;
         }
+
         html += `<td>${resultDisplay}</td>`;
 
-        // ✅ UTILISATEURS FIXES
         allUsers.forEach(user => {
 
           const userData = submissions[round]?.[user.id];
-
           const pickTeam = userData?.picks?.[teamKey];
           const pickGames = userData?.picks?.[gamesKey];
 
@@ -416,7 +406,6 @@ async function loadPredictionsDetails() {
             }
           }
 
-          // accumulateur scores
           submissionScores[user.id] = (submissionScores[user.id] || 0) + points;
           globalScores[user.id] = (globalScores[user.id] || 0) + points;
 
@@ -425,10 +414,41 @@ async function loadPredictionsDetails() {
 
         html += `</tr>`;
       });
-
     });
 
-    // ✅ LIGNE SCORE SOUMISSION
+    // ✅ Conn Smythe
+    html += `<tr>
+      <td>🏆 Conn Smythe</td>
+      <td>${previousData["Conn_Smythe"] || "-"}</td>
+    `;
+
+    allUsers.forEach(user => {
+
+      const userData = submissions[round]?.[user.id];
+      const pick = userData?.picks?.["Conn_Smythe"];
+
+      let cell = pick || "-";
+      let points = 0;
+
+      if (pick && previousData["Conn_Smythe"]) {
+
+        if (pick === previousData["Conn_Smythe"]) {
+          cell += ` ✅✅ (+${SCORING.connSmythe})`;
+          points += SCORING.connSmythe;
+        } else {
+          cell += " ❌";
+        }
+      }
+
+      submissionScores[user.id] = (submissionScores[user.id] || 0) + points;
+      globalScores[user.id] = (globalScores[user.id] || 0) + points;
+
+      html += `<td>${cell}</td>`;
+    });
+
+    html += `</tr>`;
+
+    // ✅ Total soumission
     html += `<tr class="scoreRow">
       <td colspan="2"><strong>Total Soumission</strong></td>`;
 
@@ -438,22 +458,19 @@ async function loadPredictionsDetails() {
 
     html += `</tr>`;
 
+    // ✅ Total global
+    html += `<tr class="totalGlobalRow">
+      <td colspan="2"><strong>Total Global</strong></td>`;
+
+    allUsers.forEach(user => {
+      html += `<td><strong>${globalScores[user.id] || 0}</strong></td>`;
+    });
+
+    html += `</tr>`;
+
     html += `</table></div><br>`;
     container.innerHTML += html;
   });
-
-  // ✅ TABLEAU GLOBAL FINAL
-  let totalHtml = `<h3>Total global</h3>`;
-  totalHtml += `<table class="resultsTable">`;
-  totalHtml += `<tr><th>Nom</th><th>Points</th></tr>`;
-
-  Object.entries(globalScores).forEach(([id, score]) => {
-    totalHtml += `<tr><td>${allUsersMap[id]}</td><td>${score}</td></tr>`;
-  });
-
-  totalHtml += `</table>`;
-
-  container.innerHTML += totalHtml;
 }
 
 
