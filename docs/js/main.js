@@ -777,14 +777,32 @@ function attachRound3Listeners() {
   });
 }
 
+
 function attachConnSmytheListeners() {
 
   const est = document.getElementById('R3_EST_1_team');
   const west = document.getElementById('R3_WEST_1_team');
 
-  if (est) est.addEventListener('change', () => funcs.updateConnSmytheField(playersByTeam));
-  if (west) west.addEventListener('change', () => funcs.updateConnSmytheField(playersByTeam));
+  if (est) est.addEventListener('change', () => {
+    funcs.updateConnSmytheField(playersByTeam);
+    funcs.checkIfReadyToSubmit(currentSubmission); 
+  });
+
+  if (west) west.addEventListener('change', () => {
+    funcs.updateConnSmytheField(playersByTeam);
+    funcs.checkIfReadyToSubmit(currentSubmission); 
+  });
+
+  //  AJOUT CRITIQUE
+  const conn = document.getElementById("Conn_Smythe");
+
+  if (conn) {
+    conn.addEventListener('change', () => {
+      funcs.checkIfReadyToSubmit(currentSubmission); 
+    });
+  }
 }
+
 
 
 async function hasSubmittedRound1() {
