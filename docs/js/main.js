@@ -35,7 +35,7 @@ onAuthStateChanged(auth, async (user) => {
 
   await loadAppConfig();
   
-// ✅ sécuriser que previousData est prêt
+// sécuriser que previousData est prêt
 if (!previousData || Object.keys(previousData).length === 0) {
   console.warn("previousData vide ❌");
 } else {
@@ -162,9 +162,9 @@ for (let i = 1; i <= 4; i++) {
   if (!roundDiv) continue;
 
   if (i === currentSubmission || i === currentSubmission + 1) {
-    roundDiv.style.display = "block"; ✅
+    roundDiv.style.display = "block";
   } else {
-    roundDiv.style.display = "none"; ❌
+    roundDiv.style.display = "none";
   }
 }  
   // trouver le bouton cliqué
@@ -273,7 +273,7 @@ async function loadPredictionsDetails() {
 
   const submissions = {};
 
-  // ✅ regrouper
+  // regrouper
   snapshot.forEach(doc => {
     const data = doc.data();
 
@@ -287,7 +287,7 @@ async function loadPredictionsDetails() {
     };
   });
 
-  // ✅ parcourir
+  // parcourir
   Object.keys(submissions).sort((a,b)=>a-b).forEach(round => {
 
     const users = Object.values(submissions[round]);
@@ -338,7 +338,7 @@ async function loadPredictionsDetails() {
       const resultGames = previousData[gamesKey];
       const roundNum = getRoundFromKey(matchKey);
 
-      // ✅ Match name (TOR vs OTT)
+      // Match name (TOR vs OTT)
       
       let displayName = round1Map[matchKey];
       
@@ -357,7 +357,7 @@ async function loadPredictionsDetails() {
 
       html += `<tr><td>${displayName}</td>`;
 
-      // ✅ Résultat
+      // Résultat
       let resultDisplay = resultTeam || "-";
       if (isResultAvailable(gamesKey)) {
         resultDisplay += ` (${resultGames})`;
@@ -847,7 +847,7 @@ async function generateRound(roundNumber) {
     ];
   }
 
-  // ✅ Ronde 3
+  // Ronde 3
   if (roundNumber === 3) {
     matchups = [
       { id: "R3_EST_1", team1: source["R2_EST_1_team"], team2: source["R2_EST_2_team"] },
@@ -855,7 +855,7 @@ async function generateRound(roundNumber) {
     ];
   }
 
-  // ✅ Ronde 4
+  // Ronde 4
   if (roundNumber === 4) {
     matchups = [
       { id: "R4_final", team1: source["R3_EST_1_team"], team2: source["R3_WEST_1_team"] }
