@@ -297,7 +297,7 @@ export function checkIfReadyToSubmit(currentSubmission) {
 
   const allFilled = requiredFields.every(id => {
     const el = document.getElementById(id);
-    if (!el) return false;
+    if (!el) return true;
     const value = el.value.trim();
     return value !== "";
   });
