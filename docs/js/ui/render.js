@@ -1,7 +1,7 @@
 import { appState } from "../app/state.js";
 import { getAllPredictions } from "../services/firestoreService.js";
 import { SCORING } from "../constants.js";
-import { computeLeaderboard } from "../main.js"; // temporaire
+import { computeLeaderboard } from "../logic/scoring.js";
 import { isResultAvailable } from "../main.js"; // temporaire
 
 
@@ -211,7 +211,7 @@ export async function loadPredictionsDetails() {
 
 export async function renderHome() {
 
-  const leaderboard = await computeLeaderboard();
+  const leaderboard = await computeLeaderboard(predictions,appState.results);
 
   const container = document.getElementById("homeTab");
   container.innerHTML = "<h2>🏆 Top 10</h2>";
