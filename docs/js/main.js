@@ -8,7 +8,7 @@ import { signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-aut
 import { collection, query, where,doc, getDoc, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { playersByTeam, round1Ids,SCORING } from "./constants.js";
 import { appState } from "./app/state.js"
-import { loadPredictionsDetails } from "./ui/renderResults.js"
+import { loadPredictionsDetails, renderHome, RenderFullLeaderboard} from "./ui/render.js"
 
 
 const MATCH_ORDER = [
@@ -242,45 +242,9 @@ if (tabName === "rules") {
   }
 };
 
-async function renderHome() {
 
-  const leaderboard = await computeLeaderboard();
 
-  const container = document.getElementById("homeTab");
-  container.innerHTML = "<h2>🏆 Top 10</h2>";
 
-  leaderboard.slice(0,10).forEach((p, i) => {
-    const div = document.createElement("div");
-    div.innerHTML = `
-      <strong>#${i+1}</strong> ${p.name} — ${p.score} pts
-    `;
-    container.appendChild(div);
-  });
-
-  // ton score perso
-  if (appState.user) {
-    const user = leaderboard.find(p => p.name === appState.user.displayName);
-    if (user) {
-      const me = document.createElement("h3");
-      me.innerText = `Ton score : ${user.score}`;
-      container.appendChild(me);
-    }
-  }
-}
-
-async function renderFullLeaderboard() {
-
-  const data = await computeLeaderboard();
-
-  const container = document.getElementById("leaderboardTab");
-  container.innerHTML = "<h2>Classement complet</h2>";
-
-  data.forEach((p, i) => {
-    const row = document.createElement("div");
-    row.innerHTML = `#${i+1} - ${p.name} (${p.score} pts)`;
-    container.appendChild(row);
-  });
-}
 
 async function loadUserPicks() {
 
