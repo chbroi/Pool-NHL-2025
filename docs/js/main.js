@@ -10,7 +10,6 @@ import { appState } from "./app/state.js"
 
 let currentUser = null;
 let currentSubmission=0;
-let previousData={};
 let sourceData={};
 let hasSubmittedCurrentRound = false;
 
@@ -37,8 +36,8 @@ onAuthStateChanged(auth, async (user) => {
   await loadAppConfig();
   
 // sécuriser que previousData est prêt
-if (!previousData || Object.keys(previousData).length === 0) {
-  console.warn("previousData vide ❌");
+if (!appState.results || Object.keys(appState.results).length === 0) {
+  console.warn("appState.results vide ❌");
 } else {
 
   for (let i = 1; i <= currentSubmission; i++) {
@@ -351,15 +350,15 @@ async function loadPredictionsDetails() {
         const teamKey = matchKey + "_team";
         const gamesKey = matchKey + "_games";
 
-        const resultTeam = previousData[teamKey];
-        const resultGames = previousData[gamesKey];
+        const resultTeam = appState.results[teamKey];
+        const resultGames = appState.results[gamesKey];
         const roundNum = getRoundFromKey(matchKey);
 
         let displayName = round1Map[matchKey];
 
         if (!displayName) {
-          const t1 = previousData[getParentMatch(matchKey, 1)];
-          const t2 = previousData[getParentMatch(matchKey, 2)];
+          const t1 = appState.results[getParentMatch(matchKey, 1)];
+          const t2 = appState.results[getParentMatch(matchKey, 2)];
           displayName = (t1 && t2) ? `${t1} vs ${t2}` : matchKey;
         }
 
@@ -421,7 +420,7 @@ async function loadPredictionsDetails() {
     // ✅ Conn Smythe
     html += `<tr>
       <td>🏆 Conn Smythe</td>
-      <td>${previousData["Conn_Smythe"] || "-"}</td>
+      <td>${appState.results["Conn_Smythe"] || "-"}</td>
     `;
 
     allUsers.forEach(user => {
@@ -432,9 +431,9 @@ async function loadPredictionsDetails() {
       let cell = pick || "-";
       let points = 0;
 
-      if (pick && previousData["Conn_Smythe"]) {
+      if (pick && appState.results["Conn_Smythe"]) {
 
-        if (pick === previousData["Conn_Smythe"]) {
+        if (pick === appState.results["Conn_Smythe"]) {
           cell += ` ✅✅ (+${SCORING.connSmythe})`;
           points += SCORING.connSmythe;
         } else {
@@ -670,7 +669,7 @@ async function computeLeaderboard() {
 
   Object.values(users).forEach(user => {
 
-    const score = calculateTotalScore(user.predictions, previousData);
+    const score = calculateTotalScore(user.predictions, appState.results);
 
     leaderboard.push({
       name: user.name,
@@ -913,13 +912,13 @@ async function loadAppConfig() {
 
   if (resultsSnap.exists()) {
     appState.results = resultsSnap.data();
-    console.log("previousData loaded:", previousData);
+    console.log("previousData loaded:", appState.results);
   }
 }
 
 
 function isResultAvailable(key) {
-  return previousData[key] && previousData[key] !== "";
+  return appState.results[key] && appState.results[key] !== "";
 }
 
 
@@ -948,7 +947,7 @@ async function generateRound(roundNumber) {
   let source = {};
 
   if (roundNumber <= currentSubmission) {
-    source = previousData; 
+    source = appState.results; 
   } else {
     source = picks;
   }
