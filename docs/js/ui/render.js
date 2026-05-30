@@ -1,6 +1,5 @@
 import { appState } from "../app/state.js";
 import { getAllPredictions } from "../services/firestoreService.js";
-import { appState } from "../app/state.js";
 import { SCORING } from "../constants.js";
 import { computeLeaderboard } from "../main.js"; // temporaire
 import { isResultAvailable } from "../main.js"; // temporaire
@@ -236,7 +235,7 @@ export async function renderHome() {
   }
 }
 
-async function renderFullLeaderboard() {
+export async function renderFullLeaderboard() {
 
   const data = await computeLeaderboard();
 
