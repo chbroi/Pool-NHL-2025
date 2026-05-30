@@ -6,6 +6,7 @@ import { signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/fir
 import { signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { collection, query, where,doc, getDoc, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { playersByTeam, round1Ids,SCORING } from "./constants.js";
+import { appState } from "./app/state.js"
 
 let currentUser = null;
 let currentSubmission=0;
@@ -27,7 +28,7 @@ const MATCH_ORDER = [
 document.getElementById("loginBtn").addEventListener("click", async () => {
   const provider = new GoogleAuthProvider();
   const result = await signInWithPopup(auth, provider);
-  currentUser = result.user;
+  appState.user = result.user;
 });
 
 // AUTO LOGIN/ LOGOUT
@@ -67,7 +68,7 @@ if (!previousData || Object.keys(previousData).length === 0) {
   
   if (user) {
 
-    currentUser = user;
+    appState.user = user;
 
     document.getElementById("loginContainer").style.display = "none";
     document.getElementById("appContent").style.display = "block";
@@ -895,7 +896,7 @@ async function loadAppConfig() {
     const config = configSnap.data();
     
 
-    currentSubmission = config.currentSubmission;
+    appState.submission = config.currentSubmission;
 
     const helper = document.getElementById("helperMessage");
 
@@ -911,7 +912,7 @@ async function loadAppConfig() {
   const resultsSnap = await getDoc(resultsRef);
 
   if (resultsSnap.exists()) {
-    previousData = resultsSnap.data();
+    appState.results = resultsSnap.data();
     console.log("previousData loaded:", previousData);
   }
 }
