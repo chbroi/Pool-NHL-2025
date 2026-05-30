@@ -2,7 +2,7 @@ import { appState } from "../app/state.js";
 import { getAllPredictions } from "../services/firestoreService.js";
 import { SCORING } from "../constants.js";
 import { computeLeaderboard } from "../logic/scoring.js";
-import { isResultAvailable } from "../main.js"; // temporaire
+import { isResultAvailable, getParent } from "../utils/helpers.js"; // temporaire
 
 
 export async function loadPredictionsDetails() {
