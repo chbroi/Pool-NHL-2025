@@ -8,7 +8,7 @@ import { signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-aut
 import { collection, query, where,doc, getDoc, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { playersByTeam, round1Ids,SCORING} from "./constants.js";
 import { appState } from "./app/state.js"
-import { loadPredictionsDetails, renderHome, renderFullLeaderboard} from "./ui/render.js"
+import { loadPredictionsDetails, renderHome, renderFullLeaderboard, loadUserPicks} from "./ui/render.js"
 
 
 const MATCH_ORDER = [
@@ -246,69 +246,7 @@ if (tabName === "rules") {
 
 
 
-async function loadUserPicks() {
 
-  if (!appState.user) return;
-
-  const container = document.getElementById("myPicksTab");
-  container.innerHTML = "<h2>Mes prédictions</h2>";
-
-  const q = query(
-    collection(db, "predictions"),
-    where("userId", "==", appState.user.uid)
-  );
-
-  const snapshot = await getDocs(q);
-  if (snapshot.empty) return;
-
-  const docs = snapshot.docs.sort((a,b)=>
-    a.data().round - b.data().round
-  );
-
-  const round1Map = await getRound1MatchMap();
-
-  docs.forEach((doc, index) => {
-
-    const picks = doc.data().picks;
-
-    container.innerHTML += `<h3>🔹 Prédiction ${index+1}</h3>`;
-
-    MATCH_ORDER.forEach(matchKey => {
-
-      if (matchKey === "Conn_Smythe") {
-        container.innerHTML += `<div>🏆 Conn Smythe : ${picks[matchKey] || ""}</div>`;
-        return;
-      }
-
-      const teamKey = matchKey + "_team";
-      const gamesKey = matchKey + "_games";
-
-      let team = picks[teamKey];
-      let games = picks[gamesKey];
-
-      if (!team) return;
-
-      let display = round1Map[matchKey];
-
-      if (!display) {
-
-        const t1 = picks[getParentMatch(matchKey, 1)];
-        const t2 = picks[getParentMatch(matchKey, 2)];
-
-        if (t1 && t2) {
-          display = `${t1} vs ${t2}`;
-        } else {
-          return;
-        }
-      }
-
-      container.innerHTML += `
-        <div><strong>${display}</strong> → ${team} (${games})</div>
-      `;
-    });
-
-  });
-}
 
 
 
