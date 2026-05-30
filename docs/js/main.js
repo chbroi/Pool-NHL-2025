@@ -8,8 +8,6 @@ import { collection, query, where,doc, getDoc, getDocs, addDoc } from "https://w
 import { playersByTeam, round1Ids,SCORING } from "./constants.js";
 import { appState } from "./app/state.js"
 
-let sourceData={};
-let hasSubmittedCurrentRound = false;
 
 const MATCH_ORDER = [
   "R1_EST_1","R1_EST_2","R1_EST_3","R1_EST_4",
@@ -96,7 +94,7 @@ if (!appState.results || Object.keys(appState.results).length === 0) {
     }
 
     const alreadyDone = await alreadySubmitted();
-    hasSubmittedCurrentRound = alreadyDone;
+    appState.hasSubmitted = alreadyDone;
 
     // FLOW
 
@@ -220,7 +218,7 @@ for (let i = 1; i <= 4; i++) {
 
   if (tabName === "submit") {
 
-  if (hasSubmittedCurrentRound) {
+  if (appState.hasSubmitted) {
 
     document.getElementById("predictionForm").style.display = "none";
 
@@ -864,7 +862,7 @@ async function hasSubmittedRound1() {
     // 2. UI UPDATE (APRÈS)
     alert("Prédictions soumises !");
 
-    hasSubmittedCurrentRound = true;
+    appState.hasSubmitted = true;
 
     document.getElementById("submitBtn").disabled = true;
 
