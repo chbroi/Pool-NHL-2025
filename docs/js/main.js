@@ -270,7 +270,7 @@ async function renderHome() {
 async function loadPredictionsDetails() {
 
   const round1Map = await getRound1MatchMap();
-  const snapshot = await getDocs(collection(db, "predictions"));
+  const predictions = await getAllPredictions();
   const container = document.getElementById("resultsTab");
 
   container.innerHTML = `<h2>📊 Résultats</h2>`;
@@ -278,7 +278,7 @@ async function loadPredictionsDetails() {
   const submissions = {};
 
   // Regrouper
-  snapshot.forEach(doc => {
+  predictions.forEach(doc => {
     const data = doc.data();
 
     if (!submissions[data.round]) {
@@ -291,7 +291,7 @@ async function loadPredictionsDetails() {
     };
   });
 
-  // ✅ Tous les users
+  // Tous les users
   const allUsersMap = {};
 
   Object.values(submissions).forEach(roundUsers => {
@@ -552,17 +552,9 @@ async function loadUserPicks() {
 
 
 
+
 async function alreadySubmitted() {
-
-  const q = query(
-    collection(db, "predictions"),
-    where("userId", "==", appState.user.uid),
-    where("round", "==", appState.submission)
-  );
-
-  const snapshot = await getDocs(q);
-
-  return !snapshot.empty;
+  return await hasSubmitted(appState.user.uid, appState.submission);
 }
 
 function getRoundFromKey(key) {
@@ -852,7 +844,7 @@ async function hasSubmittedRound1() {
   try {
 
     // 1. FIRESTORE (SEULEMENT DATA)
-    await addDoc(collection(db, "predictions"), {
+    await submitPrediction( {
       userId: appState.user.uid,
       userName: appState.user.displayName,
       round: appState.submission,
