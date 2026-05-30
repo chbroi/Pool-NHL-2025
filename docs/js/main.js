@@ -6,9 +6,9 @@ import {getAllPredictions, hasSubmitted, submitPrediction} from "./services/fire
 import { signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { collection, query, where,doc, getDoc, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { playersByTeam, round1Ids,SCORING } from "./constants.js";
+import { playersByTeam, round1Ids,SCORING} from "./constants.js";
 import { appState } from "./app/state.js"
-import { loadPredictionsDetails, renderHome, RenderFullLeaderboard} from "./ui/render.js"
+import { loadPredictionsDetails, renderHome, renderFullLeaderboard} from "./ui/render.js"
 
 
 const MATCH_ORDER = [
