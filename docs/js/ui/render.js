@@ -250,7 +250,7 @@ export async function renderFullLeaderboard() {
   });
 }
 
-async function loadUserPicks() {
+export async function loadUserPicks() {
 
   if (!appState.user) return;
 
