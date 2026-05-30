@@ -8,8 +8,6 @@ import { collection, query, where,doc, getDoc, getDocs, addDoc } from "https://w
 import { playersByTeam, round1Ids,SCORING } from "./constants.js";
 import { appState } from "./app/state.js"
 
-let currentUser = null;
-let currentSubmission=0;
 let sourceData={};
 let hasSubmittedCurrentRound = false;
 
@@ -40,7 +38,7 @@ if (!appState.results || Object.keys(appState.results).length === 0) {
   console.warn("appState.results vide ❌");
 } else {
 
-  for (let i = 1; i <= currentSubmission; i++) {
+  for (let i = 1; i <= appState.submission; i++) {
     await generateRound(i);
   }
 
@@ -56,7 +54,7 @@ if (!appState.results || Object.keys(appState.results).length === 0) {
   
   if (form && !form.hasListener) {
     form.addEventListener("change", () => {
-      funcs.checkIfReadyToSubmit(currentSubmission);
+      funcs.checkIfReadyToSubmit(appState.submission);
     });
   
     form.hasListener = true;
@@ -78,7 +76,7 @@ if (!appState.results || Object.keys(appState.results).length === 0) {
     // reset visuel
     rulesContainer.style.display = "none";
 
-    const eligible = await checkEligibility(db, currentUser, currentSubmission);
+    const eligible = await checkEligibility(db, appState.user, appState.submission);
 
     if (!eligible) {
 
@@ -102,7 +100,7 @@ if (!appState.results || Object.keys(appState.results).length === 0) {
 
     // FLOW
 
-    if (currentSubmission === 1) {
+    if (appState.submission=== 1) {
 
       if (!alreadyDone) {
 
@@ -146,7 +144,7 @@ if (!appState.results || Object.keys(appState.results).length === 0) {
 
   } else {
 
-    currentUser = null;
+    appState.user = null;
 
     document.getElementById("appContent").style.display = "none";
     document.getElementById("loginContainer").style.display = "block";
@@ -168,7 +166,7 @@ for (let i = 1; i <= 4; i++) {
   const roundDiv = document.getElementById(`round${i}`);
   if (!roundDiv) continue;
 
-  if (i === currentSubmission || i === currentSubmission + 1) {
+  if (i === appState.submission|| i === appState.submission+ 1) {
     roundDiv.style.display = "block";
   } else {
     roundDiv.style.display = "none";
@@ -260,8 +258,8 @@ async function renderHome() {
   });
 
   // ton score perso
-  if (currentUser) {
-    const user = leaderboard.find(p => p.name === currentUser.displayName);
+  if (appState.user) {
+    const user = leaderboard.find(p => p.name === appState.user.displayName);
     if (user) {
       const me = document.createElement("h3");
       me.innerText = `Ton score : ${user.score}`;
@@ -491,14 +489,14 @@ async function renderFullLeaderboard() {
 
 async function loadUserPicks() {
 
-  if (!currentUser) return;
+  if (!appState.user) return;
 
   const container = document.getElementById("myPicksTab");
   container.innerHTML = "<h2>Mes prédictions</h2>";
 
   const q = query(
     collection(db, "predictions"),
-    where("userId", "==", currentUser.uid)
+    where("userId", "==", appState.user.uid)
   );
 
   const snapshot = await getDocs(q);
@@ -559,8 +557,8 @@ async function alreadySubmitted() {
 
   const q = query(
     collection(db, "predictions"),
-    where("userId", "==", currentUser.uid),
-    where("round", "==", currentSubmission)
+    where("userId", "==", appState.user.uid),
+    where("round", "==", appState.submission)
   );
 
   const snapshot = await getDocs(q);
@@ -701,7 +699,7 @@ async function checkEligibility(db, currentUser, currentSubmission) {
   if (!currentUser) return false;
 
   // Ronde 1 → toujours OK
-  if (currentSubmission === 1) {
+  if (appState.submission=== 1) {
     return true;
   }
 
@@ -728,8 +726,8 @@ function attachRound1Listeners() {
     if (!el) return;
 
     el.addEventListener('change', () => {
-      funcs.createRound2Matchups(currentSubmission, round1Ids);
-      funcs.checkIfReadyToSubmit(currentSubmission);
+      funcs.createRound2Matchups(appState.submission, round1Ids);
+      funcs.checkIfReadyToSubmit(appState.submission);
     });
   });
 }
@@ -753,7 +751,7 @@ function attachRound2Listeners() {
       await generateRound(3);
       funcs.showRoundFromData(3, data);
       attachRound3Listeners()
-      funcs.checkIfReadyToSubmit(currentSubmission);
+      funcs.checkIfReadyToSubmit(appState.submission);
     });
 
 
@@ -778,7 +776,7 @@ function attachRound3Listeners() {
       document.getElementById('round4').style.display = 'block';
 
       funcs.updateConnSmytheField(playersByTeam);
-      funcs.checkIfReadyToSubmit(currentSubmission);
+      funcs.checkIfReadyToSubmit(appState.submission);
 
     });
 
@@ -793,12 +791,12 @@ function attachConnSmytheListeners() {
 
   if (est) est.addEventListener('change', () => {
     funcs.updateConnSmytheField(playersByTeam);
-    funcs.checkIfReadyToSubmit(currentSubmission); 
+    funcs.checkIfReadyToSubmit(appState.submission); 
   });
 
   if (west) west.addEventListener('change', () => {
     funcs.updateConnSmytheField(playersByTeam);
-    funcs.checkIfReadyToSubmit(currentSubmission); 
+    funcs.checkIfReadyToSubmit(appState.submission); 
   });
 
   //  AJOUT CRITIQUE
@@ -806,7 +804,7 @@ function attachConnSmytheListeners() {
 
   if (conn) {
     conn.addEventListener('change', () => {
-      funcs.checkIfReadyToSubmit(currentSubmission); 
+      funcs.checkIfReadyToSubmit(appState.submission); 
     });
   }
 }
@@ -815,11 +813,11 @@ function attachConnSmytheListeners() {
 
 async function hasSubmittedRound1() {
 
-  if (!currentUser) return false;
+  if (!appState.user) return false;
 
   const q = query(
     collection(db, "predictions"),
-    where("userId", "==", currentUser.uid),
+    where("userId", "==", appState.user.uid),
     where("round", "==", 1)
   );
 
@@ -830,7 +828,7 @@ async function hasSubmittedRound1() {
 
   async function submitPredictions() {
 
-  if (!currentUser) {
+  if (!appState.user) {
     alert("Tu dois être connecté.");
     return;
   }
@@ -856,9 +854,9 @@ async function hasSubmittedRound1() {
 
     // 1. FIRESTORE (SEULEMENT DATA)
     await addDoc(collection(db, "predictions"), {
-      userId: currentUser.uid,
-      userName: currentUser.displayName,
-      round: currentSubmission,
+      userId: appState.user.uid,
+      userName: appState.user.displayName,
+      round: appState.submission,
       picks: data,
       timestamp: Date.now()
     });
@@ -912,7 +910,6 @@ async function loadAppConfig() {
 
   if (resultsSnap.exists()) {
     appState.results = resultsSnap.data();
-    console.log("previousData loaded:", appState.results);
   }
 }
 
@@ -946,7 +943,7 @@ async function generateRound(roundNumber) {
   // SOURCE FIX
   let source = {};
 
-  if (roundNumber <= currentSubmission) {
+  if (roundNumber <= appState.submission) {
     source = appState.results; 
   } else {
     source = picks;
