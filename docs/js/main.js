@@ -279,8 +279,7 @@ async function loadPredictionsDetails() {
 
   // Regrouper
   predictions.forEach(doc => {
-    const data = doc.data();
-
+    
     if (!submissions[data.round]) {
       submissions[data.round] = {};
     }
