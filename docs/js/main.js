@@ -21,6 +21,11 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
   const result = await signInWithPopup(auth, provider);
   appState.user = result.user;
 });
+// LOGOUT
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+  await signOut(auth);
+});
+
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -100,12 +105,52 @@ onAuthStateChanged(auth, async (user) => {
 
   const tabs = document.getElementById("tabs");
   const rulesContainer = document.getElementById("rulesContainer");
+  const loginBtn = document.getElementById("loginBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+  const userInfo = document.getElementById("userInfo");
+  const appContent = document.getElementById("appContent");
+
   
   if (user) {
 
     appState.user = user;
+    // UI connecté
+    if (loginBtn) loginBtn.style.display = "none";
+    if (logoutBtn) logoutBtn.style.display = "inline-block";
+  
+    if (userInfo) {
+      userInfo.innerText = user.displayName;
+    }
+  
+    if (appContent) appContent.style.display = "block";
+  
+  } else {
+  
+    appState.user = null;
+  
+    // UI déconnecté
+    if (loginBtn) loginBtn.style.display = "inline-block";
+    if (logoutBtn) logoutBtn.style.display = "none";
+  
+    if (userInfo) {
+      userInfo.innerText = "";
+    }
+  
+    if (appContent) appContent.style.display = "none";
+  
+    // message
+    const home = document.getElementById("homeTab");
+    if (home) {
+      home.innerHTML = `
+        <div class="card">
+          <h2>Bienvenue 👋</h2>
+          <p>Veuillez vous connecter pour accéder au pool.</p>
+        </div>
+      `;
+    }
+  }
 
-    document.getElementById("loginContainer").style.display = "none";
+
     document.getElementById("appContent").style.display = "block";
 
     document.getElementById("userInfo").innerText =
