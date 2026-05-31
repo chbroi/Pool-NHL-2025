@@ -20,6 +20,7 @@ export async function checkEligibility(userId, submission) {
 
 
 
+
 export async function loadAppConfig() {
 
   const configRef = doc(db, "config", "ui");
