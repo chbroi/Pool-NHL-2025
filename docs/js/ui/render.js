@@ -259,23 +259,21 @@ export async function loadUserPicks() {
   const container = document.getElementById("myPicksTab");
   container.innerHTML = "<h2>Mes prédictions</h2>";
 
-  const q = query(
-    collection(db, "predictions"),
-    where("userId", "==", appState.user.uid)
-  );
+  
+  const allPredictions = await getAllPredictions();
+  
+  const docs = allPredictions
+    .filter(p => p.userId === appState.user.uid)
+    .sort((a,b) => a.round - b.round);
+  
+  if (docs.length === 0) return;
 
-  const snapshot = await getDocs(q);
-  if (snapshot.empty) return;
-
-  const docs = snapshot.docs.sort((a,b)=>
-    a.data().round - b.data().round
-  );
 
   const round1Map = await getRound1MatchMap();
 
   docs.forEach((doc, index) => {
 
-    const picks = doc.data().picks;
+    const picks = doc.picks;
 
     container.innerHTML += `<h3>🔹 Prédiction ${index+1}</h3>`;
 
