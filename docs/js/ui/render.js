@@ -1,9 +1,10 @@
 import { appState } from "../app/state.js";
 import { getAllPredictions } from "../services/firestoreService.js";
 import { SCORING } from "../constants.js";
-import { computeLeaderboard } from "../logic/scoring.js";
+import { computeLeaderboardimport, getRoundFromKey} from "../logic/scoring.js";
 import { isResultAvailable, getParentMatch} from "../utils/helpers.js";
 import { getRound1MatchMap } from "../services/matchService.js";
+
 
 
 export async function loadPredictionsDetails() {
@@ -11,6 +12,7 @@ export async function loadPredictionsDetails() {
   const round1Map = await getRound1MatchMap();
   const predictions = await getAllPredictions();
   const container = document.getElementById("resultsTab");
+  
 
   container.innerHTML = `<h2>📊 Résultats</h2>`;
 
@@ -52,7 +54,7 @@ export async function loadPredictionsDetails() {
 
   const globalScores = {};
 
-  Object.keys(submissions).sort((a,b)=>a-b).forEach(round => {
+  Object.keys(submissions).map(Number).sort((a,b)=>a-b).forEach(round => {
 
     let html = `<h3>Soumission ${round}</h3>`;
     html += `<div style="overflow-x:auto;">`;
