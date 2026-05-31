@@ -1,6 +1,6 @@
 //Constantes nécessaires au foctionnement du Pool
 
-const MATCH_ORDER = [
+export const MATCH_ORDER = [
   "R1_EST_1","R1_EST_2","R1_EST_3","R1_EST_4",
   "R1_WEST_1","R1_WEST_2","R1_WEST_3","R1_WEST_4",
   "R2_EST_1","R2_EST_2","R2_WEST_1","R2_WEST_2",
