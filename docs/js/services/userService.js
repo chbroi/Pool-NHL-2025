@@ -1,5 +1,5 @@
 import { db } from "../firebase.js";
-import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { collection, query, where, doc,getDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 export async function checkEligibility(userId, submission) {
 
