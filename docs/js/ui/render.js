@@ -313,7 +313,7 @@ export async function loadUserPicks() {
 
   });
 }
-async function generateRound(roundNumber) {
+export async function generateRound(roundNumber) {
 
   const container = document.getElementById(`round${roundNumber}`);
   if (!container) return;
