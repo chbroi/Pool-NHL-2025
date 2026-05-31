@@ -19,32 +19,18 @@ export async function checkEligibility(userId, submission) {
 }
 
 
+
 export async function loadAppConfig() {
 
-  // config UI
   const configRef = doc(db, "config", "ui");
   const configSnap = await getDoc(configRef);
 
-  if (configSnap.exists()) {
-    const config = configSnap.data();
-    
-
-    appState.submission = config.currentSubmission;
-
-    const helper = document.getElementById("helperMessage");
-
-    if (config.submissionOpen) {
-      helper.innerHTML = config.helperMessage;
-    } else {
-      helper.innerHTML = "⏳ Les soumissions sont fermées pour cette ronde.";
-    }
-  }
-
-  // résultats
   const resultsRef = doc(db, "results", "Current");
   const resultsSnap = await getDoc(resultsRef);
 
-  if (resultsSnap.exists()) {
-    appState.results = resultsSnap.data();
-  }
+  return {
+    config: configSnap.exists() ? configSnap.data() : null,
+    results: resultsSnap.exists() ? resultsSnap.data() : {}
+  };
 }
+
