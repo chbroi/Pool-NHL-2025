@@ -1,7 +1,7 @@
 import { appState } from "../app/state.js";
 import { getAllPredictions } from "../services/firestoreService.js";
 import { SCORING } from "../constants.js";
-import { computeLeaderboardimport, getRoundFromKey} from "../logic/scoring.js";
+import { computeLeaderboard, getRoundFromKey} from "../logic/scoring.js";
 import { isResultAvailable, getParentMatch} from "../utils/helpers.js";
 import { getRound1MatchMap } from "../services/matchService.js";
 
