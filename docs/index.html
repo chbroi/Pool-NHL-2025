@@ -122,17 +122,33 @@
       color: white;
     }
     
+    
     #rightControls {
       display: flex;
       align-items: center;
       gap: 10px;
-      border-radius: 8px;
+    }
+
+    
+    #rightControls button {
+      background: transparent;
+      border: 1px solid rgba(0,0,0,0.2);
       padding: 6px 10px;
-      background: var(--primary);
-        color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text);
     }
     
+    #rightControls button:hover {
+      background: rgba(0,0,0,0.05);
+    }
+
     
+    #userInfo {
+      font-size: 14px;
+      margin-right: 5px;
+      opacity: 0.85;
+    }
     #helperMessage {
       text-align: center;
       font-size: 15px;
@@ -221,11 +237,14 @@
       <button onclick="showTab('rules')">Règlements</button>
     </div>
   
+    
     <div id="rightControls">
       <button id="loginBtn">Connexion</button>
+      <span id="userInfo"></span>
       <button id="logoutBtn" style="display:none;">Déconnexion</button>
       <button id="themeToggle">🌙</button>
     </div>
+
   
   </div>
 
