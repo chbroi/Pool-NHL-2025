@@ -1,33 +1,13 @@
 //Constantes nécessaires au foctionnement du Pool
 
-export const currentSubmission = 1; // à modifier pour 1, 2, 3, 4 selon le moment
-
-//Résultats jusqu'à présent
-export const previousData = {
-  // Ronde 1
-  R1_EST_1_team: "TOR",
-  R1_EST_2_team: "FLA",
-  R1_EST_3_team: "WSH",
-  R1_EST_4_team: "CAR",
-  R1_WEST_1_team: "WPG",
-  R1_WEST_2_team: "DAL",
-  R1_WEST_3_team: "VGK",
-  R1_WEST_4_team: "EDM",
-  
-  // Ronde 2
-  R2_EST_1_team: "FLA",  
-  R2_EST_2_team: "CAR",  
-  R2_WEST_1_team: "DAL", 
-  R2_WEST_2_team: "EDM", 
-
-  // Ronde 3
-  R3_EST_1_team: "FLA",
-  R3_WEST_1_team: "EDM",
-
-  // Ronde 4 (Finale de la Coupe Stanley)
-  R4_final_team: "",     // À choisir entre TOR (EST) et WPG (OUEST)
-  R4_final_games: "",    // Choisir le nombre de matchs (4, 5, 6, 7)
-};
+const MATCH_ORDER = [
+  "R1_EST_1","R1_EST_2","R1_EST_3","R1_EST_4",
+  "R1_WEST_1","R1_WEST_2","R1_WEST_3","R1_WEST_4",
+  "R2_EST_1","R2_EST_2","R2_WEST_1","R2_WEST_2",
+  "R3_EST_1","R3_WEST_1",
+  "R4_final",
+  "Conn_Smythe"
+];
 
 // Liste des joueurs par équipe
 export const playersByTeam = {
