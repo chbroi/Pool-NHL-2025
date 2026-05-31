@@ -13,24 +13,6 @@ import { checkEligibility, loadAppConfig} from "./services/userService.js";
 import { attachRound1Listeners, attachRound2Listeners, attachRound3Listeners, attachConnSmytheListeners} from "./ui/listeners.js";
 
 
-const savedTheme = localStorage.getItem("theme");
-
-if (savedTheme) {
-  document.body.setAttribute("data-theme", savedTheme);
-}
-
-
-const btn = document.getElementById("themeToggle");
-
-btn.addEventListener("click", () => {
-  const current = document.body.getAttribute("data-theme");
-
-  const next = current === "dark" ? "light" : "dark";
-
-  document.body.setAttribute("data-theme", next);
-
-  localStorage.setItem("theme", next);
-});
 
 
 // LOGIN
@@ -39,6 +21,40 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
   const result = await signInWithPopup(auth, provider);
   appState.user = result.user;
 });
+
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  const btn = document.getElementById("themeToggle");
+
+  // restore thème
+  const savedTheme = localStorage.getItem("theme");
+
+  if (savedTheme) {
+    document.body.setAttribute("data-theme", savedTheme);
+
+    // mettre le bon icône au chargement
+    if (btn) {
+      btn.innerText = savedTheme === "dark" ? "☀️" : "🌙";
+    }
+  }
+
+  if (btn) {
+    btn.addEventListener("click", () => {
+
+      const current = document.body.getAttribute("data-theme");
+      const next = current === "dark" ? "light" : "dark";
+
+      document.body.setAttribute("data-theme", next);
+      localStorage.setItem("theme", next);
+
+      btn.innerText = next === "dark" ? "☀️" : "🌙";
+
+    });
+  }
+
+});
+
 
 // AUTO LOGIN/ LOGOUT
 onAuthStateChanged(auth, async (user) => {
