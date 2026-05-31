@@ -25,11 +25,50 @@
 <div id="rulesTab" style="display:none;"></div>
 <div id="helperMessage"></div>
   
-  <title>Pool des Séries NHL</title>
+  
+  <title>Pool des Séries NHL</title> <button id="themeToggle"> Mode sombre/normal</button>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; background: #f4f4f4; }
+    :root {
+      --bg: #f5f7fb;
+      --text: #333;
+      --card: white;
+      --primary: #007BFF;
+    }
+    
+    body[data-theme="dark"] {
+      --bg: #121212;
+      --text: #e0e0e0;
+      --card: #1e1e1e;
+      --primary: #4dabf7;
+    }
+    
+    body {
+      background: var(--bg);
+      color: var(--text);
+    }
+    
+    .section, .matchup, .resultsTable {
+      background: var(--card);
+    }
+    
+    #mainHeader {
+      background: var(--card);
+      padding: 20px;
+      text-align: center;
+      font-size: 22px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    <body data-theme="light">
+    
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+    }
+
+    
     h1 { text-align: center; }
-    .section { background: white; padding: 20px; margin-bottom: 20px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    .section { background: var(--card); padding: 20px; margin-bottom: 20px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
     .matchup { margin-bottom: 10px; }
     select { margin-left: 10px; }
     label { font-weight: bold; }
@@ -57,7 +96,7 @@
             padding: 10px 20px;
             margin: 10px;
             background-color: #28a745;
-            color: white;
+            color: var(--card);
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -68,7 +107,7 @@
           }
         .activeTab {
             background-color: #007BFF;
-            color: white;
+            color: var(--card;
           }
         
         #tabs button {
@@ -81,7 +120,7 @@
           bottom: -30px;
           left: 0;
           background: black;
-          color: white;
+          color: var(--card);
           padding: 5px;
           font-size: 12px;
           border-radius: 5px;
