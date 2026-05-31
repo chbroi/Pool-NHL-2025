@@ -3,7 +3,7 @@ import { getAllPredictions } from "../services/firestoreService.js";
 import { SCORING, MATCH_ORDER } from "../constants.js";
 import { computeLeaderboard, getRoundFromKey} from "../logic/scoring.js";
 import { isResultAvailable, getParentMatch} from "../utils/helpers.js";
-import { getRound1MatchMap } from "../services/matchService.js";
+import { getRound1Matchups } from "../services/matchService.js";
 
 
 
