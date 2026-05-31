@@ -206,7 +206,7 @@ if (rules) rules.style.display = "none";
   if (tabName === "home") renderHome();
   if (tabName === "results") loadPredictionsDetails();
   if (tabName === "leaderboard") renderFullLeaderboard(); 
-    if (tabName === "myPicks") {
+  if (tabName === "myPicks") {
   
     // ne PAS afficher le form
     document.getElementById("predictionForm").style.display = "none";
@@ -214,24 +214,33 @@ if (rules) rules.style.display = "none";
     loadUserPicks();
     return;
   }
-
-
   if (tabName === "submit") {
-
-  if (appState.hasSubmitted) {
-
-    document.getElementById("predictionForm").style.display = "none";
-
-    document.getElementById("submitTab").innerHTML = `
-      <h3>✅ Déjà soumis</h3>
-      <p>Reviens à la prochaine ronde</p>
-    `;
-
-  } else {
-
-    document.getElementById("predictionForm").style.display = "block";
+  
+    const form = document.getElementById("predictionForm");
+    const tab = document.getElementById("submitTab");
+  
+    if (!form || !tab) return;
+  
+    if (appState.hasSubmitted) {
+  
+      form.style.display = "none";
+  
+      tab.innerHTML = `
+        <div class="card">
+          <h3>✅ Déjà soumis</h3>
+          <p>Reviens à la prochaine ronde</p>
+        </div>
+      `;
+  
+    } else {
+  
+      // IMPORTANT → remettre le form si effacé
+      if (!tab.querySelector("#predictionForm")) {
+        tab.appendChild(form);
+      }
+    }
   }
-}
+
 if (tabName === "rules") {
     document.getElementById("rulesContainer").style.display = "block";
     // cacher boutons
@@ -239,14 +248,6 @@ if (tabName === "rules") {
     document.getElementById("engagementContainer").style.display = "none";
   }
 };
-
-
-
-
-
-
-
-
 
 
 async function alreadySubmitted() {
@@ -271,27 +272,6 @@ async function alreadySubmitted() {
       confirmBtn.addEventListener("click", funcs.confirmEngagement);
     }
     
-
-
-
-
-
-
-
-async function hasSubmittedRound1() {
-
-  if (!appState.user) return false;
-
-  const q = query(
-    collection(db, "predictions"),
-    where("userId", "==", appState.user.uid),
-    where("round", "==", 1)
-  );
-
-  const snapshot = await getDocs(q);
-
-  return !snapshot.empty;
-}
 
   async function submitPredictions() {
 
