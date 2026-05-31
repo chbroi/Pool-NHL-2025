@@ -75,6 +75,10 @@ onAuthStateChanged(auth, async (user) => {
     const alreadyDone = await alreadySubmitted();
     appState.hasSubmitted = alreadyDone;
     console.log("SYNC OK:", alreadyDone);
+    
+  console.log("UID:", appState.user.uid);
+  console.log("submission:", appState.submission);
+
     // UI connecté
     if (loginBtn) loginBtn.style.display = "none";
     if (logoutBtn) logoutBtn.style.display = "inline-block";
