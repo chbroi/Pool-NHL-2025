@@ -231,7 +231,9 @@ for (let i = 1; i <= 4; i++) {
   });
 
   // cacher les règles par défaut
-  document.getElementById("rulesContainer").style.display = "none";
+  
+const rules = document.getElementById("rulesContainer");
+if (rules) rules.style.display = "none";
   document.getElementById("myPicksTab").innerHTML = "";
   document.getElementById(tabName + "Tab").style.display = "block";
   document.getElementById("predictionForm").style.display = "none";
@@ -294,14 +296,22 @@ async function alreadySubmitted() {
 }
 
    // Lorsqu'on accepte les règles
-    document.getElementById('acceptRulesButton').addEventListener('click', () => {
-      document.getElementById('rulesContainer').style.display = 'none';
-      document.getElementById('engagementContainer').style.display = 'block';
-    });
+   const acceptBtn = document.getElementById("acceptRulesButton");
+    
+    if (acceptBtn) {
+      acceptBtn.addEventListener("click", () => {
+        document.getElementById("rulesContainer").style.display = "none";
+        document.getElementById("engagementContainer").style.display = "block";
+      });
+    }
+
 
     // Lorsqu'on confirme l'engagement  
-document.getElementById('confirmEngagementButton')
-    .addEventListener('click', funcs.confirmEngagement);
+    const confirmBtn = document.getElementById("confirmEngagementButton");
+    
+    if (confirmBtn) {
+      confirmBtn.addEventListener("click", funcs.confirmEngagement);
+    }
     
 
 
