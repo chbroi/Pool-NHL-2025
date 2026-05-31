@@ -78,7 +78,7 @@ onAuthStateChanged(auth, async (user) => {
     // reset visuel
     rulesContainer.style.display = "none";
 
-    const eligible = await checkEligibility(db, appState.user, appState.submission);
+    const eligible = await checkEligibility(appState.user.uid, appState.submission);
 
     if (!eligible) {
 
