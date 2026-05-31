@@ -29,6 +29,31 @@
       background: var(--bg);
       color: var(--text);
     }
+    
+    @media (max-width: 768px) {
+    
+      #topBar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    
+      #tabs {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    
+      #tabs button {
+        flex: 1 1 45%;
+        font-size: 14px;
+      }
+    
+      #mainHeader {
+        font-size: 20px;
+        padding: 20px;
+      }
+    
+    }
+
 
     /* ===== NAVBAR ===== */
     #topBar {
@@ -190,6 +215,21 @@
     <div id="rulesTab" style="display:none;"></div>
 
     <div id="helperMessage"></div>
+    
+    <div class="section" id="rulesContainer" style="display:none;">
+      <h2>Règlements</h2>
+    
+      <p>Contenu des règlements ici...</p>
+    
+      <button id="acceptRulesButton">J'accepte</button>
+    </div>
+    
+    <div class="section" id="engagementContainer" style="display:none;">
+      <p>Confirmation du paiement</p>
+    
+      <button id="confirmEngagementButton">Confirmer</button>
+    </div>
+
 
   </div>
 
