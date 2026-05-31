@@ -1,265 +1,199 @@
 <!DOCTYPE html>
-
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
- <!-- TABS -->
-<div id="tabs">  
-  <button onclick="showTab('home')"data-tooltip=" Onglet de la page d'accueil du site">Accueil</button>
-  <button onclick="showTab('submit')"data-tooltip=" Onglet pour soumettre ses prédictions">Soumettre</button>
-  <button onclick="showTab('myPicks')"data-tooltip=" Onglet pour consulter ses propres prédictions">Mes prédictions</button>
-  <button onclick="showTab('results')"data-tooltip=" Onglet pour consulter les résultats détaillés de tous les participants">Résultats</button>
-  <button onclick="showTab('leaderboard')"data-tooltip=" Onglet pour consulter le classement de tous les participants">Classement</button>
-  <button onclick="showTab('rules')"data-tooltip=" Onglet pour consulter les règlements du pool">Règlements</button>
-</div>
-<div id="mainHeader">
-  <h1>🏒 Pool des séries éliminatoires de la LNH</h1>
-</div>
+  <title>Pool des Séries NHL</title>
 
-<div id="homeTab"></div>
-<div id="submitTab" style="display:none;"></div>
-<div id="myPicksTab" style="display:none;"></div>
-<div id="resultsTab" style="display:none;"></div>
-<div id="leaderboardTab" style="display:none;"></div>
-<div id="rulesTab" style="display:none;"></div>
-<div id="helperMessage"></div>
-  
-  
-  <title>Pool des Séries NHL</title> <button id="themeToggle"> Mode sombre/normal</button>
   <style>
+
+    /* ===== THEME ===== */
     :root {
       --bg: #f5f7fb;
       --text: #333;
       --card: white;
       --primary: #007BFF;
     }
-    
+
     body[data-theme="dark"] {
       --bg: #121212;
       --text: #e0e0e0;
       --card: #1e1e1e;
       --primary: #4dabf7;
     }
-    
+
     body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
       background: var(--bg);
       color: var(--text);
     }
-    
-    .section, .matchup, .resultsTable {
+
+    /* ===== NAVBAR ===== */
+    #topBar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
       background: var(--card);
+      border-bottom: 1px solid rgba(0,0,0,0.1);
     }
-    
+
+    #tabs {
+      display: flex;
+      gap: 8px;
+    }
+
+    #tabs button {
+      border: none;
+      background: transparent;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    #tabs button:hover {
+      background: rgba(0,0,0,0.05);
+    }
+
+    #tabs button.activeTab {
+      background: var(--primary);
+      color: white;
+    }
+
+    /* ===== DARK BUTTON ===== */
+    #themeToggle {
+      border: none;
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      background: var(--card);
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+
+    #themeToggle:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    /* ===== HEADER ===== */
     #mainHeader {
+      text-align: center;
+      padding: 40px 20px;
+      font-size: 26px;
+      font-weight: 600;
+      background: linear-gradient(135deg, #1e1e1e, #2c3e50);
+      color: white;
+    }
+
+    /* ===== CONTENT ===== */
+    #homeTab, #submitTab, #resultsTab, #leaderboardTab,
+    #rulesTab, #myPicksTab {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 10px;
+    }
+
+    /* ===== CARDS ===== */
+    .section, .card {
       background: var(--card);
-      padding: 20px;
-      text-align: center;
-      font-size: 22px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.05);
     }
 
-    <body data-theme="light">
-    
-    body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      margin: 0;
+    .matchup {
+      background: var(--card);
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
     }
 
-    
-    h1 { text-align: center; }
-    .section { background: var(--card); padding: 20px; margin-bottom: 20px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
-    .matchup { margin-bottom: 10px; }
-    select { margin-left: 10px; }
-    label { font-weight: bold; }
-    .results { margin-top: 20px; }
-    button { padding: 10px 20px; font-size: 16px; margin-top: 20px; cursor: pointer; }
-    .rules-container {
-            display: none;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f8f8f8;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        .engagement-container {
-            display: none;
-            margin-top: 20px;
-            text-align: center;
-        }
-        #predictionForm {
-            display: none;
-            margin-top: 20px;
-        }
-        .button {
-            padding: 10px 20px;
-            margin: 10px;
-            background-color: #28a745;
-            color: var(--card);
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-          }
-        .activeTab {
-            background-color: #007BFF;
-            color: var(--card;
-          }
-        
-        #tabs button {
-          position: relative;
-        }
-        
-        #tabs button::after {
-          content: attr(data-tooltip);
-          position: absolute;
-          bottom: -30px;
-          left: 0;
-          background: black;
-          color: var(--card);
-          padding: 5px;
-          font-size: 12px;
-          border-radius: 5px;
-          display: none;
-          white-space: nowrap;
-         }
-        #tabs button:hover::after {
-          display: block;
-          opacity: 1;
-        }
-        
-        #tabs button::after {
-          opacity: 0;
-          transition: 0.2s;
-        }
-        .resultsTable {
+    /* ===== TABLE ===== */
+    .resultsTable {
+      width: 100%;
       border-collapse: collapse;
-      min-width: 900px;
     }
-    
-    .resultsTable th,
+
+    .resultsTable th {
+      background: var(--primary);
+      color: white;
+      padding: 10px;
+    }
+
     .resultsTable td {
-      border: 1px solid #ccc;
-      padding: 6px;
+      padding: 8px;
+      border-bottom: 1px solid #eee;
       text-align: center;
     }
-    
-    /* Sticky header */
-    .resultsTable th {
-      position: sticky;
-      top: 0;
-      background: #eee;
-      z-index: 2;
+
+    .resultsTable tr:hover {
+      background: rgba(0,0,0,0.05);
     }
-    
-    /* Match column sticky */
-    .resultsTable th:first-child,
-    .resultsTable td:first-child {
-      position: sticky;
-      left: 0;
-      background: #f9f9f9;
-      text-align: left;
-      z-index: 2;
+
+    /* ===== BUTTON ===== */
+    button {
+      cursor: pointer;
+      transition: 0.2s;
     }
-    
-    /* Result column sticky */
-    .resultsTable th:nth-child(2),
-    .resultsTable td:nth-child(2) {
-      position: sticky;
-      left: 120px;
-      background: #f1f1f1;
-      z-index: 2;
+
+    button:hover {
+      transform: translateY(-1px);
     }
-    
-    .roundHeader {
-      background: #ddd;
-      font-weight: bold;
-      text-align: left;
-    }
-    
-    .scoreRow {
-      background: #f5f5f5;
-    }
+
   </style>
+
 </head>
-<body>
-   
 
-   <!-- LOGIN/LOGOUT -->
-<div id="loginContainer">
-  <button type="button" id="loginBtn">Connexion</button>
-  <button type="button" id="logoutBtn" style="display:none;">Déconnexion</button>
-  <p id="userInfo"></p>
-</div>
+<body data-theme="light">
 
+  <!-- NAVBAR -->
+  <div id="topBar">
+
+    <div id="tabs">
+      <button onclick="showTab('home')">Accueil</button>
+      <button onclick="showTab('submit')">Soumettre</button>
+      <button onclick="showTab('myPicks')">Mes prédictions</button>
+      <button onclick="showTab('results')">Résultats</button>
+      <button onclick="showTab('leaderboard')">Classement</button>
+      <button onclick="showTab('rules')">Règlements</button>
+    </div>
+
+    <button id="themeToggle">🌙</button>
+
+  </div>
+
+  <!-- HEADER -->
+  <div id="mainHeader">
+    🏒 Pool des séries éliminatoires de la LNH
+  </div>
+
+  <!-- LOGIN -->
+  <div id="loginContainer">
+    <button id="loginBtn">Connexion</button>
+    <button id="logoutBtn" style="display:none;">Déconnexion</button>
+    <p id="userInfo"></p>
+  </div>
 
   <!-- APP -->
   <div id="appContent" style="display:none;">
-  <!-- Section des Règlements -->
-    <div class="rules-container" id="rulesContainer">
-        <h2>Règlements du pool LNH</h2>
-        <h4>1. Bref rappel sur les séries dans la LNH</h4>
-          <h5>Les séries éliminatoires sont composés de 4 rondes: 1ere ronde, 2e ronde, Finales de conférences, Finale de la Coupe Stanley </p>
-          <h5>Le gagnant d'un affrontement entre 2 équipes de la LNH est déterminé par la première équipe remportant 4 matchs sur une possibilités de 7.</p>
-          <h5>La LNH est divisé entre 2 conférence (Est et Ouest) et chacune des conférences est divisée de la manière suivante:</h5>
-            <h6>Conférence Est: Division Metropolitaine (MET) et Atlantique (ATL)</h6>
-            <h6>Conférence Ouest: Division Pacifique (PAC) et Centrale (CEN) </h6>
-          <h5>Le trophée Conn Smythe est remis au joueur par excellence des séries éliminatoires dans la LNH. </h5>
-        <h4>2. Définitions et règles du pool</h4>
-          <h5>Une personne est considérée comme un participant du pool s'il contribue au montant de 5$ à envoyer à Charles Brosseau (via virement interac à charles.brosseau@hotmail.com) et entre sa prédiction de 1ere ronde avant le début des series éliminatoires (19 avril 2025 19h).</h5>
-          <h5>Le choix du participant est composé de l'équipe gagnante de chaque affrontement (1 équipe parmi 2), le nombre de matchs pour y arriver (de 4 à 7 matchs)</h5>
-          <h5>La prédiction du participant est composée de chaque choix de établi en 2.2, et du gagnant du Conn Smythe pour chacune des rondes (active et subséquentes)</h5>
-          <h5>"Pour résumer les deux derniers points, le participant doit entrer sa prédiction avant chacune des 4 rondes. Voici donc les 4 prédictions à faire:</h5>
-            <h6>Les choix des rondes 1 et 2, des finales de conférences, de la Coupe Stanley et du Conn Smythe</h6>
-            <h6>Les choix de la ronde 2, des finales de conférences, de la Coupe Stanley et du Conn Smythe</h6>
-            <h6>Les choix des finales de conférences, de la Coupe Stanley et du Conn Smythe</h6>
-            <h6>Les choix de la Coupe Stanley et du Conn Smythe"</h6>
-          <h5>Chacune des prédictions est considérée valide si elle est entrée avant le début du premier match de chacune des rondes par le participant:</h5>
-            <h6>1ere prédiction:  avant le 19 avril 2025 19h</h6>
-            <h6>2e prédiction: TBD</h6>
-            <h6>3e prédiction: TBD</h6>
-            <h6>4e prédiction : TBD.</h6>
-          <h5>Si un participant n'effectue pas une prédiction valide, ses choix précédents seront reconduits à la prochaine ronde. S'il s'agit de la première ronde, le participant est de facto éliminé.</h5>
-        <h4>3. Système de pointage</h4>
-          <h5>Le système de pointage est illustré dans le tableau sous l'onglet système de pointage.</h5> 
-          <h5>Pour que le participants obtiennent les points associés aux nombres de matchs, son choix doit aussi contenir l'équipe gagnante.</h5> 
-          <h5>Les gagnants du pool sont ceux qui ont les 3 récoltes de points les plus élevés sur la durée des séries éliminatoires.</h5>
-          <h5>"Le montant attribué aux 3 gagnants est calculé de la manière suivante:
-            <h6>1ere place: Nombre de participants*5$*4/7</h6>
-            <h6>2e place: Nombre de participants*5$*2/7</h6>
-            <h6>3e place: Nombre de participants*5$*1/7</h6>
-        <button class="button" id="acceptRulesButton">J'ai lu et j'accepte les règles</button>
-    </div>
-    <!-- Section de l'engagement -->
-    <div class="engagement-container" id="engagementContainer">
-        <p>Je m'engage à envoyer un montant de 5$ pour participer à ce pool à l'adresse <strong>charles.brosseau@hotmail.com</strong>.</p>
-        <p>Charles s'engage à vous envoyer le montant pour ceux finissant sur le podium tel que mentionné dans les règlements.</p>
-        <button class="button" id="confirmEngagementButton">Je m'engage</button>
-    </div>
-  <form id="predictionForm">    
-    <div class="section" id="round1"></div>
-    <div class="section" id="round2"></div>
-    <div class="section" id="round3"></div>
-    <div class="section" id="round4"></div>
-    
-    <!-- Liste dynamique des joueurs pour le Conn Smythe -->
-    <label for="Conn_Smythe">Gagnant du Conn Smythe :</label>
-    <select name="Conn_Smythe" id="Conn_Smythe" disabled required>
-      <option value="">-- Choisissez un joueur --</option>
-    </select>
-    
-    <div class="section">
-      <button id="submitBtn" type="button" onclick="submitPredictions()" disabled>Soumettre les prédictions</button>
-  </form>
+
+    <div id="homeTab"></div>
+    <div id="submitTab" style="display:none;"></div>
+    <div id="myPicksTab" style="display:none;"></div>
+    <div id="resultsTab" style="display:none;"></div>
+    <div id="leaderboardTab" style="display:none;"></div>
+    <div id="rulesTab" style="display:none;"></div>
+
+    <div id="helperMessage"></div>
+
   </div>
-<!-- Tes scripts -->
-<script type="module" src="js/main.js"></script>
-</body>            
+
+  <script type="module" src="js/main.js"></script>
+
+</body>
 </html>
-
-
-            
