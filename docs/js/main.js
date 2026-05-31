@@ -60,84 +60,78 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
-
-// AUTO LOGIN/ LOGOUT
 onAuthStateChanged(auth, async (user) => {
 
-  const {config, results}=await loadAppConfig();
-  appState.submission = config.currentSubmission;
-  appState.results = results;
-  const helper = document.getElementById("helperMessage");
-  if (config.submissionOpen) {
-    helper.innerHTML = config.helperMessage;
-  } else {
-    helper.innerHTML = "⏳ Les soumissions sont fermées pour cette ronde.";
-  }
-
-  
-  
-// sécuriser que previousData est prêt
-  if (!appState.results || Object.keys(appState.results).length === 0) {
-    console.warn("appState.results vide ❌");
-  } else {
-  
-    for (let i = 1; i <= appState.submission; i++) {
-      await generateRound(i);
-    }
-  
-  }
-
-  
-  // attacher listeners APRÈS génération
-  attachRound1Listeners();
-  attachRound2Listeners();
-  attachRound3Listeners();
-  attachConnSmytheListeners();
-  const form = document.getElementById("predictionForm");
-  
-  if (form && !form.hasListener) {
-    form.addEventListener("change", () => {
-      funcs.checkIfReadyToSubmit(appState.submission);
-    });
-  
-    form.hasListener = true;
-  }
-
-  const tabs = document.getElementById("tabs");
-  const rulesContainer = document.getElementById("rulesContainer");
   const loginBtn = document.getElementById("loginBtn");
   const logoutBtn = document.getElementById("logoutBtn");
   const userInfo = document.getElementById("userInfo");
   const appContent = document.getElementById("appContent");
 
-  
   if (user) {
 
     appState.user = user;
+
     // UI connecté
     if (loginBtn) loginBtn.style.display = "none";
     if (logoutBtn) logoutBtn.style.display = "inline-block";
-  
+
     if (userInfo) {
       userInfo.innerText = user.displayName;
     }
-  
+
     if (appContent) appContent.style.display = "block";
-  
+
+    // CONFIG
+    const { config, results } = await loadAppConfig();
+
+    appState.submission = config.currentSubmission;
+    appState.results = results;
+
+    const helper = document.getElementById("helperMessage");
+    if (helper) {
+      helper.innerHTML = config.submissionOpen
+        ? config.helperMessage
+        : "⏳ Les soumissions sont fermées pour cette ronde.";
+    }
+
+    // GENERATE ROUNDS
+    if (appState.results && Object.keys(appState.results).length > 0) {
+      for (let i = 1; i <= appState.submission; i++) {
+        await generateRound(i);
+      }
+    }
+
+    // listeners
+    attachRound1Listeners();
+    attachRound2Listeners();
+    attachRound3Listeners();
+    attachConnSmytheListeners();
+
+    const form = document.getElementById("predictionForm");
+    if (form && !form.hasListener) {
+      form.addEventListener("change", () => {
+        funcs.checkIfReadyToSubmit(appState.submission);
+      });
+      form.hasListener = true;
+    }
+
+    // logique app
+    showTab("home");
+
   } else {
-  
+
     appState.user = null;
-  
+
     // UI déconnecté
     if (loginBtn) loginBtn.style.display = "inline-block";
     if (logoutBtn) logoutBtn.style.display = "none";
-  
+
     if (userInfo) {
       userInfo.innerText = "";
     }
-  
+
     if (appContent) appContent.style.display = "none";
-  
+
     // message
     const home = document.getElementById("homeTab");
     if (home) {
@@ -150,89 +144,8 @@ onAuthStateChanged(auth, async (user) => {
     }
   }
 
-
-    document.getElementById("appContent").style.display = "block";
-
-    document.getElementById("userInfo").innerText =
-      "Connecté : " + user.displayName;
-
-    // reset visuel
-    rulesContainer.style.display = "none";
-
-    const eligible = await checkEligibility(appState.user.uid, appState.submission);
-
-    if (!eligible) {
-
-      const msg = document.createElement("h2");
-      msg.innerText = "🔒 Lecture seule - non éligible";
-    
-      if (!document.getElementById("readonlyMsg")) {
-      
-        const msg = document.createElement("h2");
-        msg.id = "readonlyMsg";
-        msg.innerText = "🔒 Lecture seule - non éligible";
-      
-        document.getElementById("homeTab").prepend(msg);
-      }
-      loadUserPicks();
-      return;
-    }
-
-    const alreadyDone = await alreadySubmitted();
-    appState.hasSubmitted = alreadyDone;
-
-    // FLOW
-
-    if (appState.submission=== 1) {
-
-      if (!alreadyDone) {
-
-        tabs.style.display = "none";
-        form.style.display = "none";
-        rulesContainer.style.display = "block";
-
-        showTab("rules");
-
-        document.getElementById("acceptRulesButton").style.display = "block";
-        return;
-      }
-
-      tabs.style.display = "block";
-      form.style.display = "none";
-
-      showTab("home");
-
-    } else {
-
-      tabs.style.display = "block";
-
-      if (alreadyDone) {
-
-        loadUserPicks();
-
-        if (!document.getElementById("submittedMsg")) {
-          const msg = document.createElement("h3");
-          msg.id = "submittedMsg";
-          msg.innerText = "Tu as déjà soumis. Voici ta prédiction";
-          document.getElementById("submitTab").prepend(msg);
-        }
-
-        showTab("submit");
-
-      } else {
-
-        showTab("submit");
-      }
-    }
-
-  } else {
-
-    appState.user = null;
-
-    document.getElementById("appContent").style.display = "none";
-    document.getElementById("loginContainer").style.display = "block";
-  }
 });
+
 
 
 
