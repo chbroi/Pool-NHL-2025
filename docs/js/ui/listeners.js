@@ -1,3 +1,10 @@
+import { round1Ids, playersByTeam } from "../constants.js";
+import { appState } from "../app/state.js";
+
+import { generateRound } from "./render.js"; // ou renderRounds.js
+import * as funcs from "../functions.js";
+
+
 export function attachRound1Listeners() {
 
   round1Ids.forEach(id => {
