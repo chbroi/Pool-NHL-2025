@@ -66,20 +66,29 @@ onAuthStateChanged(auth, async (user) => {
   const logoutBtn = document.getElementById("logoutBtn");
   const userInfo = document.getElementById("userInfo");
   const appContent = document.getElementById("appContent");
- 
-
 
   if (user) {
 
     appState.user = user;
-    const alreadyDone = await alreadySubmitted();
-    appState.hasSubmitted = alreadyDone;
-    console.log("SYNC OK:", alreadyDone);
-    
-  console.log("UID:", appState.user.uid);
-  console.log("submission:", appState.submission);
 
-    // UI connecté
+    //  1. charger config AVANT TOUT
+    const { config, results } = await loadAppConfig();
+
+    console.log("CONFIG FIRESTORE:", config);
+
+    appState.submission = Number(config.currentSubmission);
+    appState.results = results;
+
+    console.log("✅ submission FIX:", appState.submission);
+
+    // 2. maintenant seulement
+    const alreadyDone = await alreadySubmitted();
+
+    console.log("✅ SYNC OK:", alreadyDone);
+
+    appState.hasSubmitted = alreadyDone;
+
+    //  UI connecté
     if (loginBtn) loginBtn.style.display = "none";
     if (logoutBtn) logoutBtn.style.display = "inline-block";
 
@@ -89,12 +98,7 @@ onAuthStateChanged(auth, async (user) => {
 
     if (appContent) appContent.style.display = "block";
 
-    // CONFIG
-    const { config, results } = await loadAppConfig();
-
-    appState.submission = config.currentSubmission;
-    appState.results = results;
-
+    //  helper message
     const helper = document.getElementById("helperMessage");
     if (helper) {
       helper.innerHTML = config.submissionOpen
@@ -102,7 +106,7 @@ onAuthStateChanged(auth, async (user) => {
         : "⏳ Les soumissions sont fermées pour cette ronde.";
     }
 
-    // GENERATE ROUNDS
+    // generate rounds
     if (appState.results && Object.keys(appState.results).length > 0) {
       for (let i = 1; i <= appState.submission; i++) {
         await generateRound(i);
@@ -123,24 +127,19 @@ onAuthStateChanged(auth, async (user) => {
       form.hasListener = true;
     }
 
-    // logique app
+    //  logique app
     showTab("home");
 
   } else {
 
     appState.user = null;
 
-    // UI déconnecté
     if (loginBtn) loginBtn.style.display = "inline-block";
     if (logoutBtn) logoutBtn.style.display = "none";
 
-    if (userInfo) {
-      userInfo.innerText = "";
-    }
-
+    if (userInfo) userInfo.innerText = "";
     if (appContent) appContent.style.display = "none";
 
-    // message
     const home = document.getElementById("homeTab");
     if (home) {
       home.innerHTML = `
@@ -153,6 +152,7 @@ onAuthStateChanged(auth, async (user) => {
   }
 
 });
+
 
 
 
