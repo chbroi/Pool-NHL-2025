@@ -10,17 +10,6 @@ import { playersByTeam, round1Ids,SCORING} from "./constants.js";
 import { appState } from "./app/state.js"
 import { loadPredictionsDetails, renderHome, renderFullLeaderboard, loadUserPicks} from "./ui/render.js"
 
-
-const MATCH_ORDER = [
-  "R1_EST_1","R1_EST_2","R1_EST_3","R1_EST_4",
-  "R1_WEST_1","R1_WEST_2","R1_WEST_3","R1_WEST_4",
-  "R2_EST_1","R2_EST_2","R2_WEST_1","R2_WEST_2",
-  "R3_EST_1","R3_WEST_1",
-  "R4_final",
-  "Conn_Smythe"
-];
-
-
 // LOGIN
 document.getElementById("loginBtn").addEventListener("click", async () => {
   const provider = new GoogleAuthProvider();
