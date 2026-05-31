@@ -9,7 +9,13 @@ import { getRound1Matchups } from "../services/matchService.js";
 
 export async function loadPredictionsDetails() {
 
-  const round1Map = await getRound1MatchMap();
+  const round1Matchups = await getRound1Matchups();
+  
+  const round1Map = {};
+  round1Matchups.forEach(m => {
+    round1Map[m.id] = `${m.team1} vs ${m.team2}`;
+  });
+
   const predictions = await getAllPredictions();
   const container = document.getElementById("resultsTab");
   
@@ -214,7 +220,12 @@ export async function loadPredictionsDetails() {
 
 export async function renderHome() {
 
-  const leaderboard = await computeLeaderboard(predictions,appState.results);
+  
+const predictions = await getAllPredictions();
+
+const leaderboard = await computeLeaderboard(predictions,
+  appState.results);
+
 
   const container = document.getElementById("homeTab");
   container.innerHTML = "<h2>🏆 Top 10</h2>";
@@ -240,8 +251,10 @@ export async function renderHome() {
 
 export async function renderFullLeaderboard() {
 
-  const data = await computeLeaderboard();
-
+  
+  const predictions = await getAllPredictions();
+  
+  const data = await computeLeaderboard(predictions,appState.results);
   const container = document.getElementById("leaderboardTab");
   container.innerHTML = "<h2>Classement complet</h2>";
 
@@ -269,7 +282,14 @@ export async function loadUserPicks() {
   if (docs.length === 0) return;
 
 
-  const round1Map = await getRound1MatchMap();
+  
+  const round1Matchups = await getRound1Matchups();
+  
+  const round1Map = {};
+  round1Matchups.forEach(m => {
+    round1Map[m.id] = `${m.team1} vs ${m.team2}`;
+  });
+
 
   docs.forEach((doc, index) => {
 
