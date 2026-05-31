@@ -34,12 +34,17 @@
     
       #topBar {
         flex-direction: column;
-        align-items: stretch;
+        align-items: stretch; 
+        position: sticky;
+          top: 0;
+          z-index: 1000;
+        backdrop-filter: blur(10px);
       }
     
       #tabs {
         flex-wrap: wrap;
         justify-content: center;
+        
       }
     
       #tabs button {
@@ -47,10 +52,13 @@
         font-size: 14px;
       }
     
+      
       #mainHeader {
-        font-size: 20px;
-        padding: 20px;
+        position: sticky;
+        top: 50px; 
+        z-index: 999;
       }
+
     
     }
 
@@ -113,8 +121,32 @@
       background: linear-gradient(135deg, #1e1e1e, #2c3e50);
       color: white;
     }
+    
+    #rightControls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-radius: 8px;
+      padding: 6px 10px;
+      background: var(--primary);
+        color: white;
+    }
+    
+    
+    #helperMessage {
+      text-align: center;
+      font-size: 15px;
+      margin-top: -10px;
+      margin-bottom: 20px;
+      color: var(--text);
+      opacity: 0.75;
+    }
+
+
+
 
     /* ===== CONTENT ===== */
+    
     #homeTab, #submitTab, #resultsTab, #leaderboardTab,
     #rulesTab, #myPicksTab {
       max-width: 1000px;
@@ -177,8 +209,9 @@
 <body data-theme="light">
 
   <!-- NAVBAR -->
-  <div id="topBar">
 
+  <div id="topBar">
+  
     <div id="tabs">
       <button onclick="showTab('home')">Accueil</button>
       <button onclick="showTab('submit')">Soumettre</button>
@@ -187,21 +220,19 @@
       <button onclick="showTab('leaderboard')">Classement</button>
       <button onclick="showTab('rules')">Règlements</button>
     </div>
-
-    <button id="themeToggle">🌙</button>
-
+  
+    <div id="rightControls">
+      <button id="loginBtn">Connexion</button>
+      <button id="logoutBtn" style="display:none;">Déconnexion</button>
+      <button id="themeToggle">🌙</button>
+    </div>
+  
   </div>
+
 
   <!-- HEADER -->
   <div id="mainHeader">
     🏒 Pool des séries éliminatoires de la LNH
-  </div>
-
-  <!-- LOGIN -->
-  <div id="loginContainer">
-    <button id="loginBtn">Connexion</button>
-    <button id="logoutBtn" style="display:none;">Déconnexion</button>
-    <p id="userInfo"></p>
   </div>
 
   <!-- APP -->
