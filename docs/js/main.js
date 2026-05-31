@@ -13,6 +13,26 @@ import { checkEligibility, loadAppConfig} from "./services/userService.js";
 import { attachRound1Listeners, attachRound2Listeners, attachRound3Listeners, attachConnSmytheListeners} from "./ui/listeners.js";
 
 
+const savedTheme = localStorage.getItem("theme");
+
+if (savedTheme) {
+  document.body.setAttribute("data-theme", savedTheme);
+}
+
+
+const btn = document.getElementById("themeToggle");
+
+btn.addEventListener("click", () => {
+  const current = document.body.getAttribute("data-theme");
+
+  const next = current === "dark" ? "light" : "dark";
+
+  document.body.setAttribute("data-theme", next);
+
+  localStorage.setItem("theme", next);
+});
+
+
 // LOGIN
 document.getElementById("loginBtn").addEventListener("click", async () => {
   const provider = new GoogleAuthProvider();
