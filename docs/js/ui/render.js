@@ -313,6 +313,8 @@ export async function loadUserPicks() {
 
   });
 }
+
+
 export async function generateRound(roundNumber) {
 
   const container = document.getElementById(`round${roundNumber}`);
@@ -323,27 +325,18 @@ export async function generateRound(roundNumber) {
 
   let matchups = [];
 
-  // Ronde 1
+  // ✅ source (résultats ou picks)
+  const source =
+    roundNumber <= appState.submission
+      ? appState.results
+      : picks;
+
+  // ✅ R1 depuis Firestore
   if (roundNumber === 1) {
-
-    const ref = doc(db, "matchups", "round1");
-    const snap = await getDoc(ref);
-    if (!snap.exists()) return;
-
-    const data = snap.data();
-    matchups = [...data.EST, ...data.WEST];
+    matchups = await getRound1Matchups();
   }
 
-  // SOURCE FIX
-  let source = {};
-
-  if (roundNumber <= appState.submission) {
-    source = appState.results; 
-  } else {
-    source = picks;
-  }
-
-  // Ronde 2
+  // ✅ R2
   if (roundNumber === 2) {
     matchups = [
       { id: "R2_EST_1", team1: source["R1_EST_1_team"], team2: source["R1_EST_2_team"] },
@@ -353,7 +346,7 @@ export async function generateRound(roundNumber) {
     ];
   }
 
-  // Ronde 3
+  // ✅ R3
   if (roundNumber === 3) {
     matchups = [
       { id: "R3_EST_1", team1: source["R2_EST_1_team"], team2: source["R2_EST_2_team"] },
@@ -361,14 +354,16 @@ export async function generateRound(roundNumber) {
     ];
   }
 
-  // Ronde 4
+  // ✅ R4
   if (roundNumber === 4) {
     container.style.display = "block";
+
     matchups = [
       { id: "R4_final", team1: source["R3_EST_1_team"], team2: source["R3_WEST_1_team"] }
     ];
   }
 
+  // ✅ RENDER HTML
   let html = `<h2>Ronde ${roundNumber}</h2>`;
 
   matchups.forEach(match => {
@@ -406,4 +401,3 @@ export async function generateRound(roundNumber) {
 
   container.innerHTML = html;
 }
-
