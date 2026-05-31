@@ -19,7 +19,7 @@ export async function checkEligibility(userId, submission) {
 }
 
 
-async function loadAppConfig() {
+export async function loadAppConfig() {
 
   // config UI
   const configRef = doc(db, "config", "ui");
