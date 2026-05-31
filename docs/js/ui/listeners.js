@@ -1,4 +1,4 @@
-function attachRound1Listeners() {
+export function attachRound1Listeners() {
 
   round1Ids.forEach(id => {
 
@@ -12,7 +12,7 @@ function attachRound1Listeners() {
   });
 }
 
-function attachRound2Listeners() {
+export function attachRound2Listeners() {
 
   [
     'R2_EST_1_team', 'R2_EST_2_team',
@@ -38,7 +38,7 @@ function attachRound2Listeners() {
   });
 }
 
-function attachRound3Listeners() {
+export function attachRound3Listeners() {
 
   [
     'R3_EST_1_team',
@@ -64,7 +64,7 @@ function attachRound3Listeners() {
 }
 
 
-function attachConnSmytheListeners() {
+export function attachConnSmytheListeners() {
 
   const est = document.getElementById('R3_EST_1_team');
   const west = document.getElementById('R3_WEST_1_team');
