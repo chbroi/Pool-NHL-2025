@@ -26,7 +26,14 @@ onAuthStateChanged(auth, async (user) => {
   const {config, results}=await loadAppConfig();
   appState.submission = config.currentSubmission;
   appState.results = results;
+  const helper = document.getElementById("helperMessage");
+  if (config.submissionOpen) {
+    helper.innerHTML = config.helperMessage;
+  } else {
+    helper.innerHTML = "⏳ Les soumissions sont fermées pour cette ronde.";
+  }
 
+  
   
 // sécuriser que previousData est prêt
   if (!appState.results || Object.keys(appState.results).length === 0) {
