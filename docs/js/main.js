@@ -66,11 +66,15 @@ onAuthStateChanged(auth, async (user) => {
   const logoutBtn = document.getElementById("logoutBtn");
   const userInfo = document.getElementById("userInfo");
   const appContent = document.getElementById("appContent");
+ 
+
 
   if (user) {
 
     appState.user = user;
-
+    const alreadyDone = await alreadySubmitted();
+    appState.hasSubmitted = alreadyDone;
+    console.log("SYNC OK:", alreadyDone);
     // UI connecté
     if (loginBtn) loginBtn.style.display = "none";
     if (logoutBtn) logoutBtn.style.display = "inline-block";
@@ -220,7 +224,7 @@ if (rules) rules.style.display = "none";
     const tab = document.getElementById("submitTab");
   
     if (!form || !tab) return;
-  
+    console.log("hasSubmitted:", appState.hasSubmitted);
     if (appState.hasSubmitted) {
   
       form.style.display = "none";
