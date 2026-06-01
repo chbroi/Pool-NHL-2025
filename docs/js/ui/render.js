@@ -11,6 +11,13 @@ export async function loadPredictionsDetails() {
 
   const round1Matchups = await getRound1Matchups();
   
+  const sortedRounds = Object.keys(submissions)
+    .map(Number)
+    .sort((a,b)=>a-b);
+  
+  const lastSubmission = sortedRounds[sortedRounds.length - 1];
+
+  
   const round1Map = {};
   round1Matchups.forEach(m => {
     round1Map[m.id] = `${m.team1} vs ${m.team2}`;
@@ -97,13 +104,25 @@ export async function loadPredictionsDetails() {
         const resultGames = appState.results[gamesKey];
         const roundNum = getRoundFromKey(matchKey);
 
+        
         let displayName = round1Map[matchKey];
-
+        
+        // ✅ fallback robuste pour R2, R3, R4
         if (!displayName) {
-          const t1 = appState.results[getParentMatch(matchKey, 1)];
-          const t2 = appState.results[getParentMatch(matchKey, 2)];
-          displayName = (t1 && t2) ? `${t1} vs ${t2}` : matchKey;
+        
+          const parent1 = getParentMatch(matchKey, 1) + "_team";
+          const parent2 = getParentMatch(matchKey, 2) + "_team";
+        
+          const t1 = appState.results[parent1];
+          const t2 = appState.results[parent2];
+        
+          if (t1 && t2) {
+            displayName = `${t1} vs ${t2}`;
+          } else {
+            displayName = matchKey; // fallback ultime
+          }
         }
+
 
         html += `<tr><td>${displayName}</td>`;
 
@@ -203,7 +222,19 @@ export async function loadPredictionsDetails() {
     html += `</tr>`;
 
     // ✅ Total global
-    html += `<tr class="totalGlobalRow">
+    
+    if (round === lastSubmission) {
+    
+      html += `<tr class="totalGlobalRow">
+        <td colspan="2"><strong>Total Global</strong></td>`;
+    
+      allUsers.forEach(user => {
+        html += `<td><strong>${globalScores[user.id] || 0}</strong></td>`;
+      });
+    
+      html += `</tr>`;
+    }
+
       <td colspan="2"><strong>Total Global</strong></td>`;
 
     allUsers.forEach(user => {
