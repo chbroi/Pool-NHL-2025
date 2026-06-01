@@ -9,15 +9,7 @@ import { getRound1Matchups } from "../services/matchService.js";
 
 export async function loadPredictionsDetails() {
 
-  const round1Matchups = await getRound1Matchups();
-  
-  const sortedRounds = Object.keys(submissions)
-    .map(Number)
-    .sort((a,b)=>a-b);
-  
-  const lastSubmission = sortedRounds[sortedRounds.length - 1];
-
-  
+  const round1Matchups = await getRound1Matchups();  
   const round1Map = {};
   round1Matchups.forEach(m => {
     round1Map[m.id] = `${m.team1} vs ${m.team2}`;
@@ -43,6 +35,11 @@ export async function loadPredictionsDetails() {
       picks: data.picks
     };
   });
+  const sortedRounds = Object.keys(submissions)
+    .map(Number)
+    .sort((a,b)=>a-b);
+  
+  const lastSubmission = sortedRounds[sortedRounds.length - 1];
 
   // Tous les users
   const allUsersMap = {};
@@ -234,14 +231,6 @@ export async function loadPredictionsDetails() {
     
       html += `</tr>`;
     }
-
-      <td colspan="2"><strong>Total Global</strong></td>`;
-
-    allUsers.forEach(user => {
-      html += `<td><strong>${globalScores[user.id] || 0}</strong></td>`;
-    });
-
-    html += `</tr>`;
 
     html += `</table></div><br>`;
     container.innerHTML += html;
