@@ -102,21 +102,20 @@ export async function loadPredictionsDetails() {
         const roundNum = getRoundFromKey(matchKey);
 
         
-        let displayName = round1Map[matchKey];
-        
-        // ✅ fallback robuste pour R2, R3, R4
+       
+        let displayName = round1Map[matchKey];let displayName = round1Map fallback robuste
         if (!displayName) {
         
-          const parent1 = getParentMatch(matchKey, 1) + "_team";
-          const parent2 = getParentMatch(matchKey, 2) + "_team";
+          const p1 = getParentMatch(matchKey, 1);
+          const p2 = getParentMatch(matchKey, 2);
         
-          const t1 = appState.results[parent1];
-          const t2 = appState.results[parent2];
+          const t1 = p1 ? appState.results[p1 + "_team"] : null;
+          const t2 = p2 ? appState.results[p2 + "_team"] : null;
         
           if (t1 && t2) {
             displayName = `${t1} vs ${t2}`;
           } else {
-            displayName = matchKey; // fallback ultime
+            displayName = matchKey;
           }
         }
 
