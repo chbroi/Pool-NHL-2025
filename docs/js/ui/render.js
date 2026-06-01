@@ -9,7 +9,7 @@ import { getRound1Matchups } from "../services/matchService.js";
 
 export async function loadPredictionsDetails() {
 
-  const round1Matchups = await getRound1Matchups();  
+  const round1Matchups = await getRound1Matchups();
   const round1Map = {};
   round1Matchups.forEach(m => {
     round1Map[m.id] = `${m.team1} vs ${m.team2}`;
@@ -103,7 +103,7 @@ export async function loadPredictionsDetails() {
 
         
        
-        let displayName = round1Map[matchKey];let displayName = round1Map fallback robuste
+        let displayName = round1Map[matchKey];
         if (!displayName) {
         
           const p1 = getParentMatch(matchKey, 1);
