@@ -57,14 +57,17 @@
         position: sticky;
         top: 50px; 
         z-index: 999;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
       }
-
     
     }
 
 
     /* ===== NAVBAR ===== */
     #topBar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -114,12 +117,16 @@
 
     /* ===== HEADER ===== */
     #mainHeader {
+      position: sticky;
+      top: 50px;
+      z-index: 999;
       text-align: center;
       padding: 40px 20px;
       font-size: 26px;
       font-weight: 600;
       background: linear-gradient(135deg, #1e1e1e, #2c3e50);
       color: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
     
     
@@ -149,17 +156,15 @@
       margin-right: 5px;
       opacity: 0.85;
     }
+    
     #helperMessage {
       text-align: center;
-      font-size: 15px;
-      margin-top: -10px;
+      font-size: 18px;
+      margin-top: 10px;
       margin-bottom: 20px;
-      color: var(--text);
-      opacity: 0.75;
+      font-weight: 500;
+      opacity: 0.9;
     }
-
-
-
 
     /* ===== CONTENT ===== */
     
@@ -207,6 +212,15 @@
     .resultsTable tr:hover {
       background: rgba(0,0,0,0.05);
     }
+    
+    .roundHeader td {
+      text-align: left;
+      font-weight: bold;
+      padding: 10px;
+      background: rgba(255,255,255,0.08);
+      font-size: 16px;
+    }
+
 
     /* ===== BUTTON ===== */
     button {
@@ -253,6 +267,7 @@
   <div id="mainHeader">
     🏒 Pool des séries éliminatoires de la LNH
   </div>
+  <div id="helperMessage"></div>
 
   <!-- APP -->
   <div id="appContent" style="display:none;">
@@ -263,8 +278,6 @@
     <div id="resultsTab" style="display:none;"></div>
     <div id="leaderboardTab" style="display:none;"></div>
     <div id="rulesTab" style="display:none;"></div>
-
-    <div id="helperMessage"></div>
 
     
 <form id="predictionForm" style="display:none;">
