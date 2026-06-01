@@ -74,17 +74,12 @@ onAuthStateChanged(auth, async (user) => {
     //  1. charger config AVANT TOUT
     const { config, results } = await loadAppConfig();
 
-    console.log("CONFIG FIRESTORE:", config);
-
     appState.submission = Number(config.currentSubmission);
     appState.results = results;
-
-    console.log("✅ submission FIX:", appState.submission);
 
     // 2. maintenant seulement
     const alreadyDone = await alreadySubmitted();
 
-    console.log("✅ SYNC OK:", alreadyDone);
 
     appState.hasSubmitted = alreadyDone;
 
@@ -228,7 +223,6 @@ if (rules) rules.style.display = "none";
     const tab = document.getElementById("submitTab");
   
     if (!form || !tab) return;
-    console.log("hasSubmitted:", appState.hasSubmitted);
     if (appState.hasSubmitted) {
   
       form.style.display = "none";
