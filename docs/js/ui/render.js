@@ -97,14 +97,11 @@ export async function loadPredictionsDetails() {
         const teamKey = matchKey + "_team";
         const gamesKey = matchKey + "_games";
 
-        const resultTeam = appState.results[teamKey];
-        const resultGames = appState.results[gamesKey];
-        const roundNum = getRoundFromKey(matchKey);
-
         
-       
-        let displayName = round1Map[matchKey];
-        if (!displayName) {
+        let resultTeam = appState.results[teamKey];
+        
+        // ✅ fallback dynamique si résultat vide
+        if (!resultTeam || resultTeam === "") {
         
           const p1 = getParentMatch(matchKey, 1);
           const p2 = getParentMatch(matchKey, 2);
@@ -113,10 +110,30 @@ export async function loadPredictionsDetails() {
           const t2 = p2 ? appState.results[p2 + "_team"] : null;
         
           if (t1 && t2) {
-            displayName = `${t1} vs ${t2}`;
+            resultTeam = `${t1} vs ${t2}`;
           } else {
-            displayName = matchKey;
+            resultTeam = "-";
           }
+        }
+
+        const resultGames = appState.results[gamesKey];
+        const roundNum = getRoundFromKey(matchKey);
+
+        
+       
+        let displayName = round1Map[matchKey];
+
+        if (!displayName) {
+        
+          const p1 = getParentMatch(matchKey, 1);
+          const p2 = getParentMatch(matchKey, 2);
+        
+          const t1 = p1 ? appState.results[p1 + "_team"] : null;
+          const t2 = p2 ? appState.results[p2 + "_team"] : null;
+        
+          displayName = (t1 && t2)
+            ? `${t1} vs ${t2}`
+            : matchKey;
         }
 
 
