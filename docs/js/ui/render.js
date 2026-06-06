@@ -134,12 +134,26 @@ export async function loadPredictionsDetails() {
         let displayName = "";
         
         // ✅ Ronde 1 → toujours afficher matchup réel
+        
         if (matchKey.startsWith("R1")) {
         
-          displayName = round1Map[matchKey] || matchKey;
+          const m = round1Map[matchKey];
         
+          if (m && m !== "") {
+            displayName = m;
+          } else {
+        
+            // ✅ fallback FIABLE basé sur Firebase
+            const team = appState.results[matchKey + "_team"];
+        
+            if (team && team !== "") {
+              displayName = team; // au moins afficher gagnant
+            } else {
+              displayName = matchKey;
+            }
+        
+          }
         }
-        
         // ✅ Ronde 2
         else if (matchKey.startsWith("R2")) {
         
