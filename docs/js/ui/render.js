@@ -8,13 +8,6 @@ import { getRound1Matchups } from "../services/matchService.js";
 
 
 export async function loadPredictionsDetails() {
-  
-  if (user.id === appState.user.uid) {
-    html += `<td style="border:2px solid #007BFF;">${cell}</td>`;
-  } else {
-    html += `<td>${cell}</td>`;
-  }
-
 
   const round1Matchups = await getRound1Matchups();
   const round1Map = {};
@@ -210,6 +203,13 @@ export async function loadPredictionsDetails() {
         html += `<td>${resultDisplay}</td>`;
 
         allUsers.forEach(user => {
+          
+          if (user.id === appState.user.uid) {
+              html += `<td style="border:2px solid #007BFF;">${cell}</td>`;
+            } else {
+              html += `<td>${cell}</td>`;
+            }
+
 
           const userData = submissions[round]?.[user.id];
           const pickTeam = userData?.picks?.[teamKey];
@@ -391,6 +391,15 @@ export async function renderFullLeaderboard(filterUserId = null) {
     </div>
   `;
   const filter = document.getElementById("userFilter");
+  
+  data.forEach(u => {
+    filter.innerHTML += `<option value="${u.id}">${u.name}</option>`;
+  });
+  
+  filter.addEventListener("change", (e) => {
+    renderFullLeaderboard(e.target.value);
+  });
+
 
   const predictions = await getAllPredictions();
   const data = await computeLeaderboard(predictions, appState.results);
