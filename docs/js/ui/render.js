@@ -99,14 +99,20 @@ export async function loadPredictionsDetails() {
 
         
         
-        let resultTeam = appState.results[teamKey];
+        let resultTeam = appState.results[teamKey]; // ✅ vrai gagnant
+
+        let resultDisplay = resultTeam;
         
-        // ✅ utiliser Firestore SI valeur valide
-        if (resultTeam && resultTeam !== "") {
-          // ✅ garder tel quel
-        } else {
+        console.log({
+          matchKey,
+          resultTeam,
+          pickTeam
+        });
+
         
-          // ✅ fallback seulement si vraiment vide
+        // fallback uniquement pour affichage
+        if (!resultDisplay || resultDisplay === "") {
+        
           const p1 = getParentMatch(matchKey, 1);
           const p2 = getParentMatch(matchKey, 2);
         
@@ -114,9 +120,9 @@ export async function loadPredictionsDetails() {
           const t2 = p2 ? appState.results[p2 + "_team"] : null;
         
           if (t1 && t2) {
-            resultTeam = `${t1} vs ${t2}`;
+            resultDisplay = `${t1} vs ${t2}`; // ✅ affichage seulement
           } else {
-            resultTeam = "-";
+            resultDisplay = "-";
           }
         }
 
