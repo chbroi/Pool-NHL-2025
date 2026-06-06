@@ -104,7 +104,12 @@ export async function loadPredictionsDetails() {
         let resultDisplay = resultTeam;
         
         
-
+        console.log({
+          matchKey,
+          teamKey,
+          gamesKey,
+          resultTeam,
+          });
         
         // fallback uniquement pour affichage
         if (!resultDisplay || resultDisplay === "") {
