@@ -353,15 +353,46 @@ const leaderboard = await computeLeaderboard(predictions,
       container.appendChild(me);
     }
   }
+  
+container.innerHTML += `
+  <div class="card">
+    <h3>ℹ️ Comment utiliser le pool</h3>
+    <ul>
+     <li onclick="showTab('submit')">Soumettre</li> → entrer tes prédictions</li>
+      <li onclick="showTab('scoring')">Système de pointage</li> → voir comment le pointage fonctionne</li>
+      <li onclick="showTab('results')">Résultats</li> → voir les points de chaque joueur</li>
+     <li onclick="showTab('leaderboard')">Classement</li> → voir le classement global</li>
+     <li onclick="showTab('rules)">Classement</li> → voir les règlements du pool</li>
+    </ul>
+  </div>
+
 }
 
-export async function renderFullLeaderboard(filterUserId = null) {
+
+xport async function renderFullLeaderboard(filterUserId = null) {
 
   const predictions = await getAllPredictions();
   const data = await computeLeaderboard(predictions, appState.results);
 
   const container = document.getElementById("leaderboardTab");
-  container.innerHTML = "<h2>Classement complet</h2>";
+
+  container.innerHTML = `
+    <h2>Classement complet</h2>
+    <select id="userFilter">
+      <option value="">Tous</option>
+    </select>
+  `;
+
+  const filter = document.getElementById("userFilter");
+
+  // remplir filter
+  data.forEach(u => {
+    filter.innerHTML += `<option value="${u.id}">${u.name}</option>`;
+  });
+
+  filter.addEventListener("change", (e) => {
+    renderFullLeaderboard(e.target.value);
+  });
 
   let filtered = data;
 
@@ -375,6 +406,7 @@ export async function renderFullLeaderboard(filterUserId = null) {
     container.appendChild(row);
   });
 }
+
 
 export async function loadUserPicks() {
 
