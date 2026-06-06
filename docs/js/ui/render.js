@@ -355,16 +355,21 @@ const leaderboard = await computeLeaderboard(predictions,
   }
 }
 
-export async function renderFullLeaderboard() {
+export async function renderFullLeaderboard(filterUserId = null) {
 
-  
   const predictions = await getAllPredictions();
-  
-  const data = await computeLeaderboard(predictions,appState.results);
+  const data = await computeLeaderboard(predictions, appState.results);
+
   const container = document.getElementById("leaderboardTab");
   container.innerHTML = "<h2>Classement complet</h2>";
 
-  data.forEach((p, i) => {
+  let filtered = data;
+
+  if (filterUserId) {
+    filtered = data.filter(p => p.id === filterUserId);
+  }
+
+  filtered.forEach((p, i) => {
     const row = document.createElement("div");
     row.innerHTML = `#${i+1} - ${p.name} (${p.score} pts)`;
     container.appendChild(row);
