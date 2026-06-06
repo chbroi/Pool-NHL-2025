@@ -61,11 +61,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-filter.addEventListener("change", () => {
-  renderFullLeaderboard(filter.value);
-});
-
-
 onAuthStateChanged(auth, async (user) => {
 
   const loginBtn = document.getElementById("loginBtn");
