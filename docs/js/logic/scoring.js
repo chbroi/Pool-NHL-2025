@@ -11,38 +11,50 @@ export function getRoundFromKey(key) {
 }
 
 // score d'une soumission
-export function calculateSubmissionScore(picks, results) {
+
+export function calculateSubmissionScore(picks, results, submission) {
 
   let score = 0;
+
+  const submissionConfig = SCORING.submissions[submission];
+  if (!submissionConfig) return 0;
 
   Object.keys(picks).forEach(key => {
 
     const resultValue = results[key];
-    if (!resultValue) return;
 
+    if (!resultValue || resultValue === "") return;
+
+    // ✅ MATCHS
     if (key.includes("_team")) {
 
       const round = getRoundFromKey(key);
-      const multiplier = SCORING.roundMultiplier[round];
+      const roundConfig = submissionConfig.rounds[round];
+
+      if (!roundConfig) return;
 
       if (picks[key] === resultValue) {
 
-        score += SCORING.teamCorrect * multiplier;
+        // ✅ points équipe
+        score += roundConfig.team;
 
+        // ✅ points games
         const gamesKey = key.replace("_team", "_games");
 
         if (
           results[gamesKey] &&
           Number(picks[gamesKey]) === Number(results[gamesKey])
         ) {
-          score += SCORING.gamesCorrect * multiplier;
+          score += roundConfig.games;
         }
       }
     }
 
+    // ✅ CONN SMYTHE
     if (key === "Conn_Smythe") {
+
       if (picks[key] === results[key]) {
-        score += SCORING.connSmythe;
+        score += submissionConfig.connSmythe;
       }
     }
 
