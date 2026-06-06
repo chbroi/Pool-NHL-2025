@@ -82,7 +82,8 @@ export async function loadPredictionsDetails() {
     
       const isMe = appState.user && u.id === appState.user.uid;
     
-      html += `<th ${isMe ? 'style='myColumHeader' : ''}>
+      
+      html += `<th class="${isMe ? 'myColumnHeader' : ''}">
         ${u.name}
       </th>`;
     });
@@ -215,10 +216,10 @@ export async function loadPredictionsDetails() {
               const isMe = appState.user && user.id === appState.user.uid;
               
               
+              
               html += `<td class="${isMe ? 'myColumnCell' : ''}">
                 ${cell}
               </td>`;
-
 
             }
 
