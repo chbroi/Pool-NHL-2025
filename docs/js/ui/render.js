@@ -8,6 +8,17 @@ import { getRound1Matchups } from "../services/matchService.js";
 
 
 export async function loadPredictionsDetails() {
+  
+    allUsers.sort((a, b) => {
+      return (globalScores[b.id] || 0) - (globalScores[a.id] || 0);
+    });
+  
+  if (user.id === appState.user.uid) {
+    html += `<td style="border:2px solid #007BFF;">${cell}</td>`;
+  } else {
+    html += `<td>${cell}</td>`;
+  }
+
 
   const round1Matchups = await getRound1Matchups();
   const round1Map = {};
@@ -358,11 +369,11 @@ container.innerHTML += `
   <div class="card">
     <h3>ℹ️ Comment utiliser le pool</h3>
     <ul>
-     <li onclick="showTab('submit')">Soumettre</li> → entrer tes prédictions</li>
-      <li onclick="showTab('scoring')">Système de pointage</li> → voir comment le pointage fonctionne</li>
-      <li onclick="showTab('results')">Résultats</li> → voir les points de chaque joueur</li>
-     <li onclick="showTab('leaderboard')">Classement</li> → voir le classement global</li>
-     <li onclick="showTab('rules)">Classement</li> → voir les règlements du pool</li>
+     <li onclick="showTab('submit')"style="cursor:pointer";>Soumettre</li> → entrer tes prédictions</li>
+      <li onclick="showTab('scoring')"style="cursor:pointer";>Système de pointage</li> → voir comment le pointage fonctionne</li>
+      <li onclick="showTab('results')"style="cursor:pointer";>Résultats</li> → voir les points de chaque joueur</li>
+     <li onclick="showTab('leaderboard')"style="cursor:pointer";>Classement</li> → voir le classement global</li>
+     <li onclick="showTab('rules)"style="cursor:pointer";>Règlements</li> → voir les règlements du pool</li>
     </ul>
   </div>
 `
@@ -370,11 +381,31 @@ container.innerHTML += `
 
 
 export async function renderFullLeaderboard(filterUserId = null) {
+  const container = document.getElementById("leaderboardTab");
+  container.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h2 style="margin:0;">🏆 Classement complet</h2>
+      <select id="userFilter">
+        <option value="">Tous</option>
+      </select>
+    </div>
+  `;
+  const filter = document.getElementById("userFilter");
 
   const predictions = await getAllPredictions();
   const data = await computeLeaderboard(predictions, appState.results);
 
-  const container = document.getElementById("leaderboardTab");
+    // remplir le select
+    data.forEach(u => {
+      filter.innerHTML += `<option value="${u.id}">${u.name}</option>`;
+    });
+    
+    // listener ✅ IMPORTANT
+    filter.addEventListener("change", (e) => {
+      renderFullLeaderboard(e.target.value);
+    });
+
+  
 
   container.innerHTML = `
     <h2>Classement complet</h2>
@@ -383,7 +414,6 @@ export async function renderFullLeaderboard(filterUserId = null) {
     </select>
   `;
 
-  const filter = document.getElementById("userFilter");
 
   // remplir filter
   data.forEach(u => {
@@ -396,7 +426,7 @@ export async function renderFullLeaderboard(filterUserId = null) {
 
   let filtered = data;
 
-  if (filterUserId) {
+  if (filterUserId && filterUserId !== "") {
     filtered = data.filter(p => p.id === filterUserId);
   }
 
