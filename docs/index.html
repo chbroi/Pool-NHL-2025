@@ -41,17 +41,33 @@
         backdrop-filter: blur(10px);
       }
     
+      
       #tabs {
-        flex-wrap: wrap;
-        justify-content: center;
-        
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap; /* important mobile */
       }
-    
+      
       #tabs button {
-        flex: 1 1 45%;
-        font-size: 14px;
+        border: none;
+        background: var(--card);
+        padding: 8px 14px;
+        border-radius: 8px;
+        cursor: pointer;
+        color: var(--text);
+        font-weight: 500;
+        transition: 0.2s;
       }
-    
+      
+      #tabs button:hover {
+        background: rgba(0,0,0,0.1);
+      }
+      
+      #tabs button.activeTab {
+        background: var(--primary);
+        color: white;
+      }
+
       
       #mainHeader {
         position: sticky;
@@ -220,6 +236,17 @@
       background: rgba(255,255,255,0.08);
       font-size: 16px;
     }
+    
+    .myColumnHeader {
+      background: #ffd700;
+      color: black;
+    }
+    
+    .myColumnCell {
+      background: rgba(255,215,0,0.15);
+      font-weight: bold;
+    }
+
 
 
     /* ===== BUTTON ===== */
