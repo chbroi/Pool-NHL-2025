@@ -55,9 +55,6 @@ export async function loadPredictionsDetails() {
     name
   }));
 
-  allUsers.sort((a, b) => {
-      return (globalScores[b.id] || 0) - (globalScores[a.id] || 0);
-    });
 
   const rounds = {
     1: MATCH_ORDER.filter(k => k.startsWith("R1")),
@@ -80,9 +77,16 @@ export async function loadPredictionsDetails() {
       <th>Résultat</th>
     `;
 
+    
     allUsers.forEach(u => {
-      html += `<th>${u.name}</th>`;
+    
+      const isMe = appState.user && u.id === appState.user.uid;
+    
+      html += `<th ${isMe ? 'style='myColumHeader' : ''}>
+        ${u.name}
+      </th>`;
     });
+
 
     html += `</tr>`;
 
@@ -207,7 +211,15 @@ export async function loadPredictionsDetails() {
           if (user.id === appState.user.uid) {
               html += `<td style="border:2px solid #007BFF;">${cell}</td>`;
             } else {
-              html += `<td>${cell}</td>`;
+              
+              const isMe = appState.user && user.id === appState.user.uid;
+              
+              
+              html += `<td class="${isMe ? 'myColumnCell' : ''}">
+                ${cell}
+              </td>`;
+
+
             }
 
 
@@ -263,12 +275,14 @@ export async function loadPredictionsDetails() {
 
           submissionScores[user.id] = (submissionScores[user.id] || 0) + points;
           globalScores[user.id] = (globalScores[user.id] || 0) + points;
+          
 
           html += `<td>${cell}</td>`;
         });
 
         html += `</tr>`;
       });
+      
     });
     // ✅ Conn Smythe
     html += `<tr>
@@ -331,6 +345,11 @@ export async function loadPredictionsDetails() {
 
     html += `</table></div><br>`;
     container.innerHTML += html;
+    
+allUsers.sort((a, b) => {
+  return (globalScores[b.id] || 0) - (globalScores[a.id] || 0);
+});
+
   });
 }
 
