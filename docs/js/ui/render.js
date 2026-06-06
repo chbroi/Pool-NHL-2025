@@ -103,14 +103,6 @@ export async function loadPredictionsDetails() {
 
         let resultDisplay = resultTeam;
         
-        
-        console.log({
-          matchKey,
-          teamKey,
-          gamesKey,
-          resultTeam,
-          });
-        
         // fallback uniquement pour affichage
         if (!resultDisplay || resultDisplay === "") {
         
@@ -515,4 +507,27 @@ export async function generateRound(roundNumber) {
   });
 
   container.innerHTML = html;
+}
+
+export function renderScoring() {
+
+  const container = document.getElementById("scoringTab");
+
+  container.innerHTML = `<h2>📊 Système de pointage</h2>`;
+
+  Object.entries(SCORING.submissions).forEach(([sub, config]) => {
+
+    let html = `<h3>Soumission ${sub}</h3>`;
+    html += `<ul>`;
+
+    Object.entries(config.rounds).forEach(([round, pts]) => {
+      html += `<li>Ronde ${round} : ${pts.team} pts (équipe) + ${pts.games} pts (# matchs)</li>`;
+    });
+
+    html += `<li>Conn Smythe : ${config.connSmythe} pts</li>`;
+    html += `</ul>`;
+
+    container.innerHTML += html;
+
+  });
 }
