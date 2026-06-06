@@ -199,11 +199,6 @@ export async function loadPredictionsDetails() {
         html += `</tr>`;
       });
     });
-  console.log({
-          matchKey,
-          resultTeam,
-          pickTeam
-        });
     // ✅ Conn Smythe
     html += `<tr>
       <td>🏆 Conn Smythe</td>
