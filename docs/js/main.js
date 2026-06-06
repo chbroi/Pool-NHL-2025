@@ -178,7 +178,7 @@ for (let i = 1; i <= 4; i++) {
   }
   const helper = document.getElementById("helperMessage");
   
-  if (["home", "submit", "myPicks"].includes(tabName)) {
+  if (["home", "submit", "scoring"].includes(tabName)) {
     helper.style.display = "block";
   } else {
     helper.style.display = "none";
@@ -195,7 +195,7 @@ for (let i = 1; i <= 4; i++) {
   
 const rules = document.getElementById("rulesContainer");
 if (rules) rules.style.display = "none";
-  document.getElementById("myPicksTab").innerHTML = "";
+  document.getElementById("scoringTab").innerHTML = "";
   document.getElementById(tabName + "Tab").style.display = "block";
   document.getElementById("predictionForm").style.display = "none";
 
@@ -209,7 +209,7 @@ if (rules) rules.style.display = "none";
   if (tabName === "home") renderHome();
   if (tabName === "results") loadPredictionsDetails();
   if (tabName === "leaderboard") renderFullLeaderboard(); 
-  if (tabName === "scoringTab") renderScoring();
+  if (tabName === "scoring") renderScoring();
   if (tabName === "submit") {
   
     const form = document.getElementById("predictionForm");
