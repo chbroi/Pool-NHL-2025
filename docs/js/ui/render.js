@@ -103,11 +103,7 @@ export async function loadPredictionsDetails() {
 
         let resultDisplay = resultTeam;
         
-        console.log({
-          matchKey,
-          resultTeam,
-          pickTeam
-        });
+        
 
         
         // fallback uniquement pour affichage
@@ -203,7 +199,11 @@ export async function loadPredictionsDetails() {
         html += `</tr>`;
       });
     });
-
+  console.log({
+          matchKey,
+          resultTeam,
+          pickTeam
+        });
     // ✅ Conn Smythe
     html += `<tr>
       <td>🏆 Conn Smythe</td>
