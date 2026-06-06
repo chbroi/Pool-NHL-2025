@@ -365,11 +365,11 @@ container.innerHTML += `
      <li onclick="showTab('rules)">Classement</li> → voir les règlements du pool</li>
     </ul>
   </div>
-
+`
 }
 
 
-xport async function renderFullLeaderboard(filterUserId = null) {
+export async function renderFullLeaderboard(filterUserId = null) {
 
   const predictions = await getAllPredictions();
   const data = await computeLeaderboard(predictions, appState.results);
