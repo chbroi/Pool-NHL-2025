@@ -207,23 +207,39 @@ export async function loadPredictionsDetails() {
           let cell = pickTeam ? `${pickTeam} (${pickGames})` : "-";
 
           let points = 0;
-          const mult = SCORING.roundMultiplier[roundNum];
+          
+          const submission = round;
+          
+          const submissionConfig = SCORING.submissions[submission];
+          const roundConfig = submissionConfig?.rounds[roundNum];
+;
 
           if (pickTeam && isResultAvailable(teamKey)) {
 
             if (pickTeam === resultTeam) {
 
-              points += SCORING.teamCorrect * mult;
+              
+                if (roundConfig) {
+                
+                  points += roundConfig.team;
+                
+                  if (
+                    isResultAvailable(gamesKey) &&
+                    Number(pickGames) === Number(resultGames)
+                  ) {
+                    points += roundConfig.games;
+                  }
+                
+                }
+                if (
+                  isResultAvailable(gamesKey) &&
+                  Number(pickGames) === Number(resultGames)
+                ) {
+                  cell += " ✅✅";
+                } else {
+                  cell += " ✅";
+                }
 
-              if (
-                isResultAvailable(gamesKey) &&
-                Number(pickGames) === Number(resultGames)
-              ) {
-                points += SCORING.gamesCorrect * mult;
-                cell += " ✅✅";
-              } else {
-                cell += " ✅";
-              }
 
             } else {
               cell += " ❌";
@@ -257,11 +273,14 @@ export async function loadPredictionsDetails() {
       let cell = pick || "-";
       let points = 0;
 
+      const submission = Number(round);
+      const submissionConfig = SCORING.submissions[submission];
+
       if (pick && appState.results["Conn_Smythe"]) {
 
         if (pick === appState.results["Conn_Smythe"]) {
           cell += ` ✅✅ (+${SCORING.connSmythe})`;
-          points += SCORING.connSmythe;
+          points += submissionConfig.connSmythe;
         } else {
           cell += " ❌";
         }
