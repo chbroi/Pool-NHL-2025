@@ -60,6 +60,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
+
+filter.addEventListener("change", () => {
+  renderFullLeaderboard(filter.value);
+});
+
+
 onAuthStateChanged(auth, async (user) => {
 
   const loginBtn = document.getElementById("loginBtn");
@@ -155,6 +161,13 @@ onAuthStateChanged(auth, async (user) => {
 
 
 window.showTab = function(tabName) {
+  
+  if (!appState.user && tabName !== "home" && tabName !== "rules") {
+    alert("Tu dois être connecté pour accéder à cette section.");
+    showTab("home");
+    return;
+  }
+
   
   // mise en valeur de l'onglet actif
   document.querySelectorAll("#tabs button").forEach(btn => {
