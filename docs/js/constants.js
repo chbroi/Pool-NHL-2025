@@ -51,16 +51,46 @@ export const round1Ids = [
     ];
 
 
+
 export const SCORING = {
-  teamCorrect: 2,
-  gamesCorrect: 1,
 
-  roundMultiplier: {
-    1: 1,
-    2: 2,
-    3: 3,
-    4: 5
-  },
+  submissions: {
 
-  connSmythe: 10
+    1: {
+      rounds: {
+        1: { team: 1, games: 2 },
+        2: { team: 2, games: 2 },
+        3: { team: 4, games: 2 },
+        4: { team: 8, games: 2 }
+      },
+      connSmythe: 4
+    },
+
+    2: {
+      rounds: {
+        2: { team: 1, games: 2 },
+        3: { team: 2, games: 2 },
+        4: { team: 4, games: 2 }
+      },
+      connSmythe: 3
+    },
+
+    3: {
+      rounds: {
+        3: { team: 1, games: 2 },
+        4: { team: 2, games: 2 }
+      },
+      connSmythe: 2
+    },
+
+    4: {
+      rounds: {
+        4: { team: 1, games: 2 }
+      },
+      connSmythe: 1
+    }
+
+  }
+
 };
+
