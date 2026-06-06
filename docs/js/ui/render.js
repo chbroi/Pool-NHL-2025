@@ -9,10 +9,6 @@ import { getRound1Matchups } from "../services/matchService.js";
 
 export async function loadPredictionsDetails() {
   
-    allUsers.sort((a, b) => {
-      return (globalScores[b.id] || 0) - (globalScores[a.id] || 0);
-    });
-  
   if (user.id === appState.user.uid) {
     html += `<td style="border:2px solid #007BFF;">${cell}</td>`;
   } else {
@@ -65,6 +61,10 @@ export async function loadPredictionsDetails() {
     id,
     name
   }));
+
+  allUsers.sort((a, b) => {
+      return (globalScores[b.id] || 0) - (globalScores[a.id] || 0);
+    });
 
   const rounds = {
     1: MATCH_ORDER.filter(k => k.startsWith("R1")),
