@@ -131,26 +131,59 @@ export async function loadPredictionsDetails() {
         const resultGames = appState.results[gamesKey];
         const roundNum = getRoundFromKey(matchKey);
 
+        let displayName = "";
         
-       
-       let displayName = round1Map[matchKey];
-
-        if (!displayName) {
+        // ✅ Ronde 1 → toujours afficher matchup réel
+        if (matchKey.startsWith("R1")) {
         
-          const p1 = getParentMatch(matchKey, 1);
-          const p2 = getParentMatch(matchKey, 2);
+          displayName = round1Map[matchKey] || matchKey;
         
-          const t1 = p1 ? appState.results[p1 + "_team"] : null;
-          const t2 = p2 ? appState.results[p2 + "_team"] : null;
+        }
         
-          if (t1 && t2) {
-            displayName = `${t1} vs ${t2}`;
-          } else if (appState.results[matchKey + "_team"]) {
-            displayName = appState.results[matchKey + "_team"]; // fallback winner
+        // ✅ Ronde 2
+        else if (matchKey.startsWith("R2")) {
+        
+          const result = appState.results[matchKey + "_team"];
+        
+          if (result && result !== "") {
+            displayName = result;
           } else {
-            displayName = matchKey;
+            if (matchKey.includes("EST")) {
+              displayName = "Gagnant Est 1 vs Gagnant Est 2";
+            } else {
+              displayName = "Gagnant Ouest 1 vs Gagnant Ouest 2";
+            }
           }
         }
+        
+        // ✅ Ronde 3
+        else if (matchKey.startsWith("R3")) {
+        
+          const result = appState.results[matchKey + "_team"];
+        
+          if (result && result !== "") {
+            displayName = result;
+          } else {
+            if (matchKey.includes("EST")) {
+              displayName = "Gagnant Est";
+            } else {
+              displayName = "Gagnant Ouest";
+            }
+          }
+        }
+        
+        // ✅ Finale
+        else if (matchKey.startsWith("R4")) {
+        
+          const result = appState.results[matchKey + "_team"];
+        
+          if (result && result !== "") {
+            displayName = result;
+          } else {
+            displayName = "Gagnant Coupe Stanley";
+          }
+        }
+
         html += `<tr><td>${displayName}</td>`;
         
         if (isResultAvailable(gamesKey)) {
