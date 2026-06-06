@@ -151,8 +151,7 @@ export async function loadPredictionsDetails() {
 
 
         html += `<tr><td>${displayName}</td>`;
-
-        let resultDisplay = resultTeam || "-";
+        
         if (isResultAvailable(gamesKey)) {
           resultDisplay += ` (${resultGames})`;
         }
