@@ -95,33 +95,32 @@ export function calculateTotalScore(predictions, results) {
 // leaderboard
 export async function computeLeaderboard(predictions, results) {
 
-  const users = {};
+  const scores = {};
 
-  predictions.forEach(data => {
+  predictions.forEach(p => {
 
-    if (!users[data.userId]) {
-      users[data.userId] = {
-        name: data.userName,
-        predictions: []
-      };
-    }
+    const userId = p.userId;
+    const submission = p.round;
 
-    users[data.userId].predictions.push(data);
+    const score = calculateSubmissionScore(
+      p.picks,
+      results,
+      submission
+    );
+
+    scores[userId] = (scores[userId] || 0) + score;
+
   });
 
-  const leaderboard = [];
+  return Object.entries(scores).map(([id, score]) => {
 
-  Object.values(users).forEach(user => {
+    const user = predictions.find(p => p.userId === id);
 
-    const score = calculateTotalScore(user.predictions, results);
+    return {
+      id,
+      name: user.userName,
+      score
+    };
 
-    leaderboard.push({
-      name: user.name,
-      score: score
-    });
-  });
-
-  leaderboard.sort((a, b) => b.score - a.score);
-
-  return leaderboard;
+  }).sort((a, b) => b.score - a.score);
 }
