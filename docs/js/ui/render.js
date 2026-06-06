@@ -98,11 +98,15 @@ export async function loadPredictionsDetails() {
         const gamesKey = matchKey + "_games";
 
         
+        
         let resultTeam = appState.results[teamKey];
         
-        // ✅ fallback dynamique si résultat vide
-        if (!resultTeam || resultTeam === "") {
+        // ✅ utiliser Firestore SI valeur valide
+        if (resultTeam && resultTeam !== "") {
+          // ✅ garder tel quel
+        } else {
         
+          // ✅ fallback seulement si vraiment vide
           const p1 = getParentMatch(matchKey, 1);
           const p2 = getParentMatch(matchKey, 2);
         
@@ -115,6 +119,7 @@ export async function loadPredictionsDetails() {
             resultTeam = "-";
           }
         }
+
 
         const resultGames = appState.results[gamesKey];
         const roundNum = getRoundFromKey(matchKey);
@@ -131,9 +136,11 @@ export async function loadPredictionsDetails() {
           const t1 = p1 ? appState.results[p1 + "_team"] : null;
           const t2 = p2 ? appState.results[p2 + "_team"] : null;
         
-          displayName = (t1 && t2)
-            ? `${t1} vs ${t2}`
-            : matchKey;
+          if (t1 && t2) {
+            displayName = `${t1} vs ${t2}`;
+          } else {
+            displayName = matchKey;
+          }
         }
 
 
