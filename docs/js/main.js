@@ -8,7 +8,7 @@ import { signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-aut
 import { collection, query, where,doc, getDoc, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { playersByTeam, round1Ids,SCORING} from "./constants.js";
 import { appState } from "./app/state.js"
-import { loadPredictionsDetails, renderHome, renderFullLeaderboard, loadUserPicks,generateRound} from "./ui/render.js"
+import { loadPredictionsDetails, renderHome, renderFullLeaderboard, renderScoring,generateRound} from "./ui/render.js"
 import { checkEligibility, loadAppConfig} from "./services/userService.js";
 import { attachRound1Listeners, attachRound2Listeners, attachRound3Listeners, attachConnSmytheListeners} from "./ui/listeners.js";
 
@@ -209,14 +209,7 @@ if (rules) rules.style.display = "none";
   if (tabName === "home") renderHome();
   if (tabName === "results") loadPredictionsDetails();
   if (tabName === "leaderboard") renderFullLeaderboard(); 
-  if (tabName === "myPicks") {
-  
-    // ne PAS afficher le form
-    document.getElementById("predictionForm").style.display = "none";
-    // afficher uniquement tes picks
-    loadUserPicks();
-    return;
-  }
+  if (tabName === "scoringTab") renderScoring();
   if (tabName === "submit") {
   
     const form = document.getElementById("predictionForm");
