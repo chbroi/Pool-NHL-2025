@@ -133,7 +133,7 @@ export async function loadPredictionsDetails() {
 
         
        
-        let displayName = round1Map[matchKey];
+       let displayName = round1Map[matchKey];
 
         if (!displayName) {
         
@@ -145,12 +145,12 @@ export async function loadPredictionsDetails() {
         
           if (t1 && t2) {
             displayName = `${t1} vs ${t2}`;
+          } else if (appState.results[matchKey + "_team"]) {
+            displayName = appState.results[matchKey + "_team"]; // fallback winner
           } else {
             displayName = matchKey;
           }
         }
-
-
         html += `<tr><td>${displayName}</td>`;
         
         if (isResultAvailable(gamesKey)) {
