@@ -82,7 +82,7 @@ export async function loadPredictionsDetails() {
     
       const isMe = appState.user && u.id === appState.user.uid;
       html += `<th class="${isMe ? 'myColumnHeader' : ''}">
-        ${u.name}
+        ${isMe ? "👤 " : ""}${u.name}
       </th>`;
     });
 
@@ -220,11 +220,6 @@ export async function loadPredictionsDetails() {
           const roundConfig = submissionConfig?.rounds[roundNum];
           const isMe = appState.user && user.id === appState.user.uid;
           
-          html += `
-            <td class="${isMe ? 'myColumnCell' : ''}">
-              ${cell}
-            </td>
-          `;
 
           if (pickTeam && isResultAvailable(teamKey)) {
 
@@ -266,7 +261,11 @@ export async function loadPredictionsDetails() {
           globalScores[user.id] = (globalScores[user.id] || 0) + points;
           
 
-          html += `<td>${cell}</td>`;
+          html += `
+          <td class="${isMe ? 'myColumnCell' : ''}">
+            ${cell}
+          </td>
+        `;
         });
 
         html += `</tr>`;
