@@ -241,13 +241,41 @@
       background: #ffd700;
       color: black;
     }
-    
-    
     .myColumnCell {
-      border-left: 4px solid #ffd700;
-      font-weight: 600;
+      background: rgba(255, 215, 0, 0.12);
     }
-
+    
+    .homeActions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .homeAction {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+      border-left: 3px solid transparent;
+    }
+    
+    .homeAction:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-left-color: var(--primary);
+    }
+    
+    .homeAction strong {
+      min-width: 140px; /* aligne les descriptions */
+      color: #ffffff;
+    }
+    
+    .homeAction span {
+      color: #bbbbbb;
+      font-size: 14px;
+    }
 
 
 
