@@ -105,105 +105,69 @@ export async function loadPredictionsDetails() {
         const teamKey = matchKey + "_team";
         const gamesKey = matchKey + "_games";
 
+        / ✅ RÉSULTAT (gagnant seulement, jamais de "vs")
+        let resultTeam = appState.results[teamKey];
+        let resultDisplay = resultTeam ? resultTeam : "-";
         
-        
-        let resultTeam = appState.results[teamKey]; // ✅ vrai gagnant
-
-        let resultDisplay = resultTeam;
-        
-        // fallback uniquement pour affichage
-        if (!resultDisplay || resultDisplay === "") {
-        
-          const p1 = getParentMatch(matchKey, 1);
-          const p2 = getParentMatch(matchKey, 2);
-        
-          
-          const t1 = p1 ? appState.results[p1] : null;
-          const t2 = p2 ? appState.results[p2] : null;
-
-          console.log("p1:", p1, "p2:", p2);
-          console.log("t1:", t1, "t2:", t2);
-          if (t1 && t2) {
-            resultDisplay = `${t1} vs ${t2}`; // ✅ affichage seulement
-          } else {
-            resultDisplay = "-";
-          }
-        }
-
-
         const resultGames = appState.results[gamesKey];
-        const roundNum = getRoundFromKey(matchKey);
-
-        let displayName = "";
-
-        // ✅ CAS RONDE 1 (source officielle)
         
+        if (resultTeam && isResultAvailable(gamesKey)) {
+          resultDisplay += ` (${resultGames})`;
+        }
+        
+        // ✅ MATCH NAME (affrontement seulement ici)
+        let displayName = "";
+        
+        // DEBUG
         console.log("matchKey:", matchKey);
-        console.log("results snapshot:", appState.results);
-
-       if (matchKey.startsWith("R1")) {
+        
+        // ✅ RONDE 1 → matchup réel
+        if (matchKey.startsWith("R1")) {
         
           const m = round1Map[matchKey];
-          
         
           if (m && m !== "") {
             displayName = m;
           } else {
-        
-            // ✅ fallback FIABLE basé sur Firebase
-            const team = appState.results[matchKey + "_team"];
-        
-            if (team && team !== "") {
-              displayName = team; // au moins afficher gagnant
-            } else {
-              displayName = matchKey;
-            }
-        
-          }
-        }
-        // ✅ Ronde 2
-        else if (matchKey.startsWith("R2")) {
-        
-          const result = appState.results[matchKey + "_team"];
-        
-          if (result && result !== "") {
-            displayName = result;
-          } else {
-            if (matchKey.includes("EST")) {
-              displayName = "Gagnant Est X vs Gagnant Est Y";
-            } else {
-              displayName = "Gagnant Ouest X vs Gagnant Ouest Y";
-            }
+            displayName = matchKey;
           }
         }
         
-        // ✅ Ronde 3
-        else if (matchKey.startsWith("R3")) {
+        // ✅ RONDE 2+
+        else {
         
-          const result = appState.results[matchKey + "_team"];
+          const p1 = getParentMatch(matchKey, 1);
+          const p2 = getParentMatch(matchKey, 2);
         
-          if (result && result !== "") {
-            displayName = result;
+          const t1 = p1 ? appState.results[p1] : null;
+          const t2 = p2 ? appState.results[p2] : null;
+        
+          console.log("p1:", p1, "p2:", p2);
+          console.log("t1:", t1, "t2:", t2);
+        
+          if (t1 && t2) {
+            displayName = `${t1} vs ${t2}`; // ✅ ICI SEULEMENT
           } else {
-            if (matchKey.includes("EST")) {
-              displayName = "Gagnant Est";
-            } else {
-              displayName = "Gagnant Ouest";
+            // ✅ fallback selon ta logique
+            if (matchKey.startsWith("R2")) {
+              displayName = matchKey.includes("EST")
+                ? "Gagnant Est X vs Gagnant Est Y"
+                : "Gagnant Ouest X vs Gagnant Ouest Y";
+            }
+            else if (matchKey.startsWith("R3")) {
+              displayName = matchKey.includes("EST")
+                ? "Finale Est"
+                : "Finale Ouest";
+            }
+            else if (matchKey.startsWith("R4")) {
+              displayName = "Finale Coupe Stanley";
+            }
+            else {
+              displayName = "Match à déterminer";
             }
           }
         }
-        
-        // ✅ Finale
-        else if (matchKey.startsWith("R4")) {
-        
-          const result = appState.results[matchKey + "_team"];
-        
-          if (result && result !== "") {
-            displayName = result;
-          } else {
-            displayName = "Gagnant Coupe Stanley";
-          }
-        }
+
       
 
         html += `<tr><td>${displayName}</td>`;
@@ -311,7 +275,15 @@ export async function loadPredictionsDetails() {
       submissionScores[user.id] = (submissionScores[user.id] || 0) + points;
       globalScores[user.id] = (globalScores[user.id] || 0) + points;
 
-      html += `<td>${cell}</td>`;
+      
+      const isMe = appState.user && user.id === appState.user.uid;
+      
+      html += `
+        <td class="${isMe ? 'myColumnCell' : ''}">
+          ${cell}
+        </td>
+      `;
+
     });
 
     html += `</tr>`;
