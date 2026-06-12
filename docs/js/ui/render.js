@@ -406,52 +406,6 @@ export async function renderFullLeaderboard() {
 }
 
 
-  const predictions = await getAllPredictions();
-  const data = await computeLeaderboard(predictions, appState.results);
-
-    // remplir le select
-    data.forEach(u => {
-      filter.innerHTML += `<option value="${u.id}">${u.name}</option>`;
-    });
-    
-    // listener ✅ IMPORTANT
-    filter.addEventListener("change", (e) => {
-      renderFullLeaderboard(e.target.value);
-    });
-
-  
-
-  container.innerHTML = `
-    <h2>Classement complet</h2>
-    <select id="userFilter">
-      <option value="">Tous</option>
-    </select>
-  `;
-
-
-  // remplir filter
-  data.forEach(u => {
-    filter.innerHTML += `<option value="${u.id}">${u.name}</option>`;
-  });
-
-  filter.addEventListener("change", (e) => {
-    renderFullLeaderboard(e.target.value);
-  });
-
-  let filtered = data;
-
-  if (filterUserId && filterUserId !== "") {
-    filtered = data.filter(p => p.id === filterUserId);
-  }
-
-  filtered.forEach((p, i) => {
-    const row = document.createElement("div");
-    row.innerHTML = `#${i+1} - ${p.name} (${p.score} pts)`;
-    container.appendChild(row);
-  });
-}
-
-
 export async function loadUserPicks() {
 
   if (!appState.user) return;
