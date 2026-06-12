@@ -250,6 +250,20 @@ if (tabName === "rules") {
     document.getElementById("acceptRulesButton").style.display = "none";
     document.getElementById("engagementContainer").style.display = "none";
   }
+  
+const desc = document.getElementById("tabDescription");
+
+const descriptions = {
+  home: "🏠 Vue d’ensemble du pool et ton classement",
+  submit: "✍️ Entre tes prédictions avant la date limite",
+  scoring: "📊 Comprendre le système de pointage",
+  results: "📈 Points obtenus par ronde et par joueur",
+  leaderboard: "🏆 Classement global des participants",
+  rules: "📜 Règlements officiels du pool"
+};
+
+desc.innerText = descriptions[tabName] || "";
+  
 };
 
 
