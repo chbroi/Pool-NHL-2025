@@ -119,7 +119,8 @@ export async function loadPredictionsDetails() {
         
           const t1 = p1 ? appState.results[p1 + "_team"] : null;
           const t2 = p2 ? appState.results[p2 + "_team"] : null;
-        
+          console.log("p1:", p1, "p2:", p2);
+          console.log("t1:", t1, "t2:", t2);
           if (t1 && t2) {
             resultDisplay = `${t1} vs ${t2}`; // ✅ affichage seulement
           } else {
@@ -136,8 +137,6 @@ export async function loadPredictionsDetails() {
         // ✅ CAS RONDE 1 (source officielle)
         
         console.log("matchKey:", matchKey);
-        console.log("p1:", p1, "p2:", p2);
-        console.log("t1:", t1, "t2:", t2);
         console.log("results snapshot:", appState.results);
 
        if (matchKey.startsWith("R1")) {
