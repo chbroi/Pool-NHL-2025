@@ -81,8 +81,6 @@ export async function loadPredictionsDetails() {
     allUsers.forEach(u => {
     
       const isMe = appState.user && u.id === appState.user.uid;
-    
-      
       html += `<th class="${isMe ? 'myColumnHeader' : ''}">
         ${u.name}
       </th>`;
@@ -208,22 +206,6 @@ export async function loadPredictionsDetails() {
         html += `<td>${resultDisplay}</td>`;
 
         allUsers.forEach(user => {
-          
-          if (user.id === appState.user.uid) {
-              html += `<td style="border:2px solid #007BFF;">${cell}</td>`;
-            } else {
-              
-              const isMe = appState.user && user.id === appState.user.uid;
-              
-              
-              
-              html += `<td class="${isMe ? 'myColumnCell' : ''}">
-                ${cell}
-              </td>`;
-
-            }
-
-
           const userData = submissions[round]?.[user.id];
           const pickTeam = userData?.picks?.[teamKey];
           const pickGames = userData?.picks?.[gamesKey];
@@ -236,7 +218,13 @@ export async function loadPredictionsDetails() {
           
           const submissionConfig = SCORING.submissions[submission];
           const roundConfig = submissionConfig?.rounds[roundNum];
-;
+          const isMe = appState.user && user.id === appState.user.uid;
+          
+          html += `
+            <td class="${isMe ? 'myColumnCell' : ''}">
+              ${cell}
+            </td>
+          `;
 
           if (pickTeam && isResultAvailable(teamKey)) {
 
@@ -393,7 +381,7 @@ container.innerHTML += `
       <li onclick="showTab('scoring')"style="cursor:pointer";>Système de pointage</li> → voir comment le pointage fonctionne</li>
       <li onclick="showTab('results')"style="cursor:pointer";>Résultats</li> → voir les points de chaque joueur</li>
      <li onclick="showTab('leaderboard')"style="cursor:pointer";>Classement</li> → voir le classement global</li>
-     <li onclick="showTab('rules)"style="cursor:pointer";>Règlements</li> → voir les règlements du pool</li>
+     <li onclick="showTab('rules')"style="cursor:pointer";>Règlements</li> → voir les règlements du pool</li>
     </ul>
   </div>
 `
