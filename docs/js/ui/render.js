@@ -16,6 +16,7 @@ export async function loadPredictionsDetails() {
   });
 
   const predictions = await getAllPredictions();
+  const leaderboard = await computeLeaderboard(predictions, appState.results);
   const container = document.getElementById("resultsTab");
   
 
@@ -42,19 +43,19 @@ export async function loadPredictionsDetails() {
   const lastSubmission = sortedRounds[sortedRounds.length - 1];
 
   // Tous les users
-  const allUsersMap = {};
+  
+  const orderedUsers = leaderboard.map(u => ({
+    id: u.id,
+    name: u.name,
+    score: u.score
+  }));
+
 
   Object.values(submissions).forEach(roundUsers => {
     Object.entries(roundUsers).forEach(([id, user]) => {
-      allUsersMap[id] = user.name;
+      orderedUsers[id] = user.name;
     });
   });
-
-  const allUsers = Object.entries(allUsersMap).map(([id, name]) => ({
-    id,
-    name
-  }));
-
 
   const rounds = {
     1: MATCH_ORDER.filter(k => k.startsWith("R1")),
@@ -78,7 +79,7 @@ export async function loadPredictionsDetails() {
     `;
 
     
-    allUsers.forEach(u => {
+    orderedUsers.forEach(u => {
     
       const isMe = appState.user && u.id === appState.user.uid;
       html += `<th class="${isMe ? 'myColumnHeader' : ''}">
@@ -96,7 +97,7 @@ export async function loadPredictionsDetails() {
 
       if (Number(r) < Number(round)) return;
       html += `<tr class="roundHeader">
-        <td colspan="${allUsers.length + 2}">Ronde ${r}</td>
+        <td colspan="${orderedUsers.length + 2}">Ronde ${r}</td>
       </tr>`;
 
       rounds[r].forEach(matchKey => {
@@ -205,7 +206,7 @@ export async function loadPredictionsDetails() {
 
         html += `<td>${resultDisplay}</td>`;
 
-        allUsers.forEach(user => {
+        orderedUsers.forEach(user => {
           const userData = submissions[round]?.[user.id];
           const pickTeam = userData?.picks?.[teamKey];
           const pickGames = userData?.picks?.[gamesKey];
@@ -278,7 +279,7 @@ export async function loadPredictionsDetails() {
       <td>${appState.results["Conn_Smythe"] || "-"}</td>
     `;
 
-    allUsers.forEach(user => {
+    orderedUsers.forEach(user => {
 
       const userData = submissions[round]?.[user.id];
       const pick = userData?.picks?.["Conn_Smythe"];
@@ -311,7 +312,7 @@ export async function loadPredictionsDetails() {
     html += `<tr class="scoreRow">
       <td colspan="2"><strong>Total Soumission</strong></td>`;
 
-    allUsers.forEach(user => {
+    orderedUsers.forEach(user => {
       html += `<td><strong>${submissionScores[user.id] || 0}</strong></td>`;
     });
 
@@ -324,7 +325,7 @@ export async function loadPredictionsDetails() {
       html += `<tr class="totalGlobalRow">
         <td colspan="2"><strong>Total Global</strong></td>`;
     
-      allUsers.forEach(user => {
+      orderedUsers.forEach(user => {
         html += `<td><strong>${globalScores[user.id] || 0}</strong></td>`;
       });
     
@@ -334,7 +335,7 @@ export async function loadPredictionsDetails() {
     html += `</table></div><br>`;
     container.innerHTML += html;
     
-allUsers.sort((a, b) => {
+orderedUsers.sort((a, b) => {
   return (globalScores[b.id] || 0) - (globalScores[a.id] || 0);
 });
 
@@ -375,13 +376,33 @@ const leaderboard = await computeLeaderboard(predictions,
 container.innerHTML += `
   <div class="card">
     <h3>ℹ️ Comment utiliser le pool</h3>
-    <ul>
-     <li onclick="showTab('submit')"style="cursor:pointer";>Soumettre</li> → entrer tes prédictions</li>
-      <li onclick="showTab('scoring')"style="cursor:pointer";>Système de pointage</li> → voir comment le pointage fonctionne</li>
-      <li onclick="showTab('results')"style="cursor:pointer";>Résultats</li> → voir les points de chaque joueur</li>
-     <li onclick="showTab('leaderboard')"style="cursor:pointer";>Classement</li> → voir le classement global</li>
-     <li onclick="showTab('rules')"style="cursor:pointer";>Règlements</li> → voir les règlements du pool</li>
-    </ul>
+  <div class="homeActions">
+    <div class="homeAction" onclick="showTab('submit')">
+      <strong>Soumettre</strong>
+      <span>Entrer tes prédictions</span>
+    </div>
+  
+    <div class="homeAction" onclick="showTab('scoring')">
+      <strong>Système de pointage</strong>
+      <span>Comprendre comment les points sont calculés</span>
+    </div>
+  
+    <div class="homeAction" onclick="showTab('results')">
+      <strong>Résultats</strong>
+      <span>Voir les points obtenus par chaque joueur</span>
+    </div>
+  
+    <div class="homeAction" onclick="showTab('leaderboard')">
+      <strong>Classement</strong>
+      <span>Consulter le classement global</span>
+    </div>
+  
+    <div class="homeAction" onclick="showTab('rules')">
+      <strong>Règlements</strong>
+      <span>Lire les règles officielles du pool</span>
+    </div>
+  </div>
+
   </div>
 `
 }
