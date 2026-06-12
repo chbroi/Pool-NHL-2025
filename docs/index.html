@@ -240,10 +240,46 @@
     .myColumnHeader {
       background: #ffd700;
       color: black;
+      position: sticky;
+        left: 0;
+        z-index: 3;
+
     }
     .myColumnCell {
       background: rgba(255, 215, 0, 0.12);
+      position: sticky;
+        left: 0;
+        z-index: 3;
+
     }
+    
+    .resultsTable th:first-child,
+    .resultsTable td:first-child {
+      position: sticky;
+      left: 0;
+      z-index: 4;
+      background: #1e1e1e;
+    }
+    
+    .connSmytheRow {
+      background: rgba(0, 123, 255, 0.15);
+      font-weight: bold;
+    }
+    
+    .totalSubmissionRow {
+      background: rgba(0, 123, 255, 0.25);
+      text-align: center;
+      font-weight: bold;
+    }
+    
+    .totalGlobalRow {
+      background: rgba(255, 215, 0, 0.3);
+      text-align: center;
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+
     
     .homeActions {
       display: flex;
