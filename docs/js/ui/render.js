@@ -117,8 +117,10 @@ export async function loadPredictionsDetails() {
           const p1 = getParentMatch(matchKey, 1);
           const p2 = getParentMatch(matchKey, 2);
         
-          const t1 = p1 ? appState.results[p1 + "_team"] : null;
-          const t2 = p2 ? appState.results[p2 + "_team"] : null;
+          
+          const t1 = p1 ? appState.results[p1] : null;
+          const t2 = p2 ? appState.results[p2] : null;
+
           console.log("p1:", p1, "p2:", p2);
           console.log("t1:", t1, "t2:", t2);
           if (t1 && t2) {
@@ -454,9 +456,19 @@ export async function loadUserPicks() {
   const round1Matchups = await getRound1Matchups();
   
   const round1Map = {};
-  round1Matchups.forEach(m => {
-    round1Map[m.id] = `${m.team1} vs ${m.team2}`;
-  });
+ 
+    if (round1Matchups.EST) {
+      round1Matchups.EST.forEach(m => {
+        round1Map[m.id] = `${m.team1} vs ${m.team2}`;
+      });
+    }
+    
+    if (round1Matchups.WEST) {
+      round1Matchups.WEST.forEach(m => {
+        round1Map[m.id] = `${m.team1} vs ${m.team2}`;
+      });
+    }
+
 
 
   docs.forEach((doc, index) => {
