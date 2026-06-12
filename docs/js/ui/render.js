@@ -387,25 +387,23 @@ container.innerHTML += `
 }
 
 
-export async function renderFullLeaderboard(filterUserId = null) {
+
+export async function renderFullLeaderboard() {
   const container = document.getElementById("leaderboardTab");
-  container.innerHTML = `
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-      <h2 style="margin:0;">🏆 Classement complet</h2>
-      <select id="userFilter">
-        <option value="">Tous</option>
-      </select>
-    </div>
-  `;
-  const filter = document.getElementById("userFilter");
-  
-  data.forEach(u => {
-    filter.innerHTML += `<option value="${u.id}">${u.name}</option>`;
+
+  const predictions = await getAllPredictions();
+  const data = await computeLeaderboard(predictions, appState.results);
+
+  container.innerHTML = `<h2>🏆 Classement complet</h2>`;
+
+  data.forEach((p, i) => {
+    const row = document.createElement("div");
+    row.innerHTML = `
+      <strong>#${i + 1}</strong> ${p.name} — ${p.score} pts
+    `;
+    container.appendChild(row);
   });
-  
-  filter.addEventListener("change", (e) => {
-    renderFullLeaderboard(e.target.value);
-  });
+}
 
 
   const predictions = await getAllPredictions();
