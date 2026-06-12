@@ -134,24 +134,76 @@ export async function loadPredictionsDetails() {
         let displayName = "";
 
         // ✅ CAS RONDE 1 (source officielle)
-        if (round1Map[matchKey]) {
-          displayName = round1Map[matchKey];
-        } else {
-          // ✅ RONDES SUIVANTES → via parents
-          const p1 = getParentMatch(matchKey, 1);
-          const p2 = getParentMatch(matchKey, 2);
         
-          const t1 = p1 ? appState.results[p1 + "_team"] : null;
-          const t2 = p2 ? appState.results[p2 + "_team"] : null;
+        console.log("matchKey:", matchKey);
+        console.log("p1:", p1, "p2:", p2);
+        console.log("t1:", t1, "t2:", t2);
+        console.log("results snapshot:", appState.results);
+
+       if (matchKey.startsWith("R1")) {
         
-          if (t1 && t2) {
-            displayName = `${t1} vs ${t2}`;
+          const m = round1Map[matchKey];
+          
+        
+          if (m && m !== "") {
+            displayName = m;
           } else {
-            displayName = "Match à déterminer";
+        
+            // ✅ fallback FIABLE basé sur Firebase
+            const team = appState.results[matchKey + "_team"];
+        
+            if (team && team !== "") {
+              displayName = team; // au moins afficher gagnant
+            } else {
+              displayName = matchKey;
+            }
+        
+          }
+        }
+        // ✅ Ronde 2
+        else if (matchKey.startsWith("R2")) {
+        
+          const result = appState.results[matchKey + "_team"];
+        
+          if (result && result !== "") {
+            displayName = result;
+          } else {
+            if (matchKey.includes("EST")) {
+              displayName = "Gagnant Est X vs Gagnant Est Y";
+            } else {
+              displayName = "Gagnant Ouest X vs Gagnant Ouest Y";
+            }
           }
         }
         
-       
+        // ✅ Ronde 3
+        else if (matchKey.startsWith("R3")) {
+        
+          const result = appState.results[matchKey + "_team"];
+        
+          if (result && result !== "") {
+            displayName = result;
+          } else {
+            if (matchKey.includes("EST")) {
+              displayName = "Gagnant Est";
+            } else {
+              displayName = "Gagnant Ouest";
+            }
+          }
+        }
+        
+        // ✅ Finale
+        else if (matchKey.startsWith("R4")) {
+        
+          const result = appState.results[matchKey + "_team"];
+        
+          if (result && result !== "") {
+            displayName = result;
+          } else {
+            displayName = "Gagnant Coupe Stanley";
+          }
+        }
+      
 
         html += `<tr><td>${displayName}</td>`;
         
