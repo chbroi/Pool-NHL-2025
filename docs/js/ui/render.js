@@ -326,12 +326,35 @@ export async function renderHome() {
   
 const predictions = await getAllPredictions();
 
+const participants = new Set(
+  predictions.map(p => p.userId)
+  );
+const prizePool = participantCount * 10;
+const participantCount = participants.size;
+
 const leaderboard = await computeLeaderboard(predictions,
   appState.results);
 
 
   const container = document.getElementById("homeTab");
   container.innerHTML = "<h2>🏆 Top 10</h2>";
+  container.innerHTML += `
+<div class="card">
+
+  <h3>📈 Statistiques du pool</h3>
+
+  <p>
+    👥 Participants : <strong>${participantCount}</strong>
+  </p>
+
+  <p>
+    💰 Cagnotte : <strong>${prizePool}$</strong>
+  </p>
+
+</div>
+`;
+
+  
   if (appState.user) {
 
   if (appState.acceptedRules) {
