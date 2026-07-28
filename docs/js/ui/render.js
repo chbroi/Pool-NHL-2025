@@ -105,7 +105,7 @@ export async function loadPredictionsDetails() {
         const teamKey = matchKey + "_team";
         const gamesKey = matchKey + "_games";
 
-        / ✅ RÉSULTAT (gagnant seulement, jamais de "vs")
+        // ✅ RÉSULTAT (gagnant seulement, jamais de "vs")
         let resultTeam = appState.results[teamKey];
         let resultDisplay = resultTeam ? resultTeam : "-";
         
