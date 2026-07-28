@@ -329,8 +329,9 @@ const predictions = await getAllPredictions();
 const participants = new Set(
   predictions.map(p => p.userId)
   );
-const prizePool = participantCount * 10;
 const participantCount = participants.size;
+const prizePool = participantCount * 10;
+
 
 const leaderboard = await computeLeaderboard(predictions,
   appState.results);
