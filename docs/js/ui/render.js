@@ -14,7 +14,7 @@ export async function loadPredictionsDetails() {
   round1Matchups.forEach(m => {
     round1Map[m.id] = `${m.team1} vs ${m.team2}`;
   });
-
+  console.log(round1Matchups)
   const predictions = await getAllPredictions();
   const leaderboard = await computeLeaderboard(predictions, appState.results);
   const container = document.getElementById("resultsTab");
@@ -123,7 +123,9 @@ export async function loadPredictionsDetails() {
         
         // ✅ RONDE 1 → matchup réel
         if (matchKey.startsWith("R1")) {
-        
+        console.log("round1Matchups", round1Matchups);
+        console.log("round1Map", round1Map);
+        console.log("lookup", matchKey, round1Map[matchKey]);
           const m = round1Map[matchKey];
         
           if (m && m !== "") {
@@ -171,10 +173,6 @@ export async function loadPredictionsDetails() {
       
 
         html += `<tr><td>${displayName}</td>`;
-        
-        if (isResultAvailable(gamesKey)) {
-          resultDisplay += ` (${resultGames})`;
-        }
 
         html += `<td>${resultDisplay}</td>`;
 
@@ -440,7 +438,10 @@ export async function loadUserPicks() {
         round1Map[m.id] = `${m.team1} vs ${m.team2}`;
       });
     }
-
+console.log("round1Matchups", round1Matchups);
+console.log("round1Map", round1Map);
+console.log("lookup", matchKey, round1Map[matchKey]);
+`
 
 
   docs.forEach((doc, index) => {
