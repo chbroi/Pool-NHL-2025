@@ -6,13 +6,16 @@ import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase
 
 export async function getRound1Matchups() {
 
-  const ref = doc(db, "matchups", "round1");
+  const ref = doc(db, "results", "round1");
   const snap = await getDoc(ref);
 
   if (!snap.exists()) return [];
 
   const data = snap.data();
 
-  return [...data.EST, ...data.WEST];
+  return [
+    ...(data.EST || []),
+    ...(data.WEST || [])
+  ];
 }
 
