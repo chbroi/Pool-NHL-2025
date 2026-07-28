@@ -441,7 +441,6 @@ export async function loadUserPicks() {
 console.log("round1Matchups", round1Matchups);
 console.log("round1Map", round1Map);
 console.log("lookup", matchKey, round1Map[matchKey]);
-`
 
 
   docs.forEach((doc, index) => {
