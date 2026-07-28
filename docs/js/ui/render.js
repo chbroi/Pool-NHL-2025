@@ -188,7 +188,7 @@ export async function loadPredictionsDetails() {
           let points = 0;
           
           const submission = round;
-          
+          const roundNum = getRoundFromKey(teamKey);
           const submissionConfig = SCORING.submissions[submission];
           const roundConfig = submissionConfig?.rounds[roundNum];
           const isMe = appState.user && user.id === appState.user.uid;
@@ -265,7 +265,7 @@ export async function loadPredictionsDetails() {
       if (pick && appState.results["Conn_Smythe"]) {
 
         if (pick === appState.results["Conn_Smythe"]) {
-          cell += ` ✅✅ (+${SCORING.connSmythe})`;
+          cell += ` ✅✅ (+${submissionConfig.connSmythe})`;
           points += submissionConfig.connSmythe;
         } else {
           cell += " ❌";
