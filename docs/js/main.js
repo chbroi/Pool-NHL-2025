@@ -141,14 +141,35 @@ onAuthStateChanged(auth, async (user) => {
     if (home) {
       home.innerHTML = `
         <div class="card">
-          <h2>Bienvenue 👋</h2>
-          <p>Veuillez vous connecter pour accéder au pool.</p>
+        
+          <h2>🏒 Pool des séries éliminatoires</h2>
+        
+          <p>
+            Consultez les résultats et le classement gratuitement.
+          </p>
+        
+          <p>
+            Connectez-vous pour participer.
+          </p>
+        
+          <button id="homeLoginButton">
+            Connexion pour participer
+          </button>
+        
         </div>
-      `;
+        `;
     }
   }
+  document.getElementById("homeLoginButton")
+  ?.addEventListener("click", () => {
+
+    document.getElementById("loginBtn").click();
 
 });
+
+});
+
+
 
 
 
@@ -189,10 +210,12 @@ window.showRulesModal = function() {
 
 window.showTab = function(tabName) {
   
-  if (!appState.user && tabName !== "home" && tabName !== "rules") {
-    alert("Tu dois être connecté pour accéder à cette section.");
-    showTab("home");
-    return;
+  if (!appState.user && tabName === "submit") {
+
+      alert("Connecte-toi pour participer.");
+    
+      showTab("home");
+      return;
   }
 
   
