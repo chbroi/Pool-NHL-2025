@@ -264,7 +264,6 @@ if (rules) rules.style.display = "none";
 
   if (tabName === "rules") {
     document.getElementById("rulesContainer").style.display = "block";
-    document.getElementById("acceptRulesButton").style.display = "none";
     document.getElementById("engagementContainer").style.display = "none";
 
   }
