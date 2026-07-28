@@ -9,7 +9,7 @@ import { collection, query, where,doc, getDoc, getDocs, addDoc } from "https://w
 import { playersByTeam, round1Ids,SCORING} from "./constants.js";
 import { appState } from "./app/state.js"
 import { loadPredictionsDetails, renderHome, renderFullLeaderboard, renderScoring,generateRound} from "./ui/render.js"
-import { checkEligibility, loadAppConfig} from "./services/userService.js";
+import { checkEligibility, loadAppConfig,hasAcceptedRules, acceptRules} from "./services/userService.js";
 import { attachRound1Listeners, attachRound2Listeners, attachRound3Listeners, attachConnSmytheListeners} from "./ui/listeners.js";
 
 
@@ -71,6 +71,7 @@ onAuthStateChanged(auth, async (user) => {
   if (user) {
 
     appState.user = user;
+    appState.acceptedRules = await hasAcceptedRules(user.uid);
 
     //  1. charger config AVANT TOUT
     const { config, results } = await loadAppConfig();
@@ -151,7 +152,38 @@ onAuthStateChanged(auth, async (user) => {
 
 
 
+window.showRulesModal = function() {
 
+  const modal =
+    document.getElementById("rulesModal");
+
+  modal.style.display = "block";
+
+  const checkbox =
+    document.getElementById(
+      "rulesAcceptedCheckbox"
+    );
+
+  const btn =
+    document.getElementById(
+      "acceptModalBtn"
+    );
+
+  checkbox.onchange = () => {
+    btn.disabled = !checkbox.checked;
+  };
+
+  btn.onclick = async () => {
+
+    await acceptRules(appState.user);
+
+    appState.acceptedRules = true;
+
+    modal.style.display = "none";
+
+    showTab("submit");
+  };
+};
 
 
 
@@ -219,6 +251,10 @@ if (rules) rules.style.display = "none";
   if (tabName === "leaderboard") renderFullLeaderboard(); 
   if (tabName === "scoring") renderScoring();
   if (tabName === "submit") {
+    if (!appState.acceptedRules) {
+        showRulesModal();
+        return;
+      }
   
     const form = document.getElementById("predictionForm");
     const tab = document.getElementById("submitTab");
