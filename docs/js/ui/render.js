@@ -332,6 +332,40 @@ const leaderboard = await computeLeaderboard(predictions,
 
   const container = document.getElementById("homeTab");
   container.innerHTML = "<h2>🏆 Top 10</h2>";
+  if (appState.user) {
+
+  if (appState.acceptedRules) {
+
+    container.innerHTML += `
+      <div class="card">
+        <h3>✅ Participation confirmée</h3>
+
+        <p>
+          Bienvenue ${appState.user.displayName}.
+        </p>
+
+        <p>
+          Votre engagement de participation
+          a déjà été enregistré.
+        </p>
+      </div>
+    `;
+
+  } else {
+
+    container.innerHTML += `
+      <div class="card">
+        <h3>⚠️ Participation non confirmée</h3>
+
+        <p>
+          Pour participer au pool,
+          vous devrez accepter les conditions
+          lors de votre première soumission.
+        </p>
+      </div>
+    `;
+  }
+}
 
   leaderboard.slice(0,10).forEach((p, i) => {
     const div = document.createElement("div");
