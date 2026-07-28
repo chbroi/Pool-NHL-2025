@@ -35,3 +35,28 @@ export async function loadAppConfig() {
   };
 }
 
+export async function hasAcceptedRules(userId) {
+
+  const snap = await getDoc(
+    doc(db, "participants", userId)
+  );
+
+  if (!snap.exists()) return false;
+
+  return snap.data().acceptedRules === true;
+}
+
+export async function acceptRules(user) {
+
+  await setDoc(
+    doc(db, "participants", user.uid),
+    {
+      acceptedRules: true,
+      acceptedDate: Date.now(),
+      displayName: user.displayName,
+      email: user.email
+    },
+    { merge: true }
+  );
+}
+
