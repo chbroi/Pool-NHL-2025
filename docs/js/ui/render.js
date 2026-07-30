@@ -1,6 +1,6 @@
 import { appState } from "../app/state.js";
 import { getAllPredictions } from "../services/firestoreService.js";
-import { SCORING, MATCH_ORDER } from "../constants.js";
+import { SCORING, MATCH_ORDER, POOL_CONFIG } from "../constants.js";
 import { computeLeaderboard, getRoundFromKey} from "../logic/scoring.js";
 import { isResultAvailable, getParentMatch} from "../utils/helpers.js";
 import { getRound1Matchups } from "../services/matchService.js";
@@ -361,7 +361,8 @@ const participants = new Set(
 const participantCount = participants.size;
 const prizePool = participantCount * POOL_CONFIG.entryFee;
 const firstPlace = (prizePool * POOL_CONFIG.payout.first).toFixed(2);
-
+const secondPlace =  (prizePool * POOL_CONFIG.payout.second).toFixed(2);
+const thirdPlace = (prizePool * POOL_CONFIG.payout.third).toFixed(2);
 
 const leaderboard = await computeLeaderboard(predictions,
   appState.results);
@@ -380,6 +381,9 @@ const leaderboard = await computeLeaderboard(predictions,
 
   <p>
     💰 Cagnotte : <strong>${prizePool}$</strong>
+    <p>🥇 1re place : <strong>${firstPlace}$</strong></p>
+    <p>🥈 2e place : <strong>${secondPlace}$</strong></p>
+    <p>🥉 3e place : <strong>${thirdPlace}$</strong></p>
   </p>
 
 </div>
