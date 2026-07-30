@@ -413,15 +413,26 @@ const leaderboard = await computeLeaderboard(predictions,
 
     container.innerHTML += `
       <div class="card">
+    
         <h3>⚠️ Participation non confirmée</h3>
-
+    
         <p>
-          Pour participer au pool,
-          vous devrez accepter les conditions
-          lors de votre première soumission.
+          Vous devez accepter les conditions
+          de participation avant de soumettre
+          votre première prédiction.
         </p>
+    
+        <button
+          id="participateBtn"
+          type="button">
+    
+          🏒 Participer au pool
+    
+        </button>
+    
       </div>
     `;
+  
   }
 }
 
