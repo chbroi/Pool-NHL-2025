@@ -221,6 +221,14 @@ modal.style.display = "flex";
     document.getElementById(
       "acceptModalBtn"
     );
+  const closeBtn =
+    document.getElementById(
+      "closeRulesModal"
+    );
+  closeBtn.onclick = () => {
+    modal.style.display = "none";
+    showTab("home");
+  };
   const viewRulesBtn =
     document.getElementById(
       "viewRulesBtn"
