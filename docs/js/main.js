@@ -26,21 +26,19 @@ document.getElementById("logoutBtn").addEventListener("click", async () => {
   await signOut(auth);
 });
 
-document.querySelectorAll(".rulesEntryFee")
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".rulesEntryFee")
   .forEach(el => {
     el.textContent = POOL_CONFIG.entryFee;
   });
-
-const entryFeeAmount =
+  const entryFeeAmount =
   document.getElementById("entryFeeAmount");
 
 if (entryFeeAmount) {
   entryFeeAmount.textContent =
     POOL_CONFIG.entryFee;
 }
-
-
-document.addEventListener("DOMContentLoaded", () => {
 
   const btn = document.getElementById("themeToggle");
 
@@ -337,6 +335,8 @@ if (rules) rules.style.display = "none";
       if (!tab.querySelector("#predictionForm")) {
         tab.appendChild(form);
       }
+      
+      form.style.display = "block";
     }
   }
 
