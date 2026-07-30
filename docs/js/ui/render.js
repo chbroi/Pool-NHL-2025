@@ -15,6 +15,7 @@ export async function loadPredictionsDetails() {
     round1Map[m.id] = `${m.team1} vs ${m.team2}`;
   });
   console.log(round1Matchups)
+  const container = document.getElementById("resultsTab");
   const predictions = await getAllPredictions();
   if (predictions.length === 0) {
 
@@ -32,7 +33,7 @@ export async function loadPredictionsDetails() {
 }
   const leaderboard = await computeLeaderboard(predictions, appState.results);
   
-  const container = document.getElementById("resultsTab");
+  
   if (data.length === 0) {
 
   container.innerHTML = `
@@ -478,6 +479,19 @@ export async function renderFullLeaderboard() {
   const container = document.getElementById("leaderboardTab");
 
   const predictions = await getAllPredictions();
+
+  if (predictions.length === 0) {
+  
+    container.innerHTML = `
+      <div class="card">
+        <h3>🏆 Classement</h3>
+        <p>Aucun participant pour le moment.</p>
+      </div>
+    `;
+  
+    return;
+  }
+    
   const data = await computeLeaderboard(predictions, appState.results);
 
   container.innerHTML = `<h2>🏆 Classement complet</h2>`;
