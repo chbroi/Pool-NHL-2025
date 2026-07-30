@@ -369,7 +369,7 @@ const leaderboard = await computeLeaderboard(predictions,
 
 
   const container = document.getElementById("homeTab");
-  container.innerHTML = "<h2>🏆 Top 10</h2>";
+  container.innerHTML = "";
   container.innerHTML += `
 <div class="card">
 
@@ -413,29 +413,35 @@ const leaderboard = await computeLeaderboard(predictions,
 
     container.innerHTML += `
       <div class="card">
+
+      <h3>⚠️ Participation non confirmée</h3>
     
-        <h3>⚠️ Participation non confirmée</h3>
+      <p>
+        Pour participer au pool, vous devez accepter
+        les conditions de participation.
+      </p>
     
-        <p>
-          Vous devez accepter les conditions
-          de participation avant de soumettre
-          votre première prédiction.
-        </p>
+      <button
+        id="participateBtn"
+        type="button">
     
-        <button
-          id="participateBtn"
-          type="button">
+        🏒 Participer au pool
     
-          🏒 Participer au pool
+      </button>
     
-        </button>
+      <button
+        id="rulesBtn"
+        type="button">
     
-      </div>
-    `;
-  
+        📖 Consulter les règlements
+    
+      </button>
+    
+    </div>
+  `
   }
 }
-
+ container.innerHTML += '<h2>🏆 Top 10</h2>';
   leaderboard.slice(0,10).forEach((p, i) => {
     const div = document.createElement("div");
     div.innerHTML = `
