@@ -12,39 +12,49 @@ export function attachRound1Listeners() {
     const el = document.getElementById(id);
     if (!el) return;
 
-    el.addEventListener('change', () => {
-      funcs.createRound2Matchups(appState.submission, round1Ids);
-      funcs.checkIfReadyToSubmit(appState.submission);
+    el.addEventListener('change', async () => {
+
+      await generateRound(2);
+
+      attachRound2Listeners();
+
+      funcs.checkIfReadyToSubmit(
+        appState.submission
+      );
     });
+
   });
+
 }
 
 export function attachRound2Listeners() {
 
   [
-    'R2_EST_1_team', 'R2_EST_2_team',
-    'R2_WEST_1_team', 'R2_WEST_2_team'
+    'R2_EST_1_team',
+    'R2_EST_2_team',
+    'R2_WEST_1_team',
+    'R2_WEST_2_team'
   ].forEach(id => {
 
     const el = document.getElementById(id);
+
     if (!el) return;
 
-    
     el.addEventListener('change', async () => {
-    
-      const data = Object.fromEntries(
-        new FormData(document.getElementById('predictionForm'))
-      );
+
       await generateRound(3);
-      funcs.showRoundFromData(3, data);
-      attachRound3Listeners()
-      funcs.checkIfReadyToSubmit(appState.submission);
+
+      attachRound3Listeners();
+
+      funcs.checkIfReadyToSubmit(
+        appState.submission
+      );
+
     });
 
-
   });
-}
 
+}
 export function attachRound3Listeners() {
 
   [
@@ -53,21 +63,27 @@ export function attachRound3Listeners() {
   ].forEach(id => {
 
     const el = document.getElementById(id);
+
     if (!el) return;
 
     el.addEventListener('change', async () => {
 
       await generateRound(4);
 
-      // forcer affichage
-      document.getElementById('round4').style.display = 'block';
+      attachConnSmytheListeners();
 
-      funcs.updateConnSmytheField(playersByTeam);
-      funcs.checkIfReadyToSubmit(appState.submission);
+      funcs.updateConnSmytheField(
+        playersByTeam
+      );
+
+      funcs.checkIfReadyToSubmit(
+        appState.submission
+      );
 
     });
 
   });
+
 }
 
 
