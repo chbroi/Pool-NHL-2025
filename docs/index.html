@@ -312,6 +312,28 @@
       color: #bbbbbb;
       font-size: 14px;
     }
+    .actionBtn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin-right: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    
+    .actionBtn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+    
+    .actionBtn.secondary {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
     .modal {
     position: fixed;
     top: 0;
@@ -332,18 +354,25 @@
     width: min(600px, 90%);
     max-height: 80vh;
     overflow-y: auto;
+    position: relative;
   }
   .modalClose {
 
   position: absolute;
 
+  width: 32px;
+  height: 32px;
   top: 15px;
   right: 15px;
 
-  background: transparent;
+  background: rgba(255,255,255,0.08);
   border: none;
+  border-radius: 50%
+  color: var(--text);
 
-  font-size: 22px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 
@@ -466,13 +495,15 @@
 
    <button
     id="viewRulesBtn"
-    type="button">
+    class="actionBtn secondary">
     Consulter les règlements
   </button>
   
   <br><br>
   
-  <button id="acceptModalBtn" disabled>
+  <button 
+    id="acceptModalBtn" disabled
+    class="actionBtn">
     Continuer
   </button>
 
@@ -486,7 +517,7 @@
 
       <button
         id="backToModalBtn"
-        type="button">
+        class="actionBtn secondary">
         ← Retour à la participation
       </button>
     
