@@ -358,7 +358,8 @@ const participants = new Set(
   predictions.map(p => p.userId)
   );
 const participantCount = participants.size;
-const prizePool = participantCount * 10;
+const prizePool = participantCount * POOL_CONFIG.entryFee;
+const firstPlace = (prizePool * POOL_CONFIG.payout.first).toFixed(2);
 
 
 const leaderboard = await computeLeaderboard(predictions,
