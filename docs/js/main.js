@@ -26,15 +26,17 @@ document.getElementById("logoutBtn").addEventListener("click", async () => {
   await signOut(auth);
 });
 
-const fee =  document.getElementById("entryFeeAmount");
-const rulesFee = document.getElementById("rulesEntryFee");
-if (fee) {
-  fee.textContent =
-    `${POOL_CONFIG.entryFee} $`;
-}
-if (rulesFee) {
-  rulesFee.textContent =
-    `${POOL_CONFIG.entryFee}$`;
+document.querySelectorAll(".rulesEntryFee")
+  .forEach(el => {
+    el.textContent = POOL_CONFIG.entryFee;
+  });
+
+const entryFeeAmount =
+  document.getElementById("entryFeeAmount");
+
+if (entryFeeAmount) {
+  entryFeeAmount.textContent =
+    POOL_CONFIG.entryFee;
 }
 
 
@@ -190,7 +192,7 @@ if (!modal) {
   return;
 }
 
-modal.style.display = "block";
+modal.style.display = "flex";
 
   const checkbox =
     document.getElementById(
