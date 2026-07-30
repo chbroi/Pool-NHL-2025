@@ -10,7 +10,7 @@ export const MATCH_ORDER = [
 ];
 
 export const POOL_CONFIG = {
-  entryFee: 5,
+  entryFee: 10,
   payout: {
     first: 4 / 7,
     second: 2 / 7,
