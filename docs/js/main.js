@@ -295,8 +295,8 @@ for (let i = 1; i <= 4; i++) {
   const roundDiv = document.getElementById(`round${i}`);
   if (!roundDiv) continue;
 
-  if (i === appState.submission|| i === appState.submission+ 1) {
-    roundDiv.style.display = "block";
+  if (i === appState.submission) {
+  roundDiv.style.display = "block";
   } else {
     roundDiv.style.display = "none";
   }
