@@ -294,13 +294,10 @@ window.showTab = function(tabName) {
 for (let i = 1; i <= 4; i++) {
   const roundDiv = document.getElementById(`round${i}`);
   if (!roundDiv) continue;
-
-  if (i === appState.submission) {
-  roundDiv.style.display = "block";
-  } else {
-    roundDiv.style.display = "none";
+  if (i <= appState.submission) {
+    roundDiv.style.display = "block";
   }
-}  
+} 
   // trouver le bouton cliqué
   const clickedButton = document.querySelector(`#tabs button[onclick="showTab('${tabName}')"]`);
   if (clickedButton) {
