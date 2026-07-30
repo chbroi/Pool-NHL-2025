@@ -16,9 +16,37 @@ export async function loadPredictionsDetails() {
   });
   console.log(round1Matchups)
   const predictions = await getAllPredictions();
+  if (predictions.length === 0) {
+
+  container.innerHTML = `
+    <div class="card">
+      <h3>📊 Résultats</h3>
+
+      <p>
+        Aucune soumission pour le moment.
+      </p>
+    </div>
+  `;
+
+  return;
+}
   const leaderboard = await computeLeaderboard(predictions, appState.results);
-  const container = document.getElementById("resultsTab");
   
+  const container = document.getElementById("resultsTab");
+  if (data.length === 0) {
+
+  container.innerHTML = `
+    <div class="card">
+      <h3>🏆 Classement</h3>
+
+      <p>
+        Aucun participant pour le moment.
+      </p>
+    </div>
+  `;
+
+  return;
+}
 
   container.innerHTML = `<h2>📊 Résultats</h2>`;
 
