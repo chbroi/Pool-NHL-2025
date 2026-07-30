@@ -700,6 +700,7 @@ export async function generateRound(roundNumber) {
   });
 
   container.innerHTML = html;
+  container.style.display = "block";
 }
 
 export function renderScoring() {
