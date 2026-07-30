@@ -423,7 +423,7 @@
 
   <div class="card">
 
-    <h2>Participation au Pool NHL</h2>
+    <h2>Participation au Pool LNH</h2>
 
     <p>
       En soumettant votre première prédiction :
@@ -446,15 +446,33 @@
 
     <br><br>
 
-    <button id="acceptModalBtn" disabled>
-      Continuer
-    </button>
+   <button
+    id="viewRulesBtn"
+    type="button">
+    Consulter les règlements
+  </button>
+  
+  <br><br>
+  
+  <button id="acceptModalBtn" disabled>
+    Continuer
+  </button>
 
   </div>
 
 </div>
 
   <div id="rulesTab" style="display:none;">
+      <div id="rulesBackContainer"
+         style="display:none; margin-bottom:15px;">
+
+      <button
+        id="backToModalBtn"
+        type="button">
+        ← Retour à la participation
+      </button>
+    
+    </div>
       <div class="section" id="rulesContainer">
       <h2>Règlements du pool LNH</h2>
         <h4>1. Bref rappel sur les séries dans la LNH</h4>
