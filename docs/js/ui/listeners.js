@@ -13,7 +13,7 @@ export function attachRound1Listeners() {
     if (!el) return;
 
     el.addEventListener('change', async () => {
-
+      console.log("R1 changed", id)
       await generateRound(2);
 
       attachRound2Listeners();
