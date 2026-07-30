@@ -1,5 +1,6 @@
 //Ensemble des fonctions utiliser pour le pool.
 let participants = [];
+import { round1Ids} from "./constants.js";
 
 export function confirmEngagement() {
 
