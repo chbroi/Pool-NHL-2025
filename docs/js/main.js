@@ -265,14 +265,14 @@ for (let i = 1; i <= 4; i++) {
 
   // cacher les règles par défaut
   
-const rules = document.getElementById("rulesContainer");
+const rules = document.getElementById("rulesTab");
 if (rules) rules.style.display = "none";
   document.getElementById("scoringTab").innerHTML = "";
   document.getElementById(tabName + "Tab").style.display = "block";
   document.getElementById("predictionForm").style.display = "none";
 
   if (tabName === "rules") {
-    document.getElementById("rulesContainer").style.display = "block";
+    document.getElementById("rulesTab").style.display = "block";
 
   }
 
@@ -329,7 +329,7 @@ if (rules) rules.style.display = "none";
   }
 
 if (tabName === "rules") {
-    document.getElementById("rulesContainer").style.display = "block";
+    document.getElementById("rulesTab").style.display = "block";
   }
     
 };
