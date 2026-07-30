@@ -79,8 +79,6 @@ onAuthStateChanged(auth, async (user) => {
     appState.submission = Number(config.currentSubmission);
     appState.results = results;
     appState.hasSubmitted =await alreadySubmitted();
-    
-    appState.hasSubmitted = alreadyDone;
 
     //  UI connecté
     if (loginBtn) loginBtn.style.display = "none";
@@ -332,9 +330,6 @@ if (rules) rules.style.display = "none";
 
 if (tabName === "rules") {
     document.getElementById("rulesContainer").style.display = "block";
-    // cacher boutons
-    document.getElementById("acceptRulesButton").style.display = "none";
-    document.getElementById("engagementContainer").style.display = "none";
   }
     
 };
@@ -350,7 +345,6 @@ async function alreadySubmitted() {
     if (acceptBtn) {
       acceptBtn.addEventListener("click", () => {
         document.getElementById("rulesContainer").style.display = "none";
-        document.getElementById("engagementContainer").style.display = "block";
       });
     }
 
