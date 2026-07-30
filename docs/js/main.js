@@ -339,22 +339,8 @@ async function alreadySubmitted() {
   return await hasSubmitted(appState.user.uid, appState.submission);
 }
 
-   // Lorsqu'on accepte les règles
-   const acceptBtn = document.getElementById("acceptRulesButton");
-    
-    if (acceptBtn) {
-      acceptBtn.addEventListener("click", () => {
-        document.getElementById("rulesContainer").style.display = "none";
-      });
-    }
 
-
-    // Lorsqu'on confirme l'engagement  
-    const confirmBtn = document.getElementById("confirmEngagementButton");
     
-    if (confirmBtn) {
-      confirmBtn.addEventListener("click", funcs.confirmEngagement);
-    }
     
 
   async function submitPredictions() {
