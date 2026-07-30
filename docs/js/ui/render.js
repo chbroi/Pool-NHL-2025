@@ -34,21 +34,6 @@ export async function loadPredictionsDetails() {
   const leaderboard = await computeLeaderboard(predictions, appState.results);
   
   
-  if (data.length === 0) {
-
-  container.innerHTML = `
-    <div class="card">
-      <h3>🏆 Classement</h3>
-
-      <p>
-        Aucun participant pour le moment.
-      </p>
-    </div>
-  `;
-
-  return;
-}
-
   container.innerHTML = `<h2>📊 Résultats</h2>`;
 
   const submissions = {};
