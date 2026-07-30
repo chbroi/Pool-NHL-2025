@@ -6,7 +6,7 @@ import {getAllPredictions, hasSubmitted, submitPrediction} from "./services/fire
 import { signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { collection, query, where,doc, getDoc, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { playersByTeam, round1Ids,SCORING} from "./constants.js";
+import { playersByTeam, round1Ids,SCORING, POOL_CONFIG} from "./constants.js";
 import { appState } from "./app/state.js"
 import { loadPredictionsDetails, renderHome, renderFullLeaderboard, renderScoring,generateRound} from "./ui/render.js"
 import { checkEligibility, loadAppConfig,hasAcceptedRules, acceptRules} from "./services/userService.js";
@@ -26,6 +26,16 @@ document.getElementById("logoutBtn").addEventListener("click", async () => {
   await signOut(auth);
 });
 
+const fee =  document.getElementById("entryFeeAmount");
+const rulesFee = document.getElementById("rulesEntryFee");
+if (fee) {
+  fee.textContent =
+    `${POOL_CONFIG.entryFee} $`;
+}
+if (rulesFee) {
+  rulesFee.textContent =
+    `${POOL_CONFIG.entryFee}$`;
+}
 
 
 document.addEventListener("DOMContentLoaded", () => {
