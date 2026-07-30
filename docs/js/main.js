@@ -68,21 +68,18 @@ onAuthStateChanged(auth, async (user) => {
   const userInfo = document.getElementById("userInfo");
   const appContent = document.getElementById("appContent");
 
-  if (user) {
+ if (user) {
+  try {
 
     appState.user = user;
-    appState.acceptedRules = await hasAcceptedRules(user.uid);
+    appState.acceptedRules =
+      await hasAcceptedRules(user.uid);
 
-    //  1. charger config AVANT TOUT
     const { config, results } = await loadAppConfig();
-
     appState.submission = Number(config.currentSubmission);
     appState.results = results;
-
-    // 2. maintenant seulement
-    const alreadyDone = await alreadySubmitted();
-
-
+    appState.hasSubmitted =await alreadySubmitted();
+    
     appState.hasSubmitted = alreadyDone;
 
     //  UI connecté
@@ -93,7 +90,7 @@ onAuthStateChanged(auth, async (user) => {
       userInfo.innerText = user.displayName;
     }
 
-    if (appContent) appContent.style.display = "block";
+   
 
     //  helper message
     const helper = document.getElementById("helperMessage");
@@ -127,6 +124,16 @@ onAuthStateChanged(auth, async (user) => {
     //  logique app
     showTab("home");
 
+
+    } catch(err) {
+  
+      console.error(err);
+  
+      alert(
+        "Erreur d'initialisation : " +
+        err.message
+      );
+    }
   } else {
 
     appState.user = null;
@@ -135,7 +142,6 @@ onAuthStateChanged(auth, async (user) => {
     if (logoutBtn) logoutBtn.style.display = "none";
 
     if (userInfo) userInfo.innerText = "";
-    if (appContent) appContent.style.display = "none";
 
     const home = document.getElementById("homeTab");
     if (home) {
@@ -144,15 +150,11 @@ onAuthStateChanged(auth, async (user) => {
         
           <h2>🏒 Pool des séries éliminatoires</h2>
         
-          <p>
-            Consultez les résultats et le classement gratuitement.
-          </p>
+          <p>Consultez les résultats et le classement gratuitement.</p>
         
-          <p>
-            Connectez-vous pour participer.
-          </p>
+          <p>Connectez-vous pour participer.</p>
         
-          <button id="homeLoginButton">
+          <button onclick="document.getElementById('loginBtn').click()">
             Connexion pour participer
           </button>
         
@@ -160,11 +162,6 @@ onAuthStateChanged(auth, async (user) => {
         `;
     }
   }
-  document.getElementById("homeLoginButton")
-  ?.addEventListener("click", () => {
-
-    document.getElementById("loginBtn").click();
-
 });
 
 });
@@ -176,9 +173,18 @@ onAuthStateChanged(auth, async (user) => {
 window.showRulesModal = function() {
 
   const modal =
-    document.getElementById("rulesModal");
+  document.getElementById("rulesModal");
 
-  modal.style.display = "block";
+if (!modal) {
+
+  console.error(
+    "rulesModal introuvable"
+  );
+
+  return;
+}
+
+modal.style.display = "block";
 
   const checkbox =
     document.getElementById(
@@ -248,11 +254,18 @@ for (let i = 1; i <= 4; i++) {
   }
 
 
-  const tabs = ["home", "submit", "results", "leaderboard", "rules"];
+  const tabs = ["home", "submit","scoring", "results", "leaderboard", "rules",];
 
   tabs.forEach(t => {
-    document.getElementById(t + "Tab").style.display = "none";
-  });
+
+  const tab =
+    document.getElementById(t + "Tab");
+
+  if (tab) {
+    tab.style.display = "none";
+  }
+
+});
 
   // cacher les règles par défaut
   
@@ -272,12 +285,30 @@ if (rules) rules.style.display = "none";
   if (tabName === "leaderboard") renderFullLeaderboard(); 
   if (tabName === "scoring") renderScoring();
   if (tabName === "submit") {
+      console.log(
+    "acceptedRules",
+    appState.acceptedRules
+  );
+  
+  console.log(
+    "predictionForm",
+    document.getElementById("predictionForm")
+  );
+  
+  console.log(
+    "submitTab",
+    document.getElementById("submitTab")
+  );
     if (!appState.acceptedRules) {
         showRulesModal();
         return;
       }
   
     const form = document.getElementById("predictionForm");
+      console.log(
+    "predictionForm",
+    document.getElementById("predictionForm")
+  );
     const tab = document.getElementById("submitTab");
   
     if (!form || !tab) return;
