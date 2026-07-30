@@ -312,6 +312,27 @@
       color: #bbbbbb;
       font-size: 14px;
     }
+    .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  
+    background: rgba(0,0,0,0.65);
+  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  
+    z-index: 9999;
+  }
+  
+  .modal .card {
+    width: min(600px, 90%);
+    max-height: 80vh;
+    overflow-y: auto;
+  }
 
 
 
@@ -337,7 +358,7 @@
   
     <div id="tabs">
       <button onclick="showTab('home')">Accueil</button>
-      <button onclick="showTab('submit')">Soumettre</button>
+      <button id="submitTabButton" onclick="showTab('submit')">Soumettre</button>
       <button onclick="showTab('scoring')">Système de pointage</button>
       <button onclick="showTab('results')">Résultats</button>
       <button onclick="showTab('leaderboard')">Classement</button>
@@ -376,8 +397,6 @@
     <div id="scoringTab" style="display:none;"></div>
     <div id="resultsTab" style="display:none;"></div>
     <div id="leaderboardTab" style="display:none;"></div>
-
-    <div id="rulesTab" style="display:none;"></div>
 
     
 <form id="predictionForm" style="display:none;">
@@ -464,9 +483,9 @@
           <h5>Pour que le participants obtiennent les points associés aux nombres de matchs, son choix doit aussi contenir l'équipe gagnante.</h5> 
           <h5>Les gagnants du pool sont ceux qui ont les 3 récoltes de points les plus élevés sur la durée des séries éliminatoires.</h5>
           <h5>"Le montant attribué aux 3 gagnants est calculé de la manière suivante:
-            <h6>1ere place: Nombre de participants*<strong id="rulesEntryFee"></strong>$*4/7</h6>
-            <h6>2e place: Nombre de participants<strong id="rulesEntryFee"></strong>$*2/7</h6>
-            <h6>3e place: Nombre de participants*<strong id="rulesEntryFee"></strong>$*1/7</h6>
+            <h6>1ere place: Nombre de participants*<span class="rulesEntryFee"></span>$*4/7</h6>
+            <h6>2e place: Nombre de participants*<span class="rulesEntryFee"></span>$*2/7</h6>
+            <h6>3e place: Nombre de participants*<span class="rulesEntryFee"></span>$*1/7</h6>
     </div>
   </div>
 <script type="module" src="js/main.js"></script>
