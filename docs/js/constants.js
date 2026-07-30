@@ -9,6 +9,15 @@ export const MATCH_ORDER = [
   "Conn_Smythe"
 ];
 
+export const POOL_CONFIG = {
+  entryFee: 5,
+  payout: {
+    first: 4 / 7,
+    second: 2 / 7,
+    third: 1 / 7
+  }
+};
+
 // Liste des joueurs par équipe
 export const playersByTeam = {
         "CAR": ["Pyotr Kochetkov","Frederik Andersen","Sebastian Aho", "Seth Jarvis", "Andrei Svechnikov", "Shayne Gostisbehere", "Jack Roslovic", "Jordan Staal", "Jordan Martinook", "Jackson Blake", "Jesperi Kotkaniemi", "Eric Robinson", "Brent Burns", "Dmitry Orlov", "Jaccob Slavin", "Taylor Hall", "Jalen Chatfield", "Sean Walker", "William Carrier", "Logan Stankoven", "Tyson Jost", "Jack Drury", "Mark Jankowski", "Mikko Rantanen", "Scott Morrow", "Juha Jaaska", "Justin Robidas", "Ty Smith", "Skyler Brind'Amour", "Bradly Nadeau", "Domenick Fensore", "Ryan Suzuki", "Riley Stillman"
