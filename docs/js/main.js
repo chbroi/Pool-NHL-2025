@@ -26,19 +26,39 @@ document.getElementById("logoutBtn").addEventListener("click", async () => {
   await signOut(auth);
 });
 
-
 document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll(".rulesEntryFee")
-  .forEach(el => {
-    el.textContent = POOL_CONFIG.entryFee;
-  });
-  const entryFeeAmount =
-  document.getElementById("entryFeeAmount");
-
-if (entryFeeAmount) {
-  entryFeeAmount.textContent =
-    POOL_CONFIG.entryFee;
-}
+    document.querySelectorAll(".rulesEntryFee")
+    .forEach(el => {
+      el.textContent = POOL_CONFIG.entryFee;
+    });
+    const entryFeeAmount =
+    document.getElementById("entryFeeAmount");
+  
+  if (entryFeeAmount) {
+    entryFeeAmount.textContent =
+      POOL_CONFIG.entryFee;
+  }
+    const backBtn =
+    document.getElementById(
+      "backToModalBtn"
+    );
+  
+  if (backBtn) {
+  
+    backBtn.addEventListener(
+      "click",
+      () => {
+  
+        document.getElementById(
+          "rulesBackContainer"
+        ).style.display = "none";
+  
+        showRulesModal();
+  
+      }
+    );
+  
+  }
 
   const btn = document.getElementById("themeToggle");
 
@@ -201,6 +221,24 @@ modal.style.display = "flex";
     document.getElementById(
       "acceptModalBtn"
     );
+  const viewRulesBtn =
+    document.getElementById(
+      "viewRulesBtn"
+    );
+  
+    viewRulesBtn.onclick = () => {
+      modal.style.display = "none";
+      const backContainer =
+        document.getElementById(
+          "rulesBackContainer"
+        );
+    
+      if (backContainer) {
+        backContainer.style.display =
+          "block";
+      }
+      showTab("rules");
+    };
 
   checkbox.onchange = () => {
     btn.disabled = !checkbox.checked;
@@ -209,6 +247,15 @@ modal.style.display = "flex";
   btn.onclick = async () => {
 
     await acceptRules(appState.user);
+    const backContainer =
+      document.getElementById(
+        "rulesBackContainer"
+      );
+    
+    if (backContainer) {
+      backContainer.style.display =
+        "none";
+    }
 
     appState.acceptedRules = true;
 
