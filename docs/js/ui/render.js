@@ -843,7 +843,23 @@ export async function renderProfile() {
     predictions.filter(
       p => p.userId === appState.user.uid
     );
-
+  
+  const leaderboard =
+    await computeLeaderboard(
+      predictions,
+      appState.results
+    );
+  const myRank =
+  leaderboard.findIndex(
+    p => p.userId === appState.user.uid
+  ) + 1;
+  const myEntry =
+    leaderboard.find(
+      p => p.userId === appState.user.uid
+    );
+  const myScore =
+    myEntry?.score ?? 0;
+  
   container.innerHTML = `
 
     <div class="card">
@@ -874,6 +890,19 @@ export async function renderProfile() {
       <p>
         <strong>Progression :</strong>
         ${myPredictions.length} / 4 soumissions
+      </p>
+      <p>
+        <strong>🏆 Rang actuel :</strong>
+        ${
+          myRank > 0
+            ? `${myRank}${myRank === 1 ? "er" : "e"}`
+            : "-"
+        }
+      </p>
+      
+      <p>
+        <strong>📈 Points :</strong>
+        ${myScore}
       </p>
 
       <h3>
