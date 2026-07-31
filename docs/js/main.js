@@ -102,6 +102,31 @@ onAuthStateChanged(auth, async (user) => {
   try {
 
     appState.user = user;
+    if (loginBtn) loginBtn.style.display = "none";
+    if (logoutBtn) logoutBtn.style.display = "inline-block";
+    
+    const profileBtn =
+      document.getElementById(
+        "profileTabButton"
+      );
+    
+    if (profileBtn) {
+      profileBtn.style.display = "inline-block";
+    }
+    else {
+      if (loginBtn) loginBtn.style.display = "inline-block";
+      if (logoutBtn) logoutBtn.style.display = "none";
+      
+      const profileBtn =
+        document.getElementById(
+          "profileTabButton"
+        );
+      
+      if (profileBtn) {
+        profileBtn.style.display = "none";
+      }
+    }
+      
     appState.acceptedRules =
       await hasAcceptedRules(user.uid);
 
