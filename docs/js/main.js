@@ -96,7 +96,7 @@ onAuthStateChanged(auth, async (user) => {
   const loginBtn = document.getElementById("loginBtn");
   const logoutBtn = document.getElementById("logoutBtn");
   const userInfo = document.getElementById("userInfo");
-  const appContent = document.getElementById("appContent");
+  const profileTab = document.getElementById("profileTab");
 if (user) {
 
   try {
@@ -236,6 +236,13 @@ if (user) {
     // ======================
     // Déconnexion
     // ======================
+    const profileTab =
+    document.getElementById("profileTab");
+  
+    if (profileTab) {
+      profileTab.style.display = "none";
+      profileTab.innerHTML = "";
+    }
   
     appState.user = null;
   
@@ -314,7 +321,7 @@ if (user) {
       `;
     }
   }
-}
+})
                   
 
 
