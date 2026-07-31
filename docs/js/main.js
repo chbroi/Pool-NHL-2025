@@ -115,8 +115,8 @@ if (user) {
   
       appState.results = results;
       appState.deadline = config.deadline;
-      appState.hasSubmitted =
-        await alreadySubmitted();
+      appState.submissionOpen = config.submissionOpen;
+      appState.hasSubmitted = await alreadySubmitted();
     
       // ======================
       // UI connecté
@@ -162,18 +162,21 @@ if (user) {
       // Message utilisateur
       // ======================
   
-      const helper =
-        document.getElementById(
-          "helperMessage"
-        );
-  
-      if (helper) {
-  
+      if (config.submissionOpen) {
+      
         helper.innerHTML =
-          config.submissionOpen
-            ? config.helperMessage
-            : "⏳ Les soumissions sont fermées pour cette ronde.";
-  
+          `⏳ Vous avez jusqu'au ${
+            new Date(
+              config.deadline
+            ).toLocaleString()
+          } pour soumettre vos prédictions.`;
+      
+      }
+      else {
+      
+        helper.innerHTML =
+          "🔒 Prédictions terminées. Revenez plus tard pour la prochaine ronde.";
+      
       }
   
       // ======================
@@ -676,11 +679,6 @@ window.submitFeedback = async function () {
 
 window.toggleSubmissionOpen = async function(status) {
   
-  console.log(
-  "toggleSubmissionOpen",
-  status
-);
-
   await updateDoc(
     doc(db, "config", "ui"),
     {
@@ -689,13 +687,40 @@ window.toggleSubmissionOpen = async function(status) {
   );
 
   appState.submissionOpen = status;
-  console.log("Firestore OK")
+  renderAdmin();
+if (document.getElementById("submitTab").style.display === "block") {
+showTab("submit");
+}
+  const helper =
+  document.getElementById(
+    "helperMessage"
+  );
+
+if (helper) {
+
+  if (status) {
+
+    helper.innerHTML =
+      `⏳ Vous avez jusqu'au ${
+        new Date(
+          appState.deadline
+        ).toLocaleString()
+      } pour soumettre vos prédictions.`;
+
+  } else {
+
+    helper.innerHTML =
+      "🔒 Prédictions terminées. Revenez plus tard.";
+
+  }
+}
+  
   alert(
     status
     ? "Soumissions ouvertes"
     : "Soumissions fermées"
   );
-
+funcs.refreshHelperMessage();
 };
 
 
@@ -720,4 +745,32 @@ async function() {
   alert(
     `Soumission ${round} activée`
   );
+  funcs.refreshHelperMessage();
 };
+
+
+window.updateDeadline =
+async function() {
+
+  const value =
+    document.getElementById(
+      "adminDeadline"
+    ).value;
+
+  const timestamp =
+    new Date(value).getTime();
+
+  await updateDoc(
+    doc(db, "config", "ui"),
+    {
+      deadline: timestamp
+    }
+  );
+
+  appState.deadline =
+    timestamp;
+
+  renderAdmin();
+  funcs.refreshHelperMessage();
+};
+
