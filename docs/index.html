@@ -9,7 +9,7 @@
   <style>
 
     /* ===== THEME ===== */
-    :root {
+    :root={
       --bg: #f5f7fb;
       --text: #333;
       --card: white;
@@ -21,12 +21,6 @@
       --text: #e0e0e0;
       --card: #1e1e1e;
       --primary: #4dabf7;
-    }
-
-    body[data-theme="light"] {
-      --bg: #f5f7fb;
-      --text: #222;
-      --card: #ffffff;
     }
 
     body {
@@ -191,7 +185,7 @@
     /* ===== CONTENT ===== */
     
     #homeTab, #submitTab, #resultsTab, #leaderboardTab,
-    #rulesTab, #myPicksTab {
+    #rulesTab, #scoringTab {
       max-width: 1000px;
       margin: 20px auto;
       padding: 10px;
@@ -211,6 +205,13 @@
       padding: 12px;
       margin: 10px 0;
       border-radius: 8px;
+    }
+    .submissionBadge {
+      padding: 8px 16px;
+      border-radius: 8px;
+      background: var(--card);
+      border: 1px solid rgba(0,0,0,.15);
+      font-weight: 600;
     }
 
     /* ===== TABLE ===== */
@@ -454,6 +455,7 @@
       <button onclick="showTab('results')">Résultats</button>
       <button onclick="showTab('leaderboard')">Classement</button>
       <button onclick="showTab('rules')">Règlements</button>
+      <button onclick="showTab('profile')">Profil</button>
     </div>
   
     
@@ -463,14 +465,6 @@
       <button id="logoutBtn" style="display:none;">Déconnexion</button>
       <button id="themeToggle">🌙</button>
     </div>
-    
-    <div id="tabDescription" style="
-      font-size: 14px;
-      opacity: 0.8;
-      margin-left: 10px;
-    "></div>
-
-
   
   </div>
 
@@ -488,8 +482,8 @@
     <div id="scoringTab" style="display:none;"></div>
     <div id="resultsTab" style="display:none;"></div>
     <div id="leaderboardTab" style="display:none;"></div>
+    <div id="profileTab" style="display:none;"></div>
 
-    
 <form id="predictionForm" style="display:none;">
 
   <div class="section" id="round1"></div>
