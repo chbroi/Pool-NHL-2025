@@ -1078,6 +1078,22 @@ export async function renderAdmin() {
       <h2>
         ⚙️ Administration
       </h2>
+      <select id="adminSubmission">
+
+        <option value="1">Ronde 1</option>
+        <option value="2">Ronde 2</option>
+        <option value="3">Ronde 3</option>
+        <option value="4">Ronde 4</option>
+      
+      </select>
+      
+      <button
+        class="actionBtn"
+        onclick="updateSubmissionRound()">
+      
+        Mettre à jour
+      
+      </button>
 
       <button
         class="actionBtn"
