@@ -23,6 +23,12 @@
       --primary: #4dabf7;
     }
 
+    body[data-theme="light"] {
+      --bg: #f5f7fb;
+      --text: #222;
+      --card: #ffffff;
+    }
+
     body {
       margin: 0;
       font-family: 'Segoe UI', Arial, sans-serif;
@@ -246,19 +252,21 @@
 
     }
     .myColumnCell {
-      background: rgba(255, 215, 0, 0.12);
+      background: #fff8d6;
       position: sticky;
         left: 0;
         z-index: 3;
 
     }
-    
+    body[data-theme="light"]
     .resultsTable th:first-child,
+    body[data-theme="light"]
     .resultsTable td:first-child {
       position: sticky;
       left: 0;
       z-index: 4;
-      background: #1e1e1e;
+      background: #f0f2f5;
+      color: #222;
     }
     
     .connSmytheRow {
@@ -273,10 +281,11 @@
     }
     
     .totalGlobalRow {
-      background: rgba(255, 215, 0, 0.3);
+      background: #ffe58a;
       text-align: center;
       font-weight: bold;
       font-size: 16px;
+      color: #222;
     }
 
 
