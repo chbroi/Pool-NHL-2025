@@ -117,7 +117,7 @@ if (user) {
       appState.deadline = config.deadline;
       appState.hasSubmitted =
         await alreadySubmitted();
-  
+    
       // ======================
       // UI connecté
       // ======================
@@ -131,10 +131,10 @@ if (user) {
       }
   
       if (userInfo) {
-        userInfo.innerText =
-          user.displayName;
-      }
-  
+        userInfo.innerText =user.displayName;
+        userInfo.style.display = "inline-block";
+        userInfo.onclick = () => { showTab("profile");}
+      }    
       const profileBtn =
         document.getElementById(
           "profileTabButton"
@@ -281,6 +281,7 @@ if (user) {
   
     if (userInfo) {
       userInfo.innerText = "";
+      userInfo.style.display ="none";
     }
   
     const profileBtn =
@@ -442,16 +443,7 @@ window.showTab = async function(tabName) {
     btn.classList.remove("activeTab");
   });
   
-for (let i = 1; i <= 4; i++) {
-  const roundDiv = document.getElementById(`round${i}`);
-  if (!roundDiv) continue;
-  if (i <= appState.submission) {
-    roundDiv.style.display = "none";
-  }
-  else {
-  roundDiv.style.display = "block";
-    }
-} 
+
   // trouver le bouton cliqué
   const clickedButton = document.querySelector(`#tabs button[onclick="showTab('${tabName}')"]`);
   if (clickedButton) {
@@ -466,7 +458,7 @@ for (let i = 1; i <= 4; i++) {
   }
 
 
-  const tabs = ["home", "submit","scoring", "results", "leaderboard","stats", "rules"," admin","profile"];
+  const tabs = ["home", "submit","scoring", "results", "leaderboard","stats", "rules","admin","profile"];
 
   tabs.forEach(t => {
 
@@ -534,7 +526,17 @@ if (rules) rules.style.display = "none";
       if (!tab.querySelector("#predictionForm")) {
         tab.appendChild(form);
       }
-      await renderSubmissionStatus()
+      for (let i = 1; i <= 4; i++) {
+        const roundDiv =
+          document.getElementById(`round${i}`);
+        if (!roundDiv) continue;
+        if (i < appState.submission) {
+          roundDiv.style.display = "none";
+        } else {
+          roundDiv.style.display = "block";
+        }
+      }
+      await renderSubmissionStatus();
       form.style.display = "block";
     }
   }
@@ -673,6 +675,11 @@ window.submitFeedback = async function () {
 };
 
 window.toggleSubmissionOpen = async function(open) {
+  
+  console.log(
+  "toggleSubmissionOpen",
+  open
+);
 
   await updateDoc(
     doc(db, "config", "ui"),
@@ -682,7 +689,7 @@ window.toggleSubmissionOpen = async function(open) {
   );
 
   appState.submissionOpen = open;
-
+  console.log("Firestore OK")
   alert(
     open
     ? "Soumissions ouvertes"
