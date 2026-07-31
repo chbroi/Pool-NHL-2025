@@ -1083,3 +1083,39 @@ export async function renderStats() {
   `;
 }
 
+export async function renderAdmin() {
+
+  const container =
+    document.getElementById(
+      "adminTab"
+    );
+
+  container.innerHTML = `
+
+    <div class="card">
+
+      <h2>
+        ⚙️ Administration
+      </h2>
+
+      <button
+        class="actionBtn"
+        onclick="openSubmissions()">
+
+        Ouvrir les soumissions
+
+      </button>
+
+      <button
+        class="actionBtn"
+        onclick="closeSubmissions()">
+
+        Fermer les soumissions
+
+      </button>
+
+    </div>
+
+  `;
+}
+
