@@ -1097,7 +1097,7 @@ export async function renderAdmin() {
 
       <button
         class="actionBtn"
-        onclick="openSubmissions()">
+        onclick="toggleSubmissionOpen(true)">
 
         Ouvrir les soumissions
 
@@ -1105,7 +1105,7 @@ export async function renderAdmin() {
 
       <button
         class="actionBtn"
-        onclick="closeSubmissions()">
+        onclick="toggleSubmissionOpen(false)">
 
         Fermer les soumissions
 
