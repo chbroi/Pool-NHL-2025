@@ -5,7 +5,7 @@ import { auth, db, GoogleAuthProvider } from "./firebase.js";
 import {getAllPredictions, hasSubmitted, submitPrediction} from "./services/firestoreService.js";
 import { signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { collection, query, where,doc, getDoc, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { collection, query, where,doc, getDoc, getDocs, addDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { playersByTeam, round1Ids,SCORING, POOL_CONFIG} from "./constants.js";
 import { appState } from "./app/state.js"
 import { loadPredictionsDetails, renderHome, renderFullLeaderboard, renderScoring,generateRound,renderSubmissionStatus,renderProfile,renderStats,renderAdmin} from "./ui/render.js"
@@ -446,7 +446,7 @@ for (let i = 1; i <= 4; i++) {
   const roundDiv = document.getElementById(`round${i}`);
   if (!roundDiv) continue;
   if (i <= appState.submission) {
-    roundDiv.style.display = "block";
+    roundDiv.style.display = "none";
   }
   else {
   roundDiv.style.display = "block";
@@ -620,8 +620,7 @@ function isResultAvailable(key) {
 window.submitPredictions = submitPredictions;
 
 
-window.submitFeedback =
-async function () {
+window.submitFeedback = async function () {
 
   const message =
     document
@@ -673,3 +672,45 @@ async function () {
 
 };
 
+window.toggleSubmissionOpen = async function(open) {
+
+  await updateDoc(
+    doc(db, "config", "ui"),
+    {
+      submissionOpen: open
+    }
+  );
+
+  appState.submissionOpen = open;
+
+  alert(
+    open
+    ? "Soumissions ouvertes"
+    : "Soumissions fermées"
+  );
+
+};
+
+
+window.updateSubmissionRound =
+async function() {
+
+  const round = Number(
+    document.getElementById(
+      "adminSubmission"
+    ).value
+  );
+
+  await updateDoc(
+    doc(db, "config", "ui"),
+    {
+      currentSubmission: round
+    }
+  );
+
+  appState.submission = round;
+
+  alert(
+    `Soumission ${round} activée`
+  );
+};
