@@ -14,7 +14,6 @@ export async function loadPredictionsDetails() {
   round1Matchups.forEach(m => {
     round1Map[m.id] = `${m.team1} vs ${m.team2}`;
   });
-  console.log(round1Matchups)
   const container = document.getElementById("resultsTab");
   const predictions = await getAllPredictions();
   if (predictions.length === 0) {
@@ -132,14 +131,8 @@ export async function loadPredictionsDetails() {
         // ✅ MATCH NAME (affrontement seulement ici)
         let displayName = "";
         
-        // DEBUG
-        console.log("matchKey:", matchKey);
-        
         // ✅ RONDE 1 → matchup réel
         if (matchKey.startsWith("R1")) {
-        console.log("round1Matchups", round1Matchups);
-        console.log("round1Map", round1Map);
-        console.log("lookup", matchKey, round1Map[matchKey]);
           const m = round1Map[matchKey];
         
           if (m && m !== "") {
@@ -157,9 +150,6 @@ export async function loadPredictionsDetails() {
         
           const t1 = p1 ? appState.results[p1] : null;
           const t2 = p2 ? appState.results[p2] : null;
-        
-          console.log("p1:", p1, "p2:", p2);
-          console.log("t1:", t1, "t2:", t2);
         
           if (t1 && t2) {
             displayName = `${t1} vs ${t2}`; // ✅ ICI SEULEMENT
@@ -564,10 +554,6 @@ export async function loadUserPicks() {
         round1Map[m.id] = `${m.team1} vs ${m.team2}`;
       });
     }
-console.log("round1Matchups", round1Matchups);
-console.log("round1Map", round1Map);
-console.log("lookup", matchKey, round1Map[matchKey]);
-
 
   docs.forEach((doc, index) => {
 
@@ -615,11 +601,6 @@ console.log("lookup", matchKey, round1Map[matchKey]);
 
 export async function generateRound(roundNumber) {
 
-  console.log(
-  "generateRound",
-  roundNumber
-);
-
   const container = document.getElementById(`round${roundNumber}`);
   if (!container) return;
 
@@ -641,7 +622,6 @@ export async function generateRound(roundNumber) {
 
   // ✅ R2
   if (roundNumber === 2) {
-    console.log("source R2", source);
     matchups = [
       { id: "R2_EST_1", team1: source["R1_EST_1_team"], team2: source["R1_EST_2_team"] },
       { id: "R2_EST_2", team1: source["R1_EST_3_team"], team2: source["R1_EST_4_team"] },
@@ -1024,14 +1004,14 @@ export async function renderStats() {
 
   const predictions =
     await getAllPredictions();
-  console.log(predictions);
+  console.log("PREDICTIONS", predictions);
 
   const picks = {};
 
   predictions.forEach(p => {
-
+    console.log("PICKS", p.picks);
     const team =
-      p.picks?.R4_FINAL_team;
+      p.picks?.R4_final_team;
 
     if (!team) return;
 
