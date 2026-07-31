@@ -736,6 +736,7 @@ export async function renderSubmissionStatus() {
     document.getElementById(
       "submissionStatusCard"
     );
+  
 
   if (!container || !appState.user) return;
 
@@ -761,6 +762,7 @@ export async function renderSubmissionStatus() {
       flex-wrap:wrap;
     ">
   `;
+  
 
   for (let i = 1; i <= 4; i++) {
 
@@ -808,7 +810,50 @@ export async function renderSubmissionStatus() {
     </h4>
 
   `;
+  const deadline = new Date(config.deadline);
 
+  const now = Date.now();
+  
+  const diff = config.deadline - now;
+  if (diff > 0) {
+  
+    const days =
+      Math.floor(diff / 86400000);
+  
+    const hours =
+      Math.floor(
+        (diff % 86400000) / 3600000
+      );
+  
+    const minutes =
+      Math.floor(
+        (diff % 3600000) / 60000
+      );
+  
+    html += `
+      <div class="card">
+  
+        <h4>
+          ⏱ Date limite
+        </h4>
+  
+        <p>
+          ${new Date(
+            appState.deadline
+          ).toLocaleString()}
+        </p>
+  
+        <strong>
+  
+          ${days} jours
+          ${hours} h
+          ${minutes} min
+  
+        </strong>
+  
+      </div>
+    `;
+  }
   for (let i = 1; i <= 4; i++) {
 
     const submission =
@@ -969,3 +1014,72 @@ export async function renderProfile() {
 
   `;
 }
+
+export async function renderStats() {
+
+  const container =
+    document.getElementById(
+      "statsTab"
+    );
+
+  const predictions =
+    await getAllPredictions();
+
+  const picks = {};
+
+  predictions.forEach(p => {
+
+    const team =
+      p.picks?.R4_FINAL_team;
+
+    if (!team) return;
+
+    picks[team] =
+      (picks[team] || 0) + 1;
+
+  });
+
+  const total =
+    Object.values(picks)
+      .reduce(
+        (a,b) => a + b,
+        0
+      );
+
+  container.innerHTML = `
+    <div class="card">
+
+      <h2>
+        📊 Choix populaires
+      </h2>
+
+      ${
+        Object.entries(picks)
+
+        .sort(
+          (a,b) => b[1] - a[1]
+        )
+
+        .map(([team,count]) => `
+
+          <p>
+
+            <strong>
+              ${team}
+            </strong>
+
+            :
+
+            ${(
+              count / total * 100
+            ).toFixed(1)}%
+
+          </p>
+
+        `).join("")
+      }
+
+    </div>
+  `;
+}
+
