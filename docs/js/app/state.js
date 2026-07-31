@@ -5,6 +5,5 @@ export const appState = {
   hasSubmitted: false,
   acceptedRules: false,
   deadline: null,
-  isAdmin: false,
-  helperMessage: "",
+  isAdmin: false
 };
