@@ -748,46 +748,65 @@ export async function renderSubmissionStatus() {
     );
 
   let html = `
+
     <h3>
-      🏒 Soumission
-      ${appState.submission}/4
+      🏒 Soumission active :
+      ${appState.submission} / 4
     </h3>
 
     <div style="
       display:flex;
       gap:10px;
       margin:15px 0;
+      flex-wrap:wrap;
     ">
   `;
 
   for (let i = 1; i <= 4; i++) {
 
     let icon = "🔒";
+    let text = `Soumission ${i}`;
 
     if (
       mySubmissions.some(
         p => p.round === i
       )
     ) {
+
       icon = "✅";
+
     }
     else if (
       i === appState.submission
     ) {
+
       icon = "⏳";
+
     }
 
     html += `
       <div class="submissionBadge">
-        ${icon} ${i}
+        ${icon} ${text}
       </div>
     `;
   }
 
   html += `
+
     </div>
 
-    <h4>Historique</h4>
+    <p style="opacity:.8">
+
+      ✅ = soumise<br>
+      ⏳ = à compléter<br>
+      🔒 = non disponible
+
+    </p>
+
+    <h4>
+      Historique des soumissions
+    </h4>
+
   `;
 
   for (let i = 1; i <= 4; i++) {
@@ -798,42 +817,126 @@ export async function renderSubmissionStatus() {
       );
 
     html += submission
-      ? `<div>✅ Soumission ${i}</div>`
-      : `<div>⏳ Soumission ${i}</div>`;
+      ? `<div>✅ Soumission ${i} complétée</div>`
+      : `<div>⏳ Soumission ${i} non complétée</div>`;
   }
 
   container.innerHTML = html;
 }
-container.innerHTML +=`
-<div class="card">
 
-  <h3>
-    💬 Suggestions et signalement de bogues
-  </h3>
+export async function renderProfile() {
 
-  <p>
-    Une idée d'amélioration ?
-    Un problème rencontré ?
-    Envoyez-moi un commentaire.
-  </p>
+  const container =
+    document.getElementById(
+      "profileTab"
+    );
 
-  <textarea
-    id="profileComment"
-    rows="5"
-    style="width:100%;"
-    placeholder="Décrivez votre problème ou votre idée d'amélioration...">
-  </textarea>
+  if (
+    !container ||
+    !appState.user
+  ) return;
 
-  <br><br>
+  const predictions =
+    await getAllPredictions();
 
-  <button
-    class="actionBtn"
-    onclick="submitFeedback()">
+  const myPredictions =
+    predictions.filter(
+      p => p.userId === appState.user.uid
+    );
 
-    Envoyer
+  container.innerHTML = `
 
-  </button>
+    <div class="card">
 
-</div>
-`
+      <h2>
+        👤 Mon profil
+      </h2>
 
+      <p>
+        <strong>Nom :</strong>
+        ${appState.user.displayName}
+      </p>
+
+      <p>
+        <strong>Courriel :</strong>
+        ${appState.user.email}
+      </p>
+
+      <p>
+        <strong>Participation :</strong>
+        ${
+          appState.acceptedRules
+            ? "✅ Confirmée"
+            : "❌ Non confirmée"
+        }
+      </p>
+
+      <p>
+        <strong>Progression :</strong>
+        ${myPredictions.length} / 4 soumissions
+      </p>
+
+      <h3>
+        📋 État des soumissions
+      </h3>
+
+      <ul>
+
+        ${[1, 2, 3, 4]
+          .map(i => {
+
+            const done =
+              myPredictions.some(
+                p => p.round === i
+              );
+
+            return `
+              <li>
+                ${
+                  done
+                    ? "✅"
+                    : "⏳"
+                }
+                Soumission ${i}
+              </li>
+            `;
+
+          })
+          .join("")}
+
+      </ul>
+
+    </div>
+
+    <div class="card">
+
+      <h3>
+        💬 Suggestions et signalement de bogues
+      </h3>
+
+      <p>
+        Une idée d'amélioration ?
+        Un problème rencontré ?
+        Envoyez-moi un commentaire.
+      </p>
+
+      <textarea
+        id="profileComment"
+        rows="5"
+        style="width:100%;"
+        placeholder="Décrivez votre problème ou votre idée d'amélioration..."></textarea>
+
+      <br><br>
+
+      <button
+        class="actionBtn"
+        onclick="submitFeedback()">
+
+        Envoyer
+
+      </button>
+
+    </div>
+
+  `;
+}
