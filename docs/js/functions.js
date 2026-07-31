@@ -387,9 +387,6 @@ export function renderParticipantsTable(participants) {
   container.appendChild(table);
 }
 
-
-import { appState } from "./app/state.js";
-
 export function refreshHelperMessage() {
 
   const helper =
