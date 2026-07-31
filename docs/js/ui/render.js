@@ -804,6 +804,7 @@ export async function renderSubmissionStatus() {
 
   container.innerHTML = html;
 }
+container.innerHTML +=`
 <div class="card">
 
   <h3>
@@ -834,4 +835,5 @@ export async function renderSubmissionStatus() {
   </button>
 
 </div>
+`
 
