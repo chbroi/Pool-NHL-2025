@@ -502,7 +502,7 @@ export async function renderFullLeaderboard() {
   container.innerHTML = `
   <div class="card">
     <h2>🏆 Classement complet</h2>
-    <table class="resultsTable">
+    <table class="resultsTable leaderboardTable">
       <tr>
         <th>Position</th>
         <th>Participant</th>
