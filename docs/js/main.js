@@ -674,24 +674,24 @@ window.submitFeedback = async function () {
 
 };
 
-window.toggleSubmissionOpen = async function(open) {
+window.toggleSubmissionOpen = async function(status) {
   
   console.log(
   "toggleSubmissionOpen",
-  open
+  status
 );
 
   await updateDoc(
     doc(db, "config", "ui"),
     {
-      submissionOpen: open
+      submissionOpen: status
     }
   );
 
-  appState.submissionOpen = open;
+  appState.submissionOpen = status;
   console.log("Firestore OK")
   alert(
-    open
+    status
     ? "Soumissions ouvertes"
     : "Soumissions fermées"
   );
