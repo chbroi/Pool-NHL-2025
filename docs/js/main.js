@@ -117,6 +117,7 @@ if (user) {
       appState.deadline = config.deadline;
       appState.submissionOpen = config.submissionOpen;
       appState.hasSubmitted = await alreadySubmitted();
+      funcs.refreshHelperMessage();
     
       // ======================
       // UI connecté
@@ -162,22 +163,6 @@ if (user) {
       // Message utilisateur
       // ======================
   
-      if (config.submissionOpen) {
-      
-        helper.innerHTML =
-          `⏳ Vous avez jusqu'au ${
-            new Date(
-              config.deadline
-            ).toLocaleString()
-          } pour soumettre vos prédictions.`;
-      
-      }
-      else {
-      
-        helper.innerHTML =
-          "🔒 Prédictions terminées. Revenez plus tard pour la prochaine ronde.";
-      
-      }
   
       // ======================
       // Génération des rondes
