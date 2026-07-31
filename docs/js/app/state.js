@@ -3,5 +3,6 @@ export const appState = {
   submission: 0,
   results: {},
   hasSubmitted: false,
-  acceptedRules: false
+  acceptedRules: false,
+  deadline: null,
 };
