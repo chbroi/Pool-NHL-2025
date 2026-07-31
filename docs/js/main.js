@@ -297,6 +297,9 @@ for (let i = 1; i <= 4; i++) {
   if (i <= appState.submission) {
     roundDiv.style.display = "block";
   }
+  else {
+  roundDiv.style.display = "block";
+    }
 } 
   // trouver le bouton cliqué
   const clickedButton = document.querySelector(`#tabs button[onclick="showTab('${tabName}')"]`);
@@ -312,7 +315,7 @@ for (let i = 1; i <= 4; i++) {
   }
 
 
-  const tabs = ["home", "submit","scoring", "results", "leaderboard", "rules",];
+  const tabs = ["home", "submit","scoring", "results", "leaderboard", "rules","profile"];
 
   tabs.forEach(t => {
 
@@ -342,6 +345,7 @@ if (rules) rules.style.display = "none";
   if (tabName === "results") loadPredictionsDetails();
   if (tabName === "leaderboard") renderFullLeaderboard(); 
   if (tabName === "scoring") renderScoring();
+  if (tabName === "profile") renderProfile();
   if (tabName === "submit") {
       console.log(
     "acceptedRules",
@@ -387,7 +391,7 @@ if (rules) rules.style.display = "none";
       if (!tab.querySelector("#predictionForm")) {
         tab.appendChild(form);
       }
-      
+      await renderSubmissionStatus()
       form.style.display = "block";
     }
   }
@@ -473,5 +477,56 @@ function isResultAvailable(key) {
 window.submitPredictions = submitPredictions;
 
 
+window.submitFeedback =
+async function () {
 
+  const message =
+    document
+      .getElementById(
+        "profileComment"
+      )
+      ?.value
+      ?.trim();
+
+  if (!message) {
+
+    alert(
+      "Veuillez entrer un commentaire."
+    );
+
+    return;
+  }
+
+  try {
+
+    await addDoc(
+      collection(db, "feedback"),
+      {
+        userId: appState.user.uid,
+        userName: appState.user.displayName,
+        email: appState.user.email,
+        message,
+        timestamp: Date.now()
+      }
+    );
+
+    alert(
+      "Merci pour votre commentaire !"
+    );
+
+    document.getElementById(
+      "profileComment"
+    ).value = "";
+
+  } catch (err) {
+
+    console.error(err);
+
+    alert(
+      "Erreur lors de l'envoi du commentaire."
+    );
+
+  }
+
+};
 
