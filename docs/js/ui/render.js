@@ -855,17 +855,19 @@ export async function renderProfile() {
 
     <div class="card">
 
-      <h3>
-        🐞 Commentaires
-      </h3>
+      <h3>💬 Suggestions et signalement de bogues</h3>
+
+      <p>
+        Une idée d'amélioration ?
+        Un problème rencontré ?
+        Envoyez-moi un commentaire.
+      </p>
 
       <textarea
         id="profileComment"
         rows="5"
         style="width:100%;"
         placeholder="
-Signaler un bug ou proposer une amélioration..."></textarea>
-
       <br><br>
 
       <button
