@@ -275,7 +275,7 @@ modal.style.display = "flex";
 
 
 
-window.showTab = function(tabName) {
+window.showTab = async function(tabName) {
   
   if (!appState.user && tabName === "submit") {
 
@@ -350,16 +350,6 @@ if (rules) rules.style.display = "none";
       console.log(
     "acceptedRules",
     appState.acceptedRules
-  );
-  
-  console.log(
-    "predictionForm",
-    document.getElementById("predictionForm")
-  );
-  
-  console.log(
-    "submitTab",
-    document.getElementById("submitTab")
   );
     if (!appState.acceptedRules) {
         showRulesModal();
