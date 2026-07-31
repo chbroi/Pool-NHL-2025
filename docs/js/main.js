@@ -8,7 +8,7 @@ import { signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-aut
 import { collection, query, where,doc, getDoc, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { playersByTeam, round1Ids,SCORING, POOL_CONFIG} from "./constants.js";
 import { appState } from "./app/state.js"
-import { loadPredictionsDetails, renderHome, renderFullLeaderboard, renderScoring,generateRound,renderSubmissionStatus,renderProfile} from "./ui/render.js"
+import { loadPredictionsDetails, renderHome, renderFullLeaderboard, renderScoring,generateRound,renderSubmissionStatus,renderProfile,renderStats} from "./ui/render.js"
 import { checkEligibility, loadAppConfig,hasAcceptedRules, acceptRules} from "./services/userService.js";
 import { attachRound1Listeners, attachRound2Listeners, attachRound3Listeners, attachConnSmytheListeners} from "./ui/listeners.js";
 
@@ -113,7 +113,7 @@ if (user) {
         Number(config.currentSubmission);
   
       appState.results = results;
-  
+      appState.deadline = config.deadline;
       appState.hasSubmitted =
         await alreadySubmitted();
   
@@ -440,7 +440,7 @@ for (let i = 1; i <= 4; i++) {
   }
 
 
-  const tabs = ["home", "submit","scoring", "results", "leaderboard", "rules","profile"];
+  const tabs = ["home", "submit","scoring", "results", "leaderboard","stats", "rules","profile"];
 
   tabs.forEach(t => {
 
@@ -470,6 +470,7 @@ if (rules) rules.style.display = "none";
   if (tabName === "results") loadPredictionsDetails();
   if (tabName === "leaderboard") renderFullLeaderboard(); 
   if (tabName === "scoring") renderScoring();
+  if (tabName === "stats") renderStats();
   if (tabName === "profile") renderProfile();
   if (tabName === "submit") {
       console.log(
