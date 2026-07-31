@@ -499,16 +499,35 @@ export async function renderFullLeaderboard() {
   }
     
   const data = await computeLeaderboard(predictions, appState.results);
-
-  container.innerHTML = `<h2>🏆 Classement complet</h2>`;
-
-  data.forEach((p, i) => {
-    const row = document.createElement("div");
-    row.innerHTML = `
-      <strong>#${i + 1}</strong> ${p.name} — ${p.score} pts
-    `;
-    container.appendChild(row);
-  });
+  container.innerHTML = `
+  <div class="card">
+    <h2>🏆 Classement complet</h2>
+    <table class="resultsTable">
+      <tr>
+        <th>Position</th>
+        <th>Participant</th>
+        <th>Points</th>
+      </tr>
+      ${data.map((p, i) => `
+        <tr>
+          <td>
+            ${
+              i === 0 ? "🥇" :
+              i === 1 ? "🥈" :
+              i === 2 ? "🥉" :
+              "#" + (i + 1)
+            }
+          </td>
+          <td>${p.name}</td>
+          <td>
+            <strong>${p.score}</strong>
+          </td>
+        </tr>
+      `).join("")}
+    </table>
+  </div>
+`;
+``
 }
 
 
@@ -696,7 +715,7 @@ export function renderScoring() {
 
   Object.entries(SCORING.submissions).forEach(([sub, config]) => {
 
-    let html = `<h3>Soumission ${sub}</h3>`;
+    let html = `<div class="card"> <h3>Soumission ${sub}</h3>`;
     html += `<ul>`;
 
     Object.entries(config.rounds).forEach(([round, pts]) => {
@@ -704,7 +723,7 @@ export function renderScoring() {
     });
 
     html += `<li>Conn Smythe : ${config.connSmythe} pts</li>`;
-    html += `</ul>`;
+    html += `</ul> </div>`;
 
     container.innerHTML += html;
 
