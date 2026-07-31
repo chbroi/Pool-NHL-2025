@@ -804,81 +804,34 @@ export async function renderSubmissionStatus() {
 
   container.innerHTML = html;
 }
-export async function renderProfile() {
+<div class="card">
 
-  const container =
-    document.getElementById(
-      "profileTab"
-    );
+  <h3>
+    💬 Suggestions et signalement de bogues
+  </h3>
 
-  const predictions =
-    await getAllPredictions();
+  <p>
+    Une idée d'amélioration ?
+    Un problème rencontré ?
+    Envoyez-moi un commentaire.
+  </p>
 
-  const myPredictions =
-    predictions.filter(
-      p => p.userId === appState.user.uid
-    );
+  <textarea
+    id="profileComment"
+    rows="5"
+    style="width:100%;"
+    placeholder="Décrivez votre problème ou votre idée d'amélioration...">
+  </textarea>
 
-  container.innerHTML = `
+  <br><br>
 
-    <div class="card">
+  <button
+    class="actionBtn"
+    onclick="submitFeedback()">
 
-      <h2>
-        👤 Mon profil
-      </h2>
+    Envoyer
 
-      <p>
-        <strong>Nom :</strong>
-        ${appState.user.displayName}
-      </p>
+  </button>
 
-      <p>
-        <strong>Courriel :</strong>
-        ${appState.user.email}
-      </p>
-
-      <p>
-        <strong>Participation :</strong>
-        ${
-          appState.acceptedRules
-            ? "✅ Confirmée"
-            : "❌ Non confirmée"
-        }
-      </p>
-
-      <p>
-        <strong>Soumissions :</strong>
-        ${myPredictions.length}
-      </p>
-
-    </div>
-
-    <div class="card">
-
-      <h3>💬 Suggestions et signalement de bogues</h3>
-
-      <p>
-        Une idée d'amélioration ?
-        Un problème rencontré ?
-        Envoyez-moi un commentaire.
-      </p>
-
-      <textarea
-        id="profileComment"
-        rows="5"
-        style="width:100%;"
-        placeholder="
-      <br><br>
-
-      <button
-        class="actionBtn"
-        onclick="submitFeedback()">
-
-        Envoyer
-
-      </button>
-
-    </div>
-  `;
-}
+</div>
 
