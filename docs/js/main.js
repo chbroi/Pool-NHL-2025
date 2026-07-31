@@ -97,88 +97,130 @@ onAuthStateChanged(auth, async (user) => {
   const logoutBtn = document.getElementById("logoutBtn");
   const userInfo = document.getElementById("userInfo");
   const appContent = document.getElementById("appContent");
+if (user) {
 
- if (user) {
   try {
 
-    appState.user = user;
-    if (loginBtn) loginBtn.style.display = "none";
-    if (logoutBtn) logoutBtn.style.display = "inline-block";
-    
-    const profileBtn =
-      document.getElementById(
-        "profileTabButton"
-      );
-    
-    if (profileBtn) {
-      profileBtn.style.display = "inline-block";
-    }
-    else {
-      if (loginBtn) loginBtn.style.display = "inline-block";
-      if (logoutBtn) logoutBtn.style.display = "none";
-      
+      appState.user = user;
+  
+      appState.acceptedRules =
+        await hasAcceptedRules(user.uid);
+  
+      const { config, results } =
+        await loadAppConfig();
+  
+      appState.submission =
+        Number(config.currentSubmission);
+  
+      appState.results = results;
+  
+      appState.hasSubmitted =
+        await alreadySubmitted();
+  
+      // ======================
+      // UI connecté
+      // ======================
+  
+      if (loginBtn) {
+        loginBtn.style.display = "none";
+      }
+  
+      if (logoutBtn) {
+        logoutBtn.style.display = "inline-block";
+      }
+  
+      if (userInfo) {
+        userInfo.innerText =
+          user.displayName;
+      }
+  
       const profileBtn =
         document.getElementById(
           "profileTabButton"
         );
-      
+  
       if (profileBtn) {
-        profileBtn.style.display = "none";
+        profileBtn.style.display =
+          "inline-block";
       }
-    }
-      
-    appState.acceptedRules =
-      await hasAcceptedRules(user.uid);
-
-    const { config, results } = await loadAppConfig();
-    appState.submission = Number(config.currentSubmission);
-    appState.results = results;
-    appState.hasSubmitted =await alreadySubmitted();
-
-    //  UI connecté
-    if (loginBtn) loginBtn.style.display = "none";
-    if (logoutBtn) logoutBtn.style.display = "inline-block";
-
-    if (userInfo) {
-      userInfo.innerText = user.displayName;
-    }
-
-   
-
-    //  helper message
-    const helper = document.getElementById("helperMessage");
-    if (helper) {
-      helper.innerHTML = config.submissionOpen
-        ? config.helperMessage
-        : "⏳ Les soumissions sont fermées pour cette ronde.";
-    }
-
-    // generate rounds
-    if (appState.results && Object.keys(appState.results).length > 0) {
-      for (let i = 1; i <= appState.submission; i++) {
-        await generateRound(i);
+  
+      // ======================
+      // Message utilisateur
+      // ======================
+  
+      const helper =
+        document.getElementById(
+          "helperMessage"
+        );
+  
+      if (helper) {
+  
+        helper.innerHTML =
+          config.submissionOpen
+            ? config.helperMessage
+            : "⏳ Les soumissions sont fermées pour cette ronde.";
+  
       }
-    }
-
-    // listeners
-    attachRound1Listeners();
-    attachRound2Listeners();
-    attachRound3Listeners();
-    attachConnSmytheListeners();
-
-    const form = document.getElementById("predictionForm");
-    if (form && !form.hasListener) {
-      form.addEventListener("change", () => {
-        funcs.checkIfReadyToSubmit(appState.submission);
-      });
-      form.hasListener = true;
-    }
-
-    //  logique app
-    showTab("home");
-
-
-    } catch(err) {
+  
+      // ======================
+      // Génération des rondes
+      // ======================
+  
+      if (
+        appState.results &&
+        Object.keys(appState.results)
+          .length > 0
+      ) {
+  
+        for (
+          let i = 1;
+          i <= appState.submission;
+          i++
+        ) {
+  
+          await generateRound(i);
+  
+        }
+  
+      }
+  
+      // ======================
+      // Listeners
+      // ======================
+  
+      attachRound1Listeners();
+      attachRound2Listeners();
+      attachRound3Listeners();
+      attachConnSmytheListeners();
+  
+      const form =
+        document.getElementById(
+          "predictionForm"
+        );
+  
+      if (form && !form.hasListener) {
+  
+        form.addEventListener(
+          "change",
+          () => {
+  
+            funcs.checkIfReadyToSubmit(
+              appState.submission
+            );
+  
+          }
+        );
+  
+        form.hasListener = true;
+      }
+  
+      // ======================
+      // Accueil
+      // ======================
+  
+      showTab("home");
+  
+    } catch (err) {
   
       console.error(err);
   
@@ -186,36 +228,94 @@ onAuthStateChanged(auth, async (user) => {
         "Erreur d'initialisation : " +
         err.message
       );
+  
     }
+  
   } else {
-
+  
+    // ======================
+    // Déconnexion
+    // ======================
+  
     appState.user = null;
-
-    if (loginBtn) loginBtn.style.display = "inline-block";
-    if (logoutBtn) logoutBtn.style.display = "none";
-
-    if (userInfo) userInfo.innerText = "";
-
-    const home = document.getElementById("homeTab");
+  
+    if (loginBtn) {
+      loginBtn.style.display =
+        "inline-block";
+    }
+  
+    if (logoutBtn) {
+      logoutBtn.style.display =
+        "none";
+    }
+  
+    if (userInfo) {
+      userInfo.innerText = "";
+    }
+  
+    const profileBtn =
+      document.getElementById(
+        "profileTabButton"
+      );
+  
+    if (profileBtn) {
+      profileBtn.style.display =
+        "none";
+    }
+  
+    // Vide le contenu du profil
+  
+    const profileTab =
+      document.getElementById(
+        "profileTab"
+      );
+  
+    if (profileTab) {
+      profileTab.innerHTML = "";
+    }
+  
+    // Retour automatique à l'accueil
+  
+    showTab("home");
+  
+    // Page d'accueil visiteur
+  
+    const home =
+      document.getElementById(
+        "homeTab"
+      );
+  
     if (home) {
+  
       home.innerHTML = `
         <div class="card">
-        
-          <h2>🏒 Pool des séries éliminatoires</h2>
-        
-          <p>Consultez les résultats et le classement gratuitement.</p>
-        
-          <p>Connectez-vous pour participer.</p>
-        
-          <button onclick="document.getElementById('loginBtn').click()">
+  
+          <h2>
+            🏒 Pool des séries éliminatoires
+          </h2>
+  
+          <p>
+            Consultez les résultats
+            et le classement gratuitement.
+          </p>
+  
+          <p>
+            Connectez-vous pour participer.
+          </p>
+  
+          <button
+            onclick="document.getElementById('loginBtn').click()">
+  
             Connexion pour participer
+  
           </button>
-        
+  
         </div>
-        `;
+      `;
     }
   }
-});
+}
+                  
 
 
 
@@ -302,7 +402,7 @@ modal.style.display = "flex";
 
 window.showTab = async function(tabName) {
   
-  if (!appState.user && tabName === "submit") {
+  if (!appState.user && (tabName === "submit"|| tabName === "profile" )) {
 
       alert("Connecte-toi pour participer.");
     
