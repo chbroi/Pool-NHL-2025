@@ -8,7 +8,7 @@ import { signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-aut
 import { collection, query, where,doc, getDoc, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { playersByTeam, round1Ids,SCORING, POOL_CONFIG} from "./constants.js";
 import { appState } from "./app/state.js"
-import { loadPredictionsDetails, renderHome, renderFullLeaderboard, renderScoring,generateRound,renderSubmissionStatus,renderProfile,renderStats} from "./ui/render.js"
+import { loadPredictionsDetails, renderHome, renderFullLeaderboard, renderScoring,generateRound,renderSubmissionStatus,renderProfile,renderStats,renderAdmin} from "./ui/render.js"
 import { checkEligibility, loadAppConfig,hasAcceptedRules, acceptRules} from "./services/userService.js";
 import { attachRound1Listeners, attachRound2Listeners, attachRound3Listeners, attachConnSmytheListeners} from "./ui/listeners.js";
 
@@ -103,8 +103,9 @@ if (user) {
 
       appState.user = user;
   
-      appState.acceptedRules =
-        await hasAcceptedRules(user.uid);
+      appState.acceptedRules = await hasAcceptedRules(user.uid);
+      const participantDoc = await getDoc(doc(db, "participants", user.uid));
+      appState.isAdmin = participantDoc.exists() && participantDoc.data().isAdmin === true;
   
       const { config, results } =
         await loadAppConfig();
@@ -143,6 +144,19 @@ if (user) {
         profileBtn.style.display =
           "inline-block";
       }
+    const adminBtn =
+      document.getElementById(
+        "adminTabButton"
+      );
+    
+    if (adminBtn) {
+    
+      adminBtn.style.display =
+        appState.isAdmin
+          ? "inline-block"
+          : "none";
+    
+    }
   
       // ======================
       // Message utilisateur
@@ -242,6 +256,15 @@ if (user) {
     if (profileTab) {
       profileTab.style.display = "none";
       profileTab.innerHTML = "";
+    }
+
+    const adminBtn =
+    document.getElementById(
+      "adminTabButton"
+    );
+  
+    if (adminBtn) {
+      adminBtn.style.display = "none";
     }
   
     appState.user = null;
@@ -409,7 +432,11 @@ window.showTab = async function(tabName) {
       showTab("home");
       return;
   }
-
+  if ( tabName === "admin" && !appState.isAdmin)
+  ) {  
+    showTab("home");
+    return;
+  }
   
   // mise en valeur de l'onglet actif
   document.querySelectorAll("#tabs button").forEach(btn => {
@@ -440,7 +467,7 @@ for (let i = 1; i <= 4; i++) {
   }
 
 
-  const tabs = ["home", "submit","scoring", "results", "leaderboard","stats", "rules","profile"];
+  const tabs = ["home", "submit","scoring", "results", "leaderboard","stats", "rules"," admin","profile"];
 
   tabs.forEach(t => {
 
@@ -472,6 +499,7 @@ if (rules) rules.style.display = "none";
   if (tabName === "scoring") renderScoring();
   if (tabName === "stats") renderStats();
   if (tabName === "profile") renderProfile();
+  if (tabName === "admin") renderAdmin();
   if (tabName === "submit") {
       console.log(
     "acceptedRules",
