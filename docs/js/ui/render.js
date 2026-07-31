@@ -1024,6 +1024,7 @@ export async function renderStats() {
 
   const predictions =
     await getAllPredictions();
+  console.log(predictions);
 
   const picks = {};
 
