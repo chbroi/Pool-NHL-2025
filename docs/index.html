@@ -259,6 +259,14 @@
       background: #ffca28;
       color: black;
     }
+    body[data-theme="light"] .myColumnHeader {
+      background: #f7c825;
+      color: black;
+    }
+    
+    body[data-theme="light"] .myColumnCell {
+      background: #f5edd0;
+    }
     .myColumnCell {
       background: #fff8d6;
       position: sticky;
@@ -295,9 +303,34 @@
       font-size: 16px;
       color: #222;
     }
-
-
+    body[data-theme="light"] .totalGlobalRow {
+      background: #f4de84;
+      color: #222;
+      font-weight: bold;
+    }
+    body[data-theme="light"] .scoreRow {
+      background: #ececec;
+      font-weight: bold;
+    }
+  body[data-theme="light"] .roundHeader td {
+    background: #d9d9d9;
+    color: #222;
+    font-weight: bold;
+  }
     
+  body[data-theme="light"] .leaderboardTable {
+    background: white;
+  }
+  
+  body[data-theme="light"] .leaderboardTable td {
+    background: white;
+  }
+    body[data-theme="light"].resultsTable th:first-child,
+    body[data-theme="light"].resultsTable td:first-child {
+  background: #e5e5e5;
+  color: #222;
+}
+      
     .homeActions {
       display: flex;
       flex-direction: column;
