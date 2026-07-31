@@ -1,6 +1,7 @@
 //Ensemble des fonctions utiliser pour le pool.
 let participants = [];
 import { round1Ids} from "./constants.js";
+import { appState } from "./app/state.js";
 
 export function confirmEngagement() {
 
@@ -384,4 +385,32 @@ export function renderParticipantsTable(participants) {
   });
 
   container.appendChild(table);
+}
+
+
+import { appState } from "./app/state.js";
+
+export function refreshHelperMessage() {
+
+  const helper =
+    document.getElementById(
+      "helperMessage"
+    );
+
+  if (!helper) return;
+
+  if (appState.submissionOpen) {
+
+    helper.innerHTML =
+      `⏳ Vous avez jusqu'au ${
+        new Date(
+          appState.deadline
+        ).toLocaleString()
+      } pour soumettre vos prédictions.`;
+
+  } else {
+
+    helper.innerHTML =
+      "🔒 Prédictions terminées. Revenez plus tard pour la prochaine ronde.";
+  }
 }
