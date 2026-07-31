@@ -432,8 +432,7 @@ window.showTab = async function(tabName) {
       showTab("home");
       return;
   }
-  if ( tabName === "admin" && !appState.isAdmin)
-  ) {  
+  if ( tabName === "admin" && !appState.isAdmin) {  
     showTab("home");
     return;
   }
