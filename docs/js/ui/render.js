@@ -729,3 +729,154 @@ export function renderScoring() {
 
   });
 }
+
+export async function renderSubmissionStatus() {
+
+  const container =
+    document.getElementById(
+      "submissionStatusCard"
+    );
+
+  if (!container || !appState.user) return;
+
+  const predictions =
+    await getAllPredictions();
+
+  const mySubmissions =
+    predictions.filter(
+      p => p.userId === appState.user.uid
+    );
+
+  let html = `
+    <h3>
+      🏒 Soumission
+      ${appState.submission}/4
+    </h3>
+
+    <div style="
+      display:flex;
+      gap:10px;
+      margin:15px 0;
+    ">
+  `;
+
+  for (let i = 1; i <= 4; i++) {
+
+    let icon = "🔒";
+
+    if (
+      mySubmissions.some(
+        p => p.round === i
+      )
+    ) {
+      icon = "✅";
+    }
+    else if (
+      i === appState.submission
+    ) {
+      icon = "⏳";
+    }
+
+    html += `
+      <div class="submissionBadge">
+        ${icon} ${i}
+      </div>
+    `;
+  }
+
+  html += `
+    </div>
+
+    <h4>Historique</h4>
+  `;
+
+  for (let i = 1; i <= 4; i++) {
+
+    const submission =
+      mySubmissions.find(
+        p => p.round === i
+      );
+
+    html += submission
+      ? `<div>✅ Soumission ${i}</div>`
+      : `<div>⏳ Soumission ${i}</div>`;
+  }
+
+  container.innerHTML = html;
+}
+export async function renderProfile() {
+
+  const container =
+    document.getElementById(
+      "profileTab"
+    );
+
+  const predictions =
+    await getAllPredictions();
+
+  const myPredictions =
+    predictions.filter(
+      p => p.userId === appState.user.uid
+    );
+
+  container.innerHTML = `
+
+    <div class="card">
+
+      <h2>
+        👤 Mon profil
+      </h2>
+
+      <p>
+        <strong>Nom :</strong>
+        ${appState.user.displayName}
+      </p>
+
+      <p>
+        <strong>Courriel :</strong>
+        ${appState.user.email}
+      </p>
+
+      <p>
+        <strong>Participation :</strong>
+        ${
+          appState.acceptedRules
+            ? "✅ Confirmée"
+            : "❌ Non confirmée"
+        }
+      </p>
+
+      <p>
+        <strong>Soumissions :</strong>
+        ${myPredictions.length}
+      </p>
+
+    </div>
+
+    <div class="card">
+
+      <h3>
+        🐞 Commentaires
+      </h3>
+
+      <textarea
+        id="profileComment"
+        rows="5"
+        style="width:100%;"
+        placeholder="
+Signaler un bug ou proposer une amélioration..."></textarea>
+
+      <br><br>
+
+      <button
+        class="actionBtn"
+        onclick="submitFeedback()">
+
+        Envoyer
+
+      </button>
+
+    </div>
+  `;
+}
+
