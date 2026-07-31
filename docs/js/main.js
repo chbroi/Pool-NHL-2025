@@ -270,13 +270,6 @@ if (user) {
         "none";
     }
   
-    // Vide le contenu du profil
-  
-    const profileTab =
-      document.getElementById(
-        "profileTab"
-      );
-  
     if (profileTab) {
       profileTab.innerHTML = "";
     }
