@@ -299,9 +299,10 @@ if (user) {
       profileTab.innerHTML = "";
     }
   
-    // Retour automatique à l'accueil
+    // Retour automatique à la page actuelle
   
-    showTab("home");
+    const lastTab =localStorage.getItem( "activeTab") || "home";
+    showTab(lastTab);
   
     // Page d'accueil visiteur
   
@@ -427,6 +428,7 @@ modal.style.display = "flex";
 
 window.showTab = async function(tabName) {
   
+  localStorage.setItem("activeTab",tabName);
   if (!appState.user && (tabName === "submit"|| tabName === "profile" )) {
 
       alert("Connecte-toi pour participer.");
