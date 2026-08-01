@@ -398,7 +398,8 @@ const leaderboard = await computeLeaderboard(predictions,
     
       <button
         id="participateBtn"
-        class="actionBtn">
+        class="actionBtn"
+        onclick="showRulesModal()">
     
         🏒 Participer au pool
     
@@ -406,7 +407,8 @@ const leaderboard = await computeLeaderboard(predictions,
     
       <button
         id="rulesBtn"
-        class="actionBtn secondary">
+        class="actionBtn secondary"
+        onclick="showTab('rules')">
     
         📖 Consulter les règlements
     
