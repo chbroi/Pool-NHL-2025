@@ -27,6 +27,19 @@ document.getElementById("logoutBtn").addEventListener("click", async () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
+  appState.round1Deadline = config.round1Deadline;
+
+  appState.round2Deadline = config.round2Deadline;
+  
+  appState.round3Deadline = config.round3Deadline;
+  
+  appState.round4Deadline = config.round4Deadline;
+
+  const currentDeadline = appState[`round${appState.submission}Deadline`];
+  if (currentDeadline && Date.now() > currentDeadline) {
+    appState.submissionOpen =false;
+  }
+  
     document.querySelectorAll(".rulesEntryFee")
     .forEach(el => {
       el.textContent = POOL_CONFIG.entryFee;
