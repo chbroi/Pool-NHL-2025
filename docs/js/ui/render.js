@@ -1113,10 +1113,47 @@ ${
 </p>
 
 <p>
-<strong>Date limite :</strong>
-${new Date(
-  appState.deadline
-).toLocaleString()}
+<strong>Ronde 1 :</strong>
+${
+  appState.round1Deadline
+  ? new Date(
+      appState.round1Deadline
+    ).toLocaleString()
+  : "Non configurée"
+}
+</p>
+
+<p>
+<strong>Ronde 2 :</strong>
+${
+  appState.round2Deadline
+  ? new Date(
+      appState.round2Deadline
+    ).toLocaleString()
+  : "Non configurée"
+}
+</p>
+
+<p>
+<strong>Ronde 3 :</strong>
+${
+  appState.round3Deadline
+  ? new Date(
+      appState.round3Deadline
+    ).toLocaleString()
+  : "Non configurée"
+}
+</p>
+
+<p>
+<strong>Ronde 4 :</strong>
+${
+  appState.round4Deadline
+  ? new Date(
+      appState.round4Deadline
+    ).toLocaleString()
+  : "Non configurée"
+}
 </p>
 
 </div>
