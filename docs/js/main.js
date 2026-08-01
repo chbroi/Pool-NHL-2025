@@ -741,36 +741,57 @@ async function() {
   );
 
   appState.submission = round;
+  renderAdmin();
+  funcs.refreshHelperMessage();
 
   alert(
     `Soumission ${round} activée`
   );
-  funcs.refreshHelperMessage();
+  
 };
 
 
 window.updateDeadline =
 async function() {
 
-  const value =
-    document.getElementById(
-      "adminDeadline"
-    ).value;
-
-  const timestamp =
-    new Date(value).getTime();
-
   await updateDoc(
     doc(db, "config", "ui"),
     {
-      deadline: timestamp
+
+      round1Deadline:
+        new Date(
+          document.getElementById(
+            "round1Deadline"
+          ).value
+        ).getTime(),
+
+      round2Deadline:
+        new Date(
+          document.getElementById(
+            "round2Deadline"
+          ).value
+        ).getTime(),
+
+      round3Deadline:
+        new Date(
+          document.getElementById(
+            "round3Deadline"
+          ).value
+        ).getTime(),
+
+      round4Deadline:
+        new Date(
+          document.getElementById(
+            "round4Deadline"
+          ).value
+        ).getTime()
+
     }
   );
 
-  appState.deadline =
-    timestamp;
-
-  renderAdmin();
-  funcs.refreshHelperMessage();
+  alert(
+    "Dates mises à jour"
+  );
+funcs.refreshHelperMessage();
 };
 
