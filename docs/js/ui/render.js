@@ -1075,44 +1075,93 @@ export async function renderAdmin() {
 
     <div class="card">
 
-      <h2>
-        ⚙️ Administration
-      </h2>
-      <select id="adminSubmission">
+<h3>📋 État actuel</h3>
 
-        <option value="1">Ronde 1</option>
-        <option value="2">Ronde 2</option>
-        <option value="3">Ronde 3</option>
-        <option value="4">Ronde 4</option>
-      
-      </select>
-      
-      <button
-        class="actionBtn"
-        onclick="updateSubmissionRound()">
-      
-        Mettre à jour
-      
-      </button>
+<p>
+<strong>Ronde active :</strong>
+${appState.submission}
+</p>
 
-      <button
-        class="actionBtn"
-        onclick="toggleSubmissionOpen(true)">
+<p>
+<strong>Statut :</strong>
+${
+  appState.submissionOpen
+    ? "✅ Ouvertes"
+    : "🔒 Fermées"
+}
+</p>
 
-        Ouvrir les soumissions
+<p>
+<strong>Date limite :</strong>
+${new Date(
+  appState.deadline
+).toLocaleString()}
+</p>
 
-      </button>
+</div>
+<div class="card">
 
-      <button
-        class="actionBtn"
-        onclick="toggleSubmissionOpen(false)">
+<h3>
+🏒 Modifier la ronde active
+</h3>
 
-        Fermer les soumissions
+<select id="adminSubmission">
 
-      </button>
+...
 
-    </div>
+</select>
 
-  `;
+<button
+class="actionBtn"
+onclick="updateSubmissionRound()">
+
+Mettre à jour
+
+</button>
+
+</div>
+<div class="card">
+
+<h3>
+⏱ Date limite
+</h3>
+
+<input
+type="datetime-local"
+id="adminDeadline">
+
+<button
+class="actionBtn"
+onclick="updateDeadline()">
+
+Mettre à jour
+
+</button>
+
+</div>
+<div class="card">
+
+<h3>
+🔒 Soumissions
+</h3>
+
+<button
+class="actionBtn"
+onclick="toggleSubmissionOpen(true)">
+
+Ouvrir
+
+</button>
+
+<button
+class="actionBtn"
+onclick="toggleSubmissionOpen(false)">
+
+Fermer
+
+</button>
+
+</div>
+`
 }
 
