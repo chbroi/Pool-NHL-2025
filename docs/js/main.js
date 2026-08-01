@@ -27,13 +27,7 @@ document.getElementById("logoutBtn").addEventListener("click", async () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-  appState.round1Deadline = config.round1Deadline;
-
-  appState.round2Deadline = config.round2Deadline;
   
-  appState.round3Deadline = config.round3Deadline;
-  
-  appState.round4Deadline = config.round4Deadline;
 
   const currentDeadline = appState[`round${appState.submission}Deadline`];
   if (currentDeadline && Date.now() > currentDeadline) {
@@ -130,6 +124,10 @@ if (user) {
       appState.deadline = config.deadline;
       appState.submissionOpen = config.submissionOpen;
       appState.hasSubmitted = await alreadySubmitted();
+      appState.round1Deadline = config.round1Deadline;
+      appState.round2Deadline = config.round2Deadline;
+      appState.round3Deadline = config.round3Deadline;
+      appState.round4Deadline = config.round4Deadline;
       funcs.refreshHelperMessage();
     
       // ======================
