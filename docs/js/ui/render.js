@@ -820,9 +820,31 @@ export async function renderSubmissionStatus() {
         </h4>
   
         <p>
-          ${new Date(
-            appState.deadline
-          ).toLocaleString()}
+        <strong>Ronde 1 :</strong>
+        ${appState.round1Deadline
+          ? new Date(appState.round1Deadline).toLocaleString()
+          : "Non configurée"}
+        </p>
+        
+        <p>
+        <strong>Ronde 2 :</strong>
+        ${appState.round2Deadline
+          ? new Date(appState.round2Deadline).toLocaleString()
+          : "Non configurée"}
+        </p>
+        
+        <p>
+        <strong>Ronde 3 :</strong>
+        ${appState.round3Deadline
+          ? new Date(appState.round3Deadline).toLocaleString()
+          : "Non configurée"}
+        </p>
+        
+        <p>
+        <strong>Ronde 4 :</strong>
+        ${appState.round4Deadline
+          ? new Date(appState.round4Deadline).toLocaleString()
+          : "Non configurée"}
         </p>
   
         <strong>
@@ -1066,28 +1088,10 @@ export async function renderStats() {
 
 export async function renderAdmin() {
 
-  setTimeout(() => {
-
-  const ddl =
-    document.getElementById(
-      "adminSubmission"
-    );
-
-  if (ddl) {
-    ddl.value =
-      appState.submission;
-  }
-
-}, 0);
-
-  const container =
+const container =
     document.getElementById(
       "adminTab"
     );
-console.log(
-  "deadline",
-  appState.deadline
-);
   container.innerHTML = `
 
     <div class="card">
@@ -1145,30 +1149,30 @@ Mettre à jour
 <h3>
 ⏱ Date limite
 </h3>
-<h2>
+<label>
 Ronde 1
-</h2>
+</label>
 <input
 type="datetime-local"
 id="round1Deadline">
 
-<h2>
+<label>
 Ronde 2
-</h2>
+</label>
 <input
 type="datetime-local"
 id="round2Deadline">
 
-<h2>
+<label>
 Ronde 3
-</h2>
+</label>
 <input
 type="datetime-local"
 id="round3Deadline">
 
-<h2>
+<label>
 Ronde 4
-</h2>
+</label>
 <input
 type="datetime-local"
 id="round4Deadline">
@@ -1206,5 +1210,61 @@ Fermer
 
 </div>
 `
+setTimeout(() => {
+
+  if (appState.round1Deadline) {
+
+    document.getElementById(
+      "round1Deadline"
+    ).value =
+      new Date(
+        appState.round1Deadline
+      )
+      .toISOString()
+      .slice(0,16);
+
+  }
+
+  if (appState.round2Deadline) {
+
+    document.getElementById(
+      "round2Deadline"
+    ).value =
+      new Date(
+        appState.round2Deadline
+      )
+      .toISOString()
+      .slice(0,16);
+
+  }
+
+  if (appState.round3Deadline) {
+
+    document.getElementById(
+      "round3Deadline"
+    ).value =
+      new Date(
+        appState.round3Deadline
+      )
+      .toISOString()
+      .slice(0,16);
+
+  }
+
+  if (appState.round4Deadline) {
+
+    document.getElementById(
+      "round4Deadline"
+    ).value =
+      new Date(
+        appState.round4Deadline
+      )
+      .toISOString()
+      .slice(0,16);
+
+  }
+
+}, 0);
+  
 }
 
