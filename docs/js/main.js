@@ -2,10 +2,9 @@
 
 import * as funcs from "./functions.js";
 import { auth, db, GoogleAuthProvider } from "./firebase.js";
-import {getAllPredictions, hasSubmitted, submitPrediction} from "./services/firestoreService.js";
-import { signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { collection, query, where,doc, getDoc, getDocs, addDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import {hasSubmitted, submitPrediction} from "./services/firestoreService.js";
+import { signInWithPopup, onAuthStateChanged,signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { collection, query, where,doc, getDoc, getDocs, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { playersByTeam, round1Ids,SCORING, POOL_CONFIG} from "./constants.js";
 import { appState } from "./app/state.js"
 import { loadPredictionsDetails, renderHome, renderFullLeaderboard, renderScoring,generateRound,renderSubmissionStatus,renderProfile,renderStats,renderAdmin} from "./ui/render.js"
@@ -104,7 +103,8 @@ onAuthStateChanged(auth, async (user) => {
   const logoutBtn = document.getElementById("logoutBtn");
   const userInfo = document.getElementById("userInfo");
   const profileTab = document.getElementById("profileTab");
-if (user) {
+  const { config, results } = await loadAppConfig();
+  if (user) {
 
   try {
 
@@ -114,12 +114,9 @@ if (user) {
       const participantDoc = await getDoc(doc(db, "participants", user.uid));
       appState.isAdmin = participantDoc.exists() && participantDoc.data().isAdmin === true;
   
-      const { config, results } =
-        await loadAppConfig();
+      
   
-      appState.submission =
-        Number(config.currentSubmission);
-  
+      appState.submission = Number(config.currentSubmission);
       appState.results = results;
       appState.deadline = config.deadline;
       appState.submissionOpen = config.submissionOpen;
@@ -128,6 +125,7 @@ if (user) {
       appState.round2Deadline = config.round2Deadline;
       appState.round3Deadline = config.round3Deadline;
       appState.round4Deadline = config.round4Deadline;
+      appState.paid = participantDoc.data()?.paid ?? false;
       funcs.refreshHelperMessage();
     
       // ======================
@@ -231,7 +229,8 @@ if (user) {
       // Accueil
       // ======================
   
-      showTab("home");
+      const lastTab = localStorage.getItem("activeTab")) || "home";
+      showTab(lastTab);
   
     } catch (err) {
   
@@ -791,5 +790,38 @@ async function() {
     "Dates mises à jour"
   );
 funcs.refreshHelperMessage();
+};
+
+
+window.deletePredictionAdmin =
+async function() {
+
+  const id =
+    document.getElementById(
+      "deletePredictionSelect"
+    ).value;
+
+  if (
+    !confirm(
+      "Supprimer cette soumission ?"
+    )
+  ) {
+    return;
+  }
+
+  await deleteDoc(
+    doc(
+      db,
+      "predictions",
+      id
+    )
+  );
+
+  renderAdmin();
+
+  alert(
+    "Soumission supprimée."
+  );
+
 };
 
