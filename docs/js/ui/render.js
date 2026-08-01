@@ -1006,12 +1006,10 @@ export async function renderStats() {
 
   const predictions =
     await getAllPredictions();
-  console.log("PREDICTIONS", predictions);
 
   const picks = {};
 
   predictions.forEach(p => {
-    console.log("PICKS", p.picks);
     const team =
       p.picks?.R4_final_team;
 
@@ -1068,11 +1066,28 @@ export async function renderStats() {
 
 export async function renderAdmin() {
 
+  setTimeout(() => {
+
+  const ddl =
+    document.getElementById(
+      "adminSubmission"
+    );
+
+  if (ddl) {
+    ddl.value =
+      appState.submission;
+  }
+
+}, 0);
+
   const container =
     document.getElementById(
       "adminTab"
     );
-
+console.log(
+  "deadline",
+  appState.deadline
+);
   container.innerHTML = `
 
     <div class="card">
@@ -1109,7 +1124,10 @@ ${new Date(
 
 <select id="adminSubmission">
 
-...
+  <option value="1">Ronde 1</option>
+  <option value="2">Ronde 2</option>
+  <option value="3">Ronde 3</option>
+  <option value="4">Ronde 4</option>
 
 </select>
 
@@ -1127,10 +1145,33 @@ Mettre à jour
 <h3>
 ⏱ Date limite
 </h3>
-
+<h2>
+Ronde 1
+</h2>
 <input
 type="datetime-local"
-id="adminDeadline">
+id="round1Deadline">
+
+<h2>
+Ronde 2
+</h2>
+<input
+type="datetime-local"
+id="round2Deadline">
+
+<h2>
+Ronde 3
+</h2>
+<input
+type="datetime-local"
+id="round3Deadline">
+
+<h2>
+Ronde 4
+</h2>
+<input
+type="datetime-local"
+id="round4Deadline">
 
 <button
 class="actionBtn"
