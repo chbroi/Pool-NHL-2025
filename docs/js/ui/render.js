@@ -467,6 +467,7 @@ else {
 
   `;
 }
+}   
     
  container.innerHTML += '<h2>🏆 Top 10</h2>';
   leaderboard.slice(0,10).forEach((p, i) => {
@@ -569,7 +570,6 @@ export async function renderFullLeaderboard() {
     </table>
   </div>
 `;
-``
 }
 
 
