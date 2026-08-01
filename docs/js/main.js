@@ -229,7 +229,7 @@ onAuthStateChanged(auth, async (user) => {
       // Accueil
       // ======================
   
-      const lastTab = localStorage.getItem("activeTab")) || "home";
+      const lastTab = localStorage.getItem("activeTab") || "home";
       showTab(lastTab);
   
     } catch (err) {
