@@ -14,9 +14,13 @@ import {
  */
 export async function getAllPredictions() {
 
-  const snapshot = await getDocs(collection(db, "predictions"));
-
-  return snapshot.docs.map(doc => doc.data());
+  const snapshot = await getDocs( collection(db, "predictions"));
+  return snapshot.docs.map(
+    doc => ({
+      id: doc.id,
+      ...doc.data()
+    })
+  );
 }
 
 
