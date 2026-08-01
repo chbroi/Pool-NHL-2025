@@ -367,57 +367,107 @@ const leaderboard = await computeLeaderboard(predictions,
   
   if (appState.user) {
 
-  if (appState.acceptedRules) {
+  if (!appState.acceptedRules) {
 
-    container.innerHTML += `
-      <div class="card">
-        <h3>✅ Participation confirmée</h3>
+  container.innerHTML += `
 
-        <p>
-          Bienvenue ${appState.user.displayName}.
-        </p>
+    <div class="card">
 
-        <p>
-          Votre engagement de participation
-          a déjà été enregistré.
-        </p>
-      </div>
-    `;
+      <h3>
+        ⚠️ Participation non confirmée
+      </h3>
 
-  } else {
-
-    container.innerHTML += `
-      <div class="card">
-
-      <h3>⚠️ Participation non confirmée</h3>
-    
       <p>
         Pour participer au pool, vous devez accepter
         les conditions de participation.
       </p>
-    
+
       <button
-        id="participateBtn"
         class="actionBtn"
         onclick="showRulesModal()">
-    
+
         🏒 Participer au pool
-    
+
       </button>
-    
+
       <button
-        id="rulesBtn"
         class="actionBtn secondary"
         onclick="showTab('rules')">
-    
+
         📖 Consulter les règlements
-    
+
       </button>
-    
+
     </div>
-  `
-  }
+
+  `;
 }
+else {
+
+  container.innerHTML += `
+
+    <div class="card">
+
+      <h3>
+        ✅ Participation confirmée
+      </h3>
+
+      <p>
+        Bienvenue
+        ${appState.user.displayName}.
+      </p>
+
+      <p>
+        Votre engagement de participation
+        a été enregistré.
+      </p>
+
+      <p>
+
+        <strong>
+          💰 Paiement :
+        </strong>
+
+        ${
+          appState.paid
+            ? "✅ Reçu"
+            : "❌ Non reçu"
+        }
+
+      </p>
+
+      ${
+        !appState.paid
+        ? `
+          <div class="warningBox">
+
+            <strong>
+              ⚠️ Paiement requis
+            </strong>
+
+            <br><br>
+
+            Votre virement Interac de
+            ${POOL_CONFIG.entryFee}$ n'a pas encore été reçu.
+
+            <br><br>
+
+            À envoyer à :
+
+            <br>
+
+            charles.brosseau@hotmail.com
+
+          </div>
+        `
+        : ""
+      }
+
+    </div>
+
+  `;
+}
+    
  container.innerHTML += '<h2>🏆 Top 10</h2>';
   leaderboard.slice(0,10).forEach((p, i) => {
     const div = document.createElement("div");
@@ -820,28 +870,28 @@ export async function renderSubmissionStatus() {
         </h4>
   
         <p>
-        <strong>Ronde 1 :</strong>
+        <strong>Date limite soumission 1 :</strong>
         ${appState.round1Deadline
           ? new Date(appState.round1Deadline).toLocaleString()
           : "Non configurée"}
         </p>
         
         <p>
-        <strong>Ronde 2 :</strong>
+        <strong>Date limite soumission 2 :</strong>
         ${appState.round2Deadline
           ? new Date(appState.round2Deadline).toLocaleString()
           : "Non configurée"}
         </p>
         
         <p>
-        <strong>Ronde 3 :</strong>
+        <strong>Date limite soumission 3 :</strong>
         ${appState.round3Deadline
           ? new Date(appState.round3Deadline).toLocaleString()
           : "Non configurée"}
         </p>
         
         <p>
-        <strong>Ronde 4 :</strong>
+        <strong>Date limite soumission 4 :</strong>
         ${appState.round4Deadline
           ? new Date(appState.round4Deadline).toLocaleString()
           : "Non configurée"}
@@ -933,6 +983,17 @@ export async function renderProfile() {
           appState.acceptedRules
             ? "✅ Confirmée"
             : "❌ Non confirmée"
+        }
+      </p>
+      <p>
+        <strong>
+          💰 Paiement :
+        </strong>
+      
+        ${
+          appState.paid
+            ? "✅ Reçu"
+            : "❌ Non reçu"
         }
       </p>
 
@@ -1184,31 +1245,31 @@ Mettre à jour
 <div class="card">
 
 <h3>
-⏱ Date limite
+⏱  Modifier les dates limites
 </h3>
 <label>
-Ronde 1
+Soumission 1
 </label>
 <input
 type="datetime-local"
 id="round1Deadline">
 
 <label>
-Ronde 2
+Soumission 2
 </label>
 <input
 type="datetime-local"
 id="round2Deadline">
 
 <label>
-Ronde 3
+Soumission 3
 </label>
 <input
 type="datetime-local"
 id="round3Deadline">
 
 <label>
-Ronde 4
+Soumission 4
 </label>
 <input
 type="datetime-local"
@@ -1226,7 +1287,7 @@ Mettre à jour
 <div class="card">
 
 <h3>
-🔒 Soumissions
+🔒 Gestion des Soumissions
 </h3>
 
 <button
@@ -1245,8 +1306,47 @@ Fermer
 
 </button>
 
+ <select id="deletePredictionSelect">
+    <option>
+      Chargement...
+    </option>
+  </select>
+
+  <br><br>
+
+  <button
+    class="actionBtn"
+    onclick="deletePredictionAdmin()">
+
+    Supprimer
+
+  </button>
+
+</div>
+
 </div>
 `
+const predictions = await getAllPredictions();
+const ddl = document.getElementById( "deletePredictionSelect");
+
+ddl.innerHTML = "";
+
+predictions.forEach(p => {
+
+  ddl.innerHTML += `
+
+    <option
+      value="${p.id}">
+
+      ${p.userName}
+      - Ronde ${p.round}
+
+    </option>
+
+  `;
+
+});
+  
 setTimeout(() => {
 
   if (appState.round1Deadline) {
