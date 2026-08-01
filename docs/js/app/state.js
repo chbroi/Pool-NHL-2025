@@ -9,5 +9,6 @@ export const appState = {
   round3Deadline: null,
   round4Deadline: null,
   isAdmin: false,
-  submissionOpen: false
+  submissionOpen: false,
+  paid=false
 };
