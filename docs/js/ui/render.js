@@ -1646,87 +1646,129 @@ export function renderNhlStats() {
         Statistiques NHL
       </h2>
 
-      <div
-        id="nhlFilters">
+      <select id="nhlSeasonType">
 
-        <button
-          id="nhlPointsBtn">
+        <option value="season">
+          Saison régulière
+        </option>
 
+        <option value="playoffs">
+          Séries
+        </option>
+
+      </select>
+
+      <select id="nhlMetricSelect">
+
+        <option value="points">
           Points
+        </option>
 
-        </button>
-
-        <button
-          id="nhlGoalsBtn">
-
+        <option value="goals">
           Buts
+        </option>
 
-        </button>
-
-        <button
-          id="nhlAssistsBtn">
-
+        <option value="assists">
           Passes
+        </option>
 
-        </button>
-
-        <button
-          id="nhlGoaliesBtn">
-
+        <option value="goalies">
           Gardiens
+        </option>
 
-        </button>
+      </select>
 
-      </div>
+      <select
+        id="nhlGoalieSort"
+        style="display:none;">
 
-      <div
-        id="nhlStatsContent">
+        <option value="savePct">
+          % arrêts
+        </option>
 
-      </div>
+        <option value="wins">
+          Victoires
+        </option>
+
+        <option value="gaa">
+          MBA
+        </option>
+
+      </select>
+
+      <br><br>
+
+      <div id="nhlStatsContent"></div>
 
     </div>
+
   `;
 
   attachNhlStatsListeners();
 
-  renderNhlStatsTable(
-    "points"
-  );
+  renderNhlStatsTable();
+
 }
 
-export function attachNhlStatsListeners() {
+eexport function attachNhlStatsListeners() {
 
   document
-    .getElementById("nhlPointsBtn")
-    ?.addEventListener(
-      "click",
-      () => renderNhlStatsTable("points")
+    .getElementById("nhlMetricSelect")
+    .addEventListener(
+      "change",
+      () => {
+
+        const metric =
+          document.getElementById(
+            "nhlMetricSelect"
+          ).value;
+
+        const goalieFilter =
+          document.getElementById(
+            "nhlGoalieSort"
+          );
+
+        goalieFilter.style.display =
+          metric === "goalies"
+            ? "inline-block"
+            : "none";
+
+        renderNhlStatsTable();
+
+      }
     );
 
   document
-    .getElementById("nhlGoalsBtn")
-    ?.addEventListener(
-      "click",
-      () => renderNhlStatsTable("goals")
+    .getElementById("nhlSeasonType")
+    .addEventListener(
+      "change",
+      renderNhlStatsTable
     );
 
   document
-    .getElementById("nhlAssistsBtn")
-    ?.addEventListener(
-      "click",
-      () => renderNhlStatsTable("assists")
-    );
-
-  document
-    .getElementById("nhlGoaliesBtn")
-    ?.addEventListener(
-      "click",
-      () => renderNhlStatsTable("goalies")
+    .getElementById("nhlGoalieSort")
+    .addEventListener(
+      "change",
+      renderNhlStatsTable
     );
 
 }
 
 export function renderNhlStatsTable(metric) {
+  const seasonType =
+  document.getElementById(
+    "nhlSeasonType"
+  ).value;
+
+const metric =
+  document.getElementById(
+    "nhlMetricSelect"
+  ).value;
+
+const goalieSort =
+  document.getElementById(
+    "nhlGoalieSort"
+  ).value;
 
   const players =
     getPlayerStats(
@@ -1742,6 +1784,47 @@ export function renderNhlStatsTable(metric) {
   container.innerHTML = "";
 
   let rows = "";
+  if (metric === "goalies") {
+
+  players =
+    players.filter(
+      p => p.position === "G"
+    );
+
+  switch(goalieSort) {
+
+    case "savePct":
+
+      players.sort(
+        (a,b) =>
+          b.savePct -
+          a.savePct
+      );
+
+      break;
+
+    case "wins":
+
+      players.sort(
+        (a,b) =>
+          b.wins -
+          a.wins
+      );
+
+      break;
+
+    case "gaa":
+
+      players.sort(
+        (a,b) =>
+          a.gaa -
+          b.gaa
+      );
+
+      break;
+  }
+
+}
 
   players
     .slice(0,50)
