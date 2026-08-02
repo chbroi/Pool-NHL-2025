@@ -484,3 +484,49 @@ export function refreshHelperMessage() {
       "🔒 Prédictions terminées. Revenez plus tard pour la prochaine ronde.";
   }
 }
+
+export function getTopScorers(players) {
+
+    return [...players]
+        .sort(
+            (a,b) =>
+                b.seasonPoints -
+                a.seasonPoints
+        );
+}
+
+export function getTopGoalScorers(players) {
+
+    return [...players]
+        .sort(
+            (a,b) =>
+                b.seasonGoals -
+                a.seasonGoals
+        );
+}
+
+export function getTopAssists(players) {
+
+    return [...players]
+        .sort(
+            (a,b) =>
+                b.seasonAssists -
+                a.seasonAssists
+        );
+}
+
+export function getTopGoalies(players) {
+
+    return [...players]
+
+        .filter(
+            p =>
+                p.position === "G"
+        )
+
+        .sort(
+            (a,b) =>
+                a.gaa -
+                b.gaa
+        );
+}
