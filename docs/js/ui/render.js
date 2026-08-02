@@ -473,24 +473,110 @@ else {
 }
 }   
     
- container.innerHTML += '<h2>🏆 Top 10</h2>';
-  leaderboard.slice(0,10).forEach((p, i) => {
-    const div = document.createElement("div");
-    div.innerHTML = `
-      <strong>#${i+1}</strong> ${p.name} — ${p.score} pts
-    `;
-    container.appendChild(div);
-  });
+ const top3 =
+  leaderboard.slice(0,3);
 
-  // ton score perso
+container.innerHTML += `
+
+  <div class="card">
+
+    <h3>
+      🏆 Podium actuel
+    </h3>
+
+    ${top3[0] ? `
+      <p>
+        🥇 <strong>${top3[0].name}</strong>
+        • ${top3[0].score} pts
+      </p>
+    ` : ""}
+
+    ${top3[1] ? `
+      <p>
+        🥈 <strong>${top3[1].name}</strong>
+        • ${top3[1].score} pts
+      </p>
+    ` : ""}
+
+    ${top3[2] ? `
+      <p>
+        🥉 <strong>${top3[2].name}</strong>
+        • ${top3[2].score} pts
+      </p>
+    ` : ""}
+
+    <button
+      class="actionBtn secondary"
+      onclick="showTab('leaderboard')">
+
+      Voir le classement complet
+
+    </button>
+
+  </div>
+
+`;
   if (appState.user) {
-    const user = leaderboard.find(p => p.name === appState.user.displayName);
-    if (user) {
-      const me = document.createElement("h3");
-      me.innerText = `Ton score : ${user.score}`;
-      container.appendChild(me);
-    }
+
+  const userIndex =
+    leaderboard.findIndex(
+      p => p.name ===
+      appState.user.displayName
+    );
+
+  const user =
+    leaderboard[userIndex];
+
+  if (user) {
+
+    container.innerHTML += `
+
+      <div class="card">
+
+        <h3>
+          👤 Votre progression
+        </h3>
+
+        <p>
+
+          Rang actuel :
+
+          <strong>
+
+            #${userIndex + 1}
+
+          </strong>
+
+          sur
+
+          <strong>
+
+            ${leaderboard.length}
+
+          </strong>
+
+          participants.
+
+        </p>
+
+        <p>
+
+          Points :
+
+          <strong>
+
+            ${user.score}
+
+          </strong>
+
+        </p>
+
+      </div>
+
+    `;
+
   }
+}
   
 container.innerHTML += `
   <div class="card">
