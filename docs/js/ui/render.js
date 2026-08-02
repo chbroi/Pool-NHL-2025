@@ -1733,7 +1733,7 @@ export function renderNhlStats() {
 
 }
 
-eexport function attachNhlStatsListeners() {
+export function attachNhlStatsListeners() {
 
   document
     .getElementById("nhlMetricSelect")
