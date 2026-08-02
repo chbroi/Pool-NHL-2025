@@ -1,5 +1,5 @@
 import { appState } from "../app/state.js";
-import { getAllPredictions } from "../services/firestoreService.js";
+import { getAllPredictions, getAllParticipants } from "../services/firestoreService.js";
 import { SCORING, MATCH_ORDER, POOL_CONFIG } from "../constants.js";
 import { computeLeaderboard, getRoundFromKey} from "../logic/scoring.js";
 import { isResultAvailable, getParentMatch} from "../utils/helpers.js";
@@ -1271,10 +1271,6 @@ Mettre à jour
 <h3>
 🔒 Gestion des Soumissions
 </h3>
-<label>
-Modifier la soumission actuelle
-</label>
-
 <button
 class="actionBtn"
 onclick="toggleSubmissionOpen(true)">
@@ -1291,6 +1287,12 @@ Fermer
 
 </button>
 <br><br>
+
+<label>
+Modifier la soumission actuelle
+</label>
+
+
 
 <select id="adminSubmission">
 
