@@ -465,7 +465,7 @@ window.showTab = async function(tabName) {
   }
 
 
-  const tabs = ["home", "submit","scoring", "results", "leaderboard","stats", "rules","admin","profile"];
+  const tabs = ["home", "submit","scoring", "results", "leaderboard","stats","statsNHL", "rules","admin","profile"];
 
   tabs.forEach(t => {
 
@@ -496,6 +496,7 @@ if (rules) rules.style.display = "none";
   if (tabName === "leaderboard") renderFullLeaderboard(); 
   if (tabName === "scoring") renderScoring();
   if (tabName === "stats") renderStats();
+  if (tabName === "statsNHL") renderStatsNHL();
   if (tabName === "profile") renderProfile();
   if (tabName === "admin") renderAdmin();
   if (tabName === "submit") {
