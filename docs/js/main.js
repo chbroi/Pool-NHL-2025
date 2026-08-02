@@ -496,7 +496,7 @@ if (rules) rules.style.display = "none";
   if (tabName === "leaderboard") renderFullLeaderboard(); 
   if (tabName === "scoring") renderScoring();
   if (tabName === "stats") renderStats();
-  if (tabName === "statsNHL") renderStatsNHL();
+  if (tabName === "statsNHL") renderNhlStats();
   if (tabName === "profile") renderProfile();
   if (tabName === "admin") renderAdmin();
   if (tabName === "submit") {
