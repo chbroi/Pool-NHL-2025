@@ -336,7 +336,7 @@ const participants = new Set(
 const allParticipants =  await getAllParticipants();  
 const participantCount = participants.size;
 const prizePool = participantCount * POOL_CONFIG.entryFee;
-const paidCount =  allparticipants.filter(p => p.paid).length;
+const paidCount =  allParticipants.filter(p => p.paid).length;
 const actualPrize =  paidCount *POOL_CONFIG.entryFee
 const firstPlace = (prizePool * POOL_CONFIG.payout.first).toFixed(2);
 const secondPlace =  (prizePool * POOL_CONFIG.payout.second).toFixed(2);
