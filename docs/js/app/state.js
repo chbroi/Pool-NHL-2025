@@ -2,6 +2,7 @@ export const appState = {
   user: null,
   submission: 0,
   results: {},
+  players: [],
   hasSubmitted: false,
   acceptedRules: false,
   round1Deadline: null,
