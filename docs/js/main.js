@@ -502,13 +502,28 @@ if (rules) rules.style.display = "none";
       }
   
     const form = document.getElementById("predictionForm");
-      console.log(
-    "predictionForm",
-    document.getElementById("predictionForm")
-  );
     const tab = document.getElementById("submitTab");
   
     if (!form || !tab) return;
+const currentDeadline = appState[`round${appState.submission}Deadline`];
+const deadlinePassed = currentDeadline && Date.now() > currentDeadline;
+if ( !appState.submissionOpen ||  deadlinePassed) {
+  tab.innerHTML = `
+    <div class="card">
+
+      <h3>
+        🔒 Soumissions fermées
+      </h3>
+
+      <p>
+        Les prédictions pour cette ronde sont terminées.
+      </p>
+
+    </div>
+  `;
+
+  return;
+}
     if (appState.hasSubmitted) {
   
       form.style.display = "none";
@@ -696,11 +711,13 @@ showTab("submit");
 if (helper) {
 
   if (status) {
+    const currentDeadline = appState[
+    `round${appState.submission}Deadline`];
 
     helper.innerHTML =
       `⏳ Vous avez jusqu'au ${
         new Date(
-          appState.deadline
+          currentDeadline
         ).toLocaleString()
       } pour soumettre vos prédictions.`;
 
