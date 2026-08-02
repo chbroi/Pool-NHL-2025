@@ -87,3 +87,19 @@ export async function getAllParticipants() {
   );
 }
 
+export async function loadPlayers() {
+
+    const snapshot = await getDocs(
+        collection(db, "players")
+    );
+
+    appState.players =
+        snapshot.docs.map(
+            doc => doc.data()
+        );
+
+    console.log(
+        `${appState.players.length} joueurs chargés`
+    );
+}
+
