@@ -2,7 +2,7 @@
 
 import * as funcs from "./functions.js";
 import { auth, db, GoogleAuthProvider } from "./firebase.js";
-import {hasSubmitted, submitPrediction} from "./services/firestoreService.js";
+import {hasSubmitted, submitPrediction,loadPlayers} from "./services/firestoreService.js";
 import { signInWithPopup, onAuthStateChanged,signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { collection, query, where,doc, getDoc, getDocs, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { playersByTeam, round1Ids,SCORING, POOL_CONFIG} from "./constants.js";
