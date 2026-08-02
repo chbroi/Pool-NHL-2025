@@ -458,7 +458,7 @@ window.showTab = async function(tabName) {
   }
   const helper = document.getElementById("helperMessage");
   
-  if (["home", "submit", "scoring"].includes(tabName)) {
+  if (["home", "submit","scoring", "results", "leaderboard","stats","statsNHL", "rules","profile"].includes(tabName)) {
     helper.style.display = "block";
   } else {
     helper.style.display = "none";
