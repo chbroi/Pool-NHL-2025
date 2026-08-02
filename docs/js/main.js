@@ -842,3 +842,44 @@ async function() {
 
 };
 
+window.togglePayment =
+async function(
+  uid,
+  paid
+) {
+
+  await updateDoc(
+    doc(
+      db,
+      "participants",
+      uid
+    ),
+    {
+      paid
+    }
+  );
+
+};
+
+window.deleteFeedback =
+async function(id) {
+
+  if (
+    !confirm(
+      "Supprimer ce commentaire ?"
+    )
+  ) {
+    return;
+  }
+
+  await deleteDoc(
+    doc(
+      db,
+      "feedback",
+      id
+    )
+  );
+
+  renderAdmin();
+
+};
