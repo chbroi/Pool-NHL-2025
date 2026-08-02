@@ -48,3 +48,23 @@ export async function submitPrediction(data) {
 
   return await addDoc(collection(db, "predictions"), data);
 }
+
+
+export async function getAllFeedback() {
+
+  const snapshot =
+    await getDocs(
+      collection(
+        db,
+        "feedback"
+      )
+    );
+
+  return snapshot.docs.map(
+    doc => ({
+      id: doc.id,
+      ...doc.data()
+    })
+  );
+
+}
