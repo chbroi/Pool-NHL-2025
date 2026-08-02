@@ -1207,7 +1207,7 @@ ${
 </p>
 
 <p>
-<strong>Ronde 4 :</strong>
+<strong>Date limte soumission 4 :</strong>
 ${
   appState.round4Deadline
   ? new Date(
@@ -1305,6 +1305,8 @@ onclick="toggleSubmissionOpen(false)">
 Fermer
 
 </button>
+
+<br><br>
 
  <select id="deletePredictionSelect">
     <option>
