@@ -1576,7 +1576,8 @@ function formatDateTimeLocal(timestamp) {
 
 export function getPlayerStats(
   players,
-  metric
+  metric,
+  seasonType
 ) {
 
   let result =
@@ -1588,18 +1589,29 @@ export function getPlayerStats(
 
       result.sort(
         (a,b) =>
-          b.seasonPoints -
-          a.seasonPoints
+    
+          seasonType === "playoffs"
+    
+            ? b.playoffPoints -
+              a.playoffPoints
+    
+            : b.seasonPoints -
+              a.seasonPoints
       );
 
-      break;
+  break;
 
     case "goals":
 
       result.sort(
         (a,b) =>
-          b.seasonGoals -
-          a.seasonGoals
+          seasonType === "playoffs"
+    
+            ? b.playoffGoals -
+              a.playoffGoals
+    
+            : b.seasonGoals -
+              a.seasonGoals
       );
 
       break;
@@ -1608,8 +1620,13 @@ export function getPlayerStats(
 
       result.sort(
         (a,b) =>
-          b.seasonAssists -
-          a.seasonAssists
+          seasonType === "playoffs"
+    
+            ? b.playoffAssists -
+              a.playoffAssists
+    
+            : b.seasonAssists -
+              a.seasonAssists
       );
 
       break;
@@ -1622,7 +1639,13 @@ export function getPlayerStats(
         )
         .sort(
           (a,b) =>
-            a.gaa - b.gaa
+           seasonType === "playoffs"
+    
+            ? b.playoffGaa -
+              a.playoffGaa
+    
+            : b.seasonGaa -
+              a.seasonGaa
         );
 
       break;
@@ -1754,7 +1777,7 @@ eexport function attachNhlStatsListeners() {
 
 }
 
-export function renderNhlStatsTable(metric) {
+export function renderNhlStatsTable() {
   const seasonType =
   document.getElementById(
     "nhlSeasonType"
@@ -1770,7 +1793,7 @@ const goalieSort =
     "nhlGoalieSort"
   ).value;
 
-  const players =
+  let players =
     getPlayerStats(
       appState.players,
       metric
@@ -1833,26 +1856,44 @@ const goalieSort =
 
         let value = "";
 
+        const isPlayoffs = seasonType === "playoffs";
+
         switch(metric){
-
+        
           case "points":
+        
             value =
-              player.seasonPoints;
+              isPlayoffs
+                ? player.playoffPoints
+                : player.seasonPoints;
+        
             break;
-
+        
           case "goals":
+        
             value =
-              player.seasonGoals;
+              isPlayoffs
+                ? player.playoffGoals
+                : player.seasonGoals;
+        
             break;
-
+        
           case "assists":
+        
             value =
-              player.seasonAssists;
+              isPlayoffs
+                ? player.playoffAssists
+                : player.seasonAssists;
+        
             break;
-
+        
           case "goalies":
+        
             value =
-              player.gaa;
+              isPlayoffs
+                ? player.playoffGaa
+                : player.gaa;
+        
             break;
         }
 
@@ -1876,12 +1917,31 @@ const goalieSort =
 
           <th>#</th>
 
-          <th>Joueur</th>
+          <td>${player.position}</td>
 
-          <th>Équipe</th>
-
-          <th>Stat</th>
-
+          <td>
+            ${
+              isPlayoffs
+                ? player.playoffGoals
+                : player.seasonGoals
+            }
+          </td>
+          
+          <td>
+            ${
+              isPlayoffs
+                ? player.playoffAssists
+                : player.seasonAssists
+            }
+          </td>
+          
+          <td>
+            ${
+              isPlayoffs
+                ? player.playoffPoints
+                : player.seasonPoints
+            }
+          </td>
         </tr>
 
       </thead>
