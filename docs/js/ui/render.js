@@ -515,10 +515,21 @@ container.innerHTML += `
       <strong>Classement</strong>
       <span>Consulter le classement global</span>
     </div>
+    
+    <div class="homeAction" onclick="showTab('stats')">
+      <strong>Statistiques</strong>
+      <span>Consulter les statistiques du pool </span>
+    </div>
+    
   
     <div class="homeAction" onclick="showTab('rules')">
       <strong>Règlements</strong>
       <span>Lire les règles officielles du pool</span>
+    </div>
+    
+    <div class="homeAction" onclick="showTab('profile')">
+      <strong>Profile</strong>
+      <span>Consulter votre profil de pooler</span>
     </div>
   </div>
 
@@ -1431,25 +1442,40 @@ const feedbackContainer =
     "feedbackContainer"
   );
 
-feedbacks.forEach(f => {
+feedbacks.forEach(f => {feedbacks.forEach(f => {
+
+  const body = encodeURIComponent(
+`Bonjour ${f.userName},
+
+Pour faire suite à votre commentaire :
+
+"${f.message}"
+
+"Insérer réponse"
+
+Merci pour votre commentaire.
+
+De la part du destionnaire du Pool
+
+https://chbroi.github.io/Pool-NHL-2025/
+</a>`
+  );
 
   feedbackContainer.innerHTML += `
 
-    <div
-      class="card">
+    <div class="card">
 
       <strong>
-
         ${f.userName}
-      <strong>
-        
+      </strong>
+
       <br>
-      <a
-        href="mailto:${f.email}?subject=Réponse au commentaire Pool LNH"
+
+      subject=Réponse au commentaire Pool LNH&body=${body}"
         style="color:#4da3ff; text-decoration:none;">
-      
+
         📧 ${f.email}
-      
+
       </a>
 
       <br><br>
@@ -1461,9 +1487,7 @@ feedbacks.forEach(f => {
       <button
         class="actionBtn"
         onclick="
-          deleteFeedback(
-            '${f.id}'
-          )
+          deleteFeedback('${f.id}')
         ">
 
         Supprimer
@@ -1473,6 +1497,7 @@ feedbacks.forEach(f => {
     </div>
 
   `;
+});
 
 });
   
