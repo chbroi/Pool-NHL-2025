@@ -1693,3 +1693,122 @@ export function renderNhlStats() {
     "points"
   );
 }
+
+export function attachNhlStatsListeners() {
+
+  document
+    .getElementById("nhlPointsBtn")
+    ?.addEventListener(
+      "click",
+      () => renderNhlStatsTable("points")
+    );
+
+  document
+    .getElementById("nhlGoalsBtn")
+    ?.addEventListener(
+      "click",
+      () => renderNhlStatsTable("goals")
+    );
+
+  document
+    .getElementById("nhlAssistsBtn")
+    ?.addEventListener(
+      "click",
+      () => renderNhlStatsTable("assists")
+    );
+
+  document
+    .getElementById("nhlGoaliesBtn")
+    ?.addEventListener(
+      "click",
+      () => renderNhlStatsTable("goalies")
+    );
+
+}
+
+export function renderNhlStatsTable(metric) {
+
+  const players =
+    getPlayerStats(
+      appState.players,
+      metric
+    );
+
+  const container =
+    document.getElementById(
+      "nhlStatsContent"
+    );
+
+  container.innerHTML = "";
+
+  let rows = "";
+
+  players
+    .slice(0,50)
+    .forEach(
+      (player,index) => {
+
+        let value = "";
+
+        switch(metric){
+
+          case "points":
+            value =
+              player.seasonPoints;
+            break;
+
+          case "goals":
+            value =
+              player.seasonGoals;
+            break;
+
+          case "assists":
+            value =
+              player.seasonAssists;
+            break;
+
+          case "goalies":
+            value =
+              player.gaa;
+            break;
+        }
+
+        rows += `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${player.name}</td>
+            <td>${player.team}</td>
+            <td>${value}</td>
+          </tr>
+        `;
+      }
+    );
+
+  container.innerHTML = `
+    <table class="resultsTable">
+
+      <thead>
+
+        <tr>
+
+          <th>#</th>
+
+          <th>Joueur</th>
+
+          <th>Équipe</th>
+
+          <th>Stat</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        ${rows}
+
+      </tbody>
+
+    </table>
+  `;
+}
