@@ -59,21 +59,3 @@ export async function acceptRules(user) {
     { merge: true }
   );
 }
-
-export async function getAllParticipants() {
-
-  const snapshot =
-    await getDocs(
-      collection(
-        db,
-        "participants"
-      )
-    );
-
-  return snapshot.docs.map(
-    doc => ({
-      id: doc.id,
-      ...doc.data()
-    })
-  );
-}
