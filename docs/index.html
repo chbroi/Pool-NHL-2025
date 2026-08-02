@@ -236,17 +236,21 @@
       background: rgba(0,0,0,0.05);
     }
     
-    .roundHeader td {
-    
-      background: #e8edf3;
-    
-      font-size: 15px;
-    
-      font-weight: 700;
-    
-      color: #1f2937;
-    
-    }
+     .roundHeader td {
+  
+    text-align: left;
+  
+    padding: 12px 16px;
+  
+    font-weight: 700;
+  
+    letter-spacing: .5px;
+  
+  }
+    body[data-theme="light"].roundHeader td {
+      background: #eef3f8;
+      color: #223;
+  }
     
     .myColumnHeader {
       background: #ffd700;
@@ -254,7 +258,10 @@
       position: sticky;
         left: 0;
         z-index: 3;
-
+    }
+    body[data-theme="light"].resultsTable th:first-child,
+    body[data-theme="light"].resultsTable td:first-child {
+      background: #fafafa;
     }
     body[data-theme="dark"] .myColumnCell {
       background: rgba(255, 215, 0, 0.18);
