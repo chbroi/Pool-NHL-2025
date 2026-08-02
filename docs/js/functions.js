@@ -140,22 +140,49 @@ export function updateConnSmytheList(team1,team2, players,submissionNumber) {
         option.value =
             player.name;
 
-        if (submissionNumber === 1) {
-
-            option.textContent =
-                `${player.name} (${player.team}) - `
-                + `${player.seasonGoals} B | `
-                + `${player.seasonAssists} A | `
-                + `${player.seasonPoints} PTS`;
-
-        } else {
-
-            option.textContent =
-                `${player.name} (${player.team}) - `
-                + `${player.playoffGoals} B | `
-                + `${player.playoffAssists} A | `
-                + `${player.playoffPoints} PTS`;
-
+        if (player.position === "G") {
+        
+            if (submissionNumber === 1) {
+        
+                label =
+                  `${player.name} (${player.team})
+                  • ${player.wins} V
+                  • ${player.losses} D
+                  • ${player.gaa.toFixed(2)} MBA
+                  • ${player.savePct.toFixed(3)}`;
+        
+            }
+            else {
+        
+                label =
+                  `${player.name} (${player.team})
+                  • ${player.playoffWins || 0} V
+                  • ${player.playoffLosses || 0} D
+                  • ${(player.playoffGaa || 0).toFixed(2)} MBA
+                  • ${(player.playoffSavePct || 0).toFixed(3)}`;
+        
+            }
+        }
+        else {
+        
+            if (submissionNumber === 1) {
+        
+                label =
+                  `${player.name} (${player.team})
+                  • ${player.seasonGoals} B
+                  • ${player.seasonAssists} A
+                  • ${player.seasonPoints} PTS`;
+        
+            }
+            else {
+        
+                label =
+                  `${player.name} (${player.team})
+                  • ${player.playoffGoals} B
+                  • ${player.playoffAssists} A
+                  • ${player.playoffPoints} PTS`;
+        
+            }
         }
 
         connSmytheSelect.appendChild(
