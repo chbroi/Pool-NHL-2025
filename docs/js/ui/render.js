@@ -517,8 +517,13 @@ container.innerHTML += `
     </div>
     
     <div class="homeAction" onclick="showTab('stats')">
-      <strong>Statistiques</strong>
+      <strong>Stats Pool</strong>
       <span>Consulter les statistiques du pool </span>
+    </div>
+
+    <div class="homeAction" onclick="showTab('stats')">
+      <strong>Stats NHL</strong>
+      <span>Consulter les statistiques de la NHL </span>
     </div>
     
   
@@ -1568,4 +1573,123 @@ function formatDateTimeLocal(timestamp) {
   }`;
 
 }
-``
+
+export function getPlayerStats(
+  players,
+  metric
+) {
+
+  let result =
+    [...players];
+
+  switch(metric){
+
+    case "points":
+
+      result.sort(
+        (a,b) =>
+          b.seasonPoints -
+          a.seasonPoints
+      );
+
+      break;
+
+    case "goals":
+
+      result.sort(
+        (a,b) =>
+          b.seasonGoals -
+          a.seasonGoals
+      );
+
+      break;
+
+    case "assists":
+
+      result.sort(
+        (a,b) =>
+          b.seasonAssists -
+          a.seasonAssists
+      );
+
+      break;
+
+    case "goalies":
+
+      result = result
+        .filter(
+          p => p.position === "G"
+        )
+        .sort(
+          (a,b) =>
+            a.gaa - b.gaa
+        );
+
+      break;
+  }
+
+  return result;
+}
+
+export function renderNhlStats() {
+
+  const tab =
+    document.getElementById(
+      "statsNHLTab"
+    );
+
+  tab.innerHTML = `
+
+    <div class="section">
+
+      <h2>
+        Statistiques NHL
+      </h2>
+
+      <div
+        id="nhlFilters">
+
+        <button
+          id="nhlPointsBtn">
+
+          Points
+
+        </button>
+
+        <button
+          id="nhlGoalsBtn">
+
+          Buts
+
+        </button>
+
+        <button
+          id="nhlAssistsBtn">
+
+          Passes
+
+        </button>
+
+        <button
+          id="nhlGoaliesBtn">
+
+          Gardiens
+
+        </button>
+
+      </div>
+
+      <div
+        id="nhlStatsContent">
+
+      </div>
+
+    </div>
+  `;
+
+  attachNhlStatsListeners();
+
+  renderNhlStatsTable(
+    "points"
+  );
+}
