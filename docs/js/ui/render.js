@@ -1778,137 +1778,294 @@ export function attachNhlStatsListeners() {
 }
 
 export function renderNhlStatsTable() {
+
   const seasonType =
-  document.getElementById(
-    "nhlSeasonType"
-  ).value;
+    document.getElementById(
+      "nhlSeasonType"
+    ).value;
 
-const metric =
-  document.getElementById(
-    "nhlMetricSelect"
-  ).value;
+  const metric =
+    document.getElementById(
+      "nhlMetricSelect"
+    ).value;
 
-const goalieSort =
-  document.getElementById(
-    "nhlGoalieSort"
-  ).value;
+  const goalieSort =
+    document.getElementById(
+      "nhlGoalieSort"
+    ).value;
+
+  const isPlayoffs =
+    seasonType === "playoffs";
 
   let players =
-    getPlayerStats(
-      appState.players,
-      metric
+    [...appState.players];
+
+  // =====================
+  // TRI JOUEURS
+  // =====================
+
+  if (metric === "points") {
+
+    players.sort(
+      (a,b) =>
+        (isPlayoffs
+          ? b.playoffPoints
+          : b.seasonPoints)
+        -
+        (isPlayoffs
+          ? a.playoffPoints
+          : a.seasonPoints)
     );
+
+  }
+
+  else if (metric === "goals") {
+
+    players.sort(
+      (a,b) =>
+        (isPlayoffs
+          ? b.playoffGoals
+          : b.seasonGoals)
+        -
+        (isPlayoffs
+          ? a.playoffGoals
+          : a.seasonGoals)
+    );
+
+  }
+
+  else if (metric === "assists") {
+
+    players.sort(
+      (a,b) =>
+        (isPlayoffs
+          ? b.playoffAssists
+          : b.seasonAssists)
+        -
+        (isPlayoffs
+          ? a.playoffAssists
+          : a.seasonAssists)
+    );
+
+  }
+
+  // =====================
+  // TRI GARDIENS
+  // =====================
+
+  else if (metric === "goalies") {
+
+    players =
+      players.filter(
+        p => p.position === "G"
+      );
+
+    switch(goalieSort) {
+
+      case "wins":
+
+        players.sort(
+          (a,b) =>
+            (isPlayoffs
+              ? b.playoffWins
+              : b.wins)
+            -
+            (isPlayoffs
+              ? a.playoffWins
+              : a.wins)
+        );
+
+        break;
+
+      case "gaa":
+
+        players.sort(
+          (a,b) =>
+            (isPlayoffs
+              ? a.playoffGaa
+              : a.gaa)
+            -
+            (isPlayoffs
+              ? b.playoffGaa
+              : b.gaa)
+        );
+
+        break;
+
+      default: // savePct
+
+        players.sort(
+          (a,b) =>
+            (isPlayoffs
+              ? b.playoffSavePct
+              : b.savePct)
+            -
+            (isPlayoffs
+              ? a.playoffSavePct
+              : a.savePct)
+        );
+
+    }
+
+  }
+
+  players =
+    players.slice(0,50);
 
   const container =
     document.getElementById(
       "nhlStatsContent"
     );
 
-  container.innerHTML = "";
-
   let rows = "";
+
+  // =====================
+  // GARDIENS
+  // =====================
+
   if (metric === "goalies") {
 
-  players =
-    players.filter(
-      p => p.position === "G"
-    );
-
-  switch(goalieSort) {
-
-    case "savePct":
-
-      players.sort(
-        (a,b) =>
-          b.savePct -
-          a.savePct
-      );
-
-      break;
-
-    case "wins":
-
-      players.sort(
-        (a,b) =>
-          b.wins -
-          a.wins
-      );
-
-      break;
-
-    case "gaa":
-
-      players.sort(
-        (a,b) =>
-          a.gaa -
-          b.gaa
-      );
-
-      break;
-  }
-
-}
-
-  players
-    .slice(0,50)
-    .forEach(
+    players.forEach(
       (player,index) => {
-
-        let value = "";
-
-        const isPlayoffs = seasonType === "playoffs";
-
-        switch(metric){
-        
-          case "points":
-        
-            value =
-              isPlayoffs
-                ? player.playoffPoints
-                : player.seasonPoints;
-        
-            break;
-        
-          case "goals":
-        
-            value =
-              isPlayoffs
-                ? player.playoffGoals
-                : player.seasonGoals;
-        
-            break;
-        
-          case "assists":
-        
-            value =
-              isPlayoffs
-                ? player.playoffAssists
-                : player.seasonAssists;
-        
-            break;
-        
-          case "goalies":
-        
-            value =
-              isPlayoffs
-                ? player.playoffGaa
-                : player.gaa;
-        
-            break;
-        }
 
         rows += `
           <tr>
+
             <td>${index + 1}</td>
+
             <td>${player.name}</td>
+
             <td>${player.team}</td>
-            <td>${value}</td>
+
+            <td>
+              ${
+                isPlayoffs
+                  ? (player.playoffWins ?? 0)
+                  : (player.wins ?? 0)
+              }
+            </td>
+
+            <td>
+              ${
+                isPlayoffs
+                  ? (player.playoffLosses ?? 0)
+                  : (player.losses ?? 0)
+              }
+            </td>
+
+            <td>
+              ${
+                (
+                  isPlayoffs
+                    ? (player.playoffGaa ?? 0)
+                    : (player.gaa ?? 0)
+                ).toFixed(2)
+              }
+            </td>
+
+            <td>
+              ${
+                (
+                  isPlayoffs
+                    ? (player.playoffSavePct ?? 0)
+                    : (player.savePct ?? 0)
+                ).toFixed(3)
+              }
+            </td>
+
           </tr>
         `;
       }
     );
 
+    container.innerHTML = `
+
+      <table class="resultsTable">
+
+        <thead>
+
+          <tr>
+
+            <th>#</th>
+
+            <th>Gardien</th>
+
+            <th>Équipe</th>
+
+            <th>V</th>
+
+            <th>D</th>
+
+            <th>MBA</th>
+
+            <th>%</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          ${rows}
+
+        </tbody>
+
+      </table>
+
+    `;
+
+    return;
+  }
+
+  // =====================
+  // JOUEURS
+  // =====================
+
+  players.forEach(
+    (player,index) => {
+
+      rows += `
+        <tr>
+
+          <td>${index + 1}</td>
+
+          <td>${player.name}</td>
+
+          <td>${player.position}</td>
+
+          <td>${player.team}</td>
+
+          <td>
+            ${
+              isPlayoffs
+                ? (player.playoffGoals ?? 0)
+                : (player.seasonGoals ?? 0)
+            }
+          </td>
+
+          <td>
+            ${
+              isPlayoffs
+                ? (player.playoffAssists ?? 0)
+                : (player.seasonAssists ?? 0)
+            }
+          </td>
+
+          <td>
+            ${
+              isPlayoffs
+                ? (player.playoffPoints ?? 0)
+                : (player.seasonPoints ?? 0)
+            }
+          </td>
+
+        </tr>
+      `;
+    }
+  );
+
   container.innerHTML = `
+
     <table class="resultsTable">
 
       <thead>
@@ -1917,31 +2074,18 @@ const goalieSort =
 
           <th>#</th>
 
-          <td>${player.position}</td>
+          <th>Joueur</th>
 
-          <td>
-            ${
-              isPlayoffs
-                ? player.playoffGoals
-                : player.seasonGoals
-            }
-          </td>
-          
-          <td>
-            ${
-              isPlayoffs
-                ? player.playoffAssists
-                : player.seasonAssists
-            }
-          </td>
-          
-          <td>
-            ${
-              isPlayoffs
-                ? player.playoffPoints
-                : player.seasonPoints
-            }
-          </td>
+          <th>Pos</th>
+
+          <th>Équipe</th>
+
+          <th>B</th>
+
+          <th>A</th>
+
+          <th>PTS</th>
+
         </tr>
 
       </thead>
@@ -1953,5 +2097,6 @@ const goalieSort =
       </tbody>
 
     </table>
+
   `;
 }
