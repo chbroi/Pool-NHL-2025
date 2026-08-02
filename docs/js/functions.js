@@ -83,38 +83,116 @@ export function getMatchupsForRound(roundNumber) {
 }
 
 // Met à jour dynamiquement la liste des joueurs disponibles pour le Conn Smythe
-export function updateConnSmytheList(team1, team2,playersByTeam) {
-  const list = [...(playersByTeam[team1] || []), ...(playersByTeam[team2] || [])];
-  const connSmytheSelect = document.getElementById('Conn_Smythe');
+export function updateConnSmytheList(
+  team1,
+  team2,
+  players,
+  submissionNumber
+) {
 
-  // Réinitialise les options
-  connSmytheSelect.innerHTML = "";
-  
-  // Option par défaut
-  const defaultOption = document.createElement("option");
-  defaultOption.textContent = "-- Choisissez un joueur --";
-  defaultOption.value = "";
-  connSmytheSelect.appendChild(defaultOption);
+  const list = players.filter(
+    player =>
+      player.team === team1 ||
+      player.team === team2
+  );
 
-  // Remplit avec les joueurs autorisés
-  list.forEach(player => {
-    const option = document.createElement("option");
-    option.value = player;
-    option.textContent = player;
-    connSmytheSelect.appendChild(option);
+  // Tri intelligent
+
+  list.sort((a, b) => {
+
+    if (submissionNumber === 1) {
+      return (
+        b.seasonPoints -
+        a.seasonPoints
+      );
+    }
+
+    return (
+      b.playoffPoints -
+      a.playoffPoints
+    );
   });
 
-// Active le champ
-connSmytheSelect.disabled = list.length === 0;
+  const connSmytheSelect =
+    document.getElementById(
+      "Conn_Smythe"
+    );
+
+  connSmytheSelect.innerHTML = "";
+
+  const defaultOption =
+    document.createElement(
+      "option"
+    );
+
+  defaultOption.textContent =
+    "-- Choisissez un joueur --";
+
+  defaultOption.value = "";
+
+  connSmytheSelect.appendChild(
+    defaultOption
+  );
+
+  list.forEach(player => {
+
+    const option =
+      document.createElement(
+        "option"
+      );
+
+    option.value =
+      player.name;
+
+    if (submissionNumber === 1) {
+
+      option.textContent =
+        `${player.name} (${player.team}) - `
+        + `${player.seasonGoals} B | `
+        + `${player.seasonAssists} A | `
+        + `${player.seasonPoints} PTS`;
+
+    } else {
+
+      option.textContent =
+        `${player.name} (${player.team}) - `
+        + `${player.playoffGoals} B | `
+        + `${player.playoffAssists} A | `
+        + `${player.playoffPoints} PTS`;
+    }
+
+    connSmytheSelect.appendChild(
+      option
+    );
+  });
+
+  connSmytheSelect.disabled =
+    list.length === 0;
 }
 
 // Sur changement d'une des deux équipes finalistes
-export function updateConnSmytheField(playersByTeam) {
-    const team1 = document.getElementById('R3_EST_1_team').value;
-    const team2 = document.getElementById('R3_WEST_1_team').value;
-    if (team1 && team2) {
-        updateConnSmytheList(team1, team2,playersByTeam);
-    }
+export function updateConnSmytheField(players,
+  submissionNumber) {
+
+  const team1 =
+    document.getElementById(
+      "R3_EST_1_team"
+    ).value;
+
+  const team2 =
+    document.getElementById(
+      "R3_WEST_1_team"
+    ).value;
+
+  if (team1 && team2) {
+
+      updateConnSmytheList(
+        team1,
+        team2,
+        players,
+        submissionNumber
+      );
+  }
 }
 
     
