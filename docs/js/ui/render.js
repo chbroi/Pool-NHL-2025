@@ -1940,6 +1940,14 @@ export function renderNhlStatsTable() {
             <td>
               ${
                 isPlayoffs
+                  ? (player.playoffGames ?? 0)
+                  : (player.seasonGames ?? 0)
+              }
+            </td>
+
+            <td>
+              ${
+                isPlayoffs
                   ? (player.playoffWins ?? 0)
                   : (player.wins ?? 0)
               }
@@ -1992,6 +2000,8 @@ export function renderNhlStatsTable() {
 
             <th>Équipe</th>
 
+            <th>PJ</th>
+
             <th>V</th>
 
             <th>D</th>
@@ -2038,6 +2048,14 @@ export function renderNhlStatsTable() {
           <td>
             ${
               isPlayoffs
+                ? (player.playoffGames ?? 0)
+                : (player.seasonGames ?? 0)
+            }
+          </td>
+
+          <td>
+            ${
+              isPlayoffs
                 ? (player.playoffGoals ?? 0)
                 : (player.seasonGoals ?? 0)
             }
@@ -2079,6 +2097,8 @@ export function renderNhlStatsTable() {
           <th>Pos</th>
 
           <th>Équipe</th>
+          
+          <th>PJ</th>
 
           <th>B</th>
 
