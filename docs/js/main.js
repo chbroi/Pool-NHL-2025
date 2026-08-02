@@ -97,7 +97,13 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 await loadPlayers()
-console.log(appState.players);
+console.log("Loading players...");
+
+const snapshot = await getDocs(
+    collection(db, "players")
+);
+
+console.log(snapshot.size);
 onAuthStateChanged(auth, async (user) => {
 
   const loginBtn = document.getElementById("loginBtn");
