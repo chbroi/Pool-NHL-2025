@@ -237,11 +237,15 @@
     }
     
     .roundHeader td {
-      text-align: left;
-      font-weight: bold;
-      padding: 10px;
-      background: rgba(255,255,255,0.08);
-      font-size: 16px;
+    
+      background: #e8edf3;
+    
+      font-size: 15px;
+    
+      font-weight: 700;
+    
+      color: #1f2937;
+    
     }
     
     .myColumnHeader {
@@ -275,17 +279,15 @@
         z-index: 3;
 
     }
-    body[data-theme="light"]
-    .resultsTable th:first-child,
-    body[data-theme="light"]
-    .resultsTable td:first-child {
-      position: sticky;
-      left: 0;
-      z-index: 4;
-      background: #f0f2f5;
-      color: #222;
-    }
     
+    body[data-theme="dark"]
+    .roundHeader td {
+    
+      background: #242424;
+    
+      color: white;
+    
+    }
     .connSmytheRow {
       background: rgba(0, 123, 255, 0.15);
       font-weight: bold;
@@ -304,20 +306,50 @@
       font-size: 16px;
       color: #222;
     }
-    body[data-theme="light"] .totalGlobalRow {
-      background: #f4de84;
-      color: #222;
-      font-weight: bold;
-    }
-    body[data-theme="light"] .scoreRow {
-      background: #ececec;
-      font-weight: bold;
-    }
-  body[data-theme="light"] .roundHeader td {
-    background: #d9d9d9;
-    color: #222;
-    font-weight: bold;
-  }
+    
+  
+    .ruleArticle {
+
+  background: var(--card);
+
+  border-left: 5px solid var(--primary);
+
+  padding: 20px;
+
+  margin-bottom: 20px;
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 6px 15px
+    rgba(0,0,0,.05);
+
+}
+
+.ruleNumber {
+
+  color: var(--primary);
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  text-transform: uppercase;
+
+  letter-spacing: 1px;
+
+  margin-bottom: 10px;
+
+}
+
+.ruleArticle h3 {
+
+  margin-top: 0;
+
+  margin-bottom: 15px;
+
+}
+
     
   body[data-theme="light"] .leaderboardTable td {
     background: white;
