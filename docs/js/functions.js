@@ -462,28 +462,49 @@ export function renderParticipantsTable(participants) {
 
 export function refreshHelperMessage() {
 
-  const helper =
-    document.getElementById(
-      "helperMessage"
-    );
+    const helper =
+        document.getElementById(
+            "helperMessage"
+        );
 
-  if (!helper) return;
+    if (!helper) return;
 
-  if (appState.submissionOpen) {
+    const deadline =
+        appState[
+            `round${appState.submission}Deadline`
+        ];
 
-    helper.innerHTML =
-      `⏳ Vous avez jusqu'au ${
-        new Date(
-          appState.deadline
-        ).toLocaleString()
-      } pour soumettre vos prédictions.`;
+    if (!appState.submissionOpen) {
 
-  } else {
+        helper.innerHTML =
+            "🔒 Les soumissions sont actuellement fermées.";
 
-    helper.innerHTML =
-      "🔒 Prédictions terminées. Revenez plus tard pour la prochaine ronde.";
-  }
+        return;
+    }
+
+    const roundNames = {
+        1: "Première ronde",
+        2: "Deuxième ronde",
+        3: "Finales de conférence",
+        4: "Finale de la Coupe Stanley"
+    };
+
+    helper.innerHTML = `
+
+        🏒 Soumission active :
+        <strong>
+            ${roundNames[appState.submission]}
+        </strong>
+
+        • Date limite :
+        <strong>
+            ${new Date(deadline)
+                .toLocaleString("fr-CA")}
+        </strong>
+
+    `;
 }
+
 
 export function getTopScorers(players) {
 
