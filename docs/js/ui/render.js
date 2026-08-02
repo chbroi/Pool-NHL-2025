@@ -335,6 +335,8 @@ const participants = new Set(
   );
 const participantCount = participants.size;
 const prizePool = participantCount * POOL_CONFIG.entryFee;
+const paidCount =  participants.filter(p => p.paid).length;
+const actualPrize =  paidCount *POOL_CONFIG.entryFee
 const firstPlace = (prizePool * POOL_CONFIG.payout.first).toFixed(2);
 const secondPlace =  (prizePool * POOL_CONFIG.payout.second).toFixed(2);
 const thirdPlace = (prizePool * POOL_CONFIG.payout.third).toFixed(2);
@@ -355,7 +357,8 @@ const leaderboard = await computeLeaderboard(predictions,
   </p>
 
   <p>
-    💰 Cagnotte : <strong>${prizePool}$</strong>
+    💰 Cagnotte actuelle: <strong>${prizePool}$</strong>
+    💰 Cagnotte attendu : <strong>${actualPrize}$</strong>
     <p>🥇 1re place : <strong>${firstPlace}$</strong></p>
     <p>🥈 2e place : <strong>${secondPlace}$</strong></p>
     <p>🥉 3e place : <strong>${thirdPlace}$</strong></p>
@@ -1272,24 +1275,6 @@ Mettre à jour
 Modifier la soumission actuelle
 </label>
 
-<select id="adminSubmission">
-
-  <option value="1">Soumission 1</option>
-  <option value="2">Soumission 2</option>
-  <option value="3">Soumission 3</option>
-  <option value="4">Souimssion 4</option>
-
-</select>
-
- <br><br>
-<button
-class="actionBtn"
-onclick="updateSubmissionRound()">
-
-Mettre à jour
-
-</button>
-
 <button
 class="actionBtn"
 onclick="toggleSubmissionOpen(true)">
@@ -1303,6 +1288,26 @@ class="actionBtn"
 onclick="toggleSubmissionOpen(false)">
 
 Fermer
+
+</button>
+<br><br>
+
+<select id="adminSubmission">
+
+  <option value="1">Soumission 1</option>
+  <option value="2">Soumission 2</option>
+  <option value="3">Soumission 3</option>
+  <option value="4">Souimssion 4</option>
+
+</select>
+
+ <br><br>
+ 
+<button
+class="actionBtn"
+onclick="updateSubmissionRound()">
+
+Mettre à jour
 
 </button>
 
@@ -1325,6 +1330,30 @@ Fermer
   </button>
 
 </div>
+<div class="card">
+
+  <h3>
+    💰 Gestion des paiements
+  </h3>
+
+  <div id="paymentsContainer">
+
+  </div>
+
+</div>
+
+<div class="card">
+
+  <h3>
+    💬 Commentaires reçus
+  </h3>
+
+  <div
+    id="feedbackContainer">
+
+  </div>
+
+</div>
 
 </div>
 `
@@ -1344,6 +1373,92 @@ predictions.forEach(p => {
       - Ronde ${p.round}
 
     </option>
+
+  `;
+
+});
+
+  const participants =
+  await getAllParticipants();
+
+const paymentsContainer =
+  document.getElementById(
+    "paymentsContainer"
+  );
+
+participants.forEach(p => {
+
+  paymentsContainer.innerHTML += `
+
+    <div>
+
+      <label>
+
+        <input
+          type="checkbox"
+          ${
+            p.paid
+              ? "checked"
+              : ""
+          }
+          onchange="
+            togglePayment(
+              '${p.id}',
+              this.checked
+            )
+          "
+        >
+
+        ${p.name || p.displayName}
+
+      </label>
+
+    </div>
+
+  `;
+
+});
+
+  const feedbacks =
+  await getAllFeedback();
+
+const feedbackContainer =
+  document.getElementById(
+    "feedbackContainer"
+  );
+
+feedbacks.forEach(f => {
+
+  feedbackContainer.innerHTML += `
+
+    <div
+      class="card">
+
+      <strong>
+
+        ${f.userName}
+
+      </strong>
+
+      <br><br>
+
+      ${f.comment}
+
+      <br><br>
+
+      <button
+        class="actionBtn"
+        onclick="
+          deleteFeedback(
+            '${f.id}'
+          )
+        ">
+
+        Supprimer
+
+      </button>
+
+    </div>
 
   `;
 
