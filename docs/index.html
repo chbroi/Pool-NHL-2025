@@ -308,7 +308,7 @@
     }
     
   
-    .ruleArticle {
+.ruleArticle {
 
   background: var(--card);
 
@@ -316,19 +316,41 @@
 
   padding: 20px;
 
-  margin-bottom: 20px;
-
   border-radius: 12px;
 
-  box-shadow:
-    0 6px 15px
-    rgba(0,0,0,.05);
+  margin-bottom: 20px;
+
+}
+
+.ruleArticle h3 {
+
+  margin-top: 0;
+
+  color: var(--primary);
+
+}
+
+.ruleArticle p {
+
+  line-height: 1.6;
+
+  margin: 12px 0;
+
+}
+
+.ruleArticle ul {
+
+  padding-left: 25px;
+
+}
+
+.ruleArticle li {
+
+  margin-bottom: 8px;
 
 }
 
 .ruleNumber {
-
-  color: var(--primary);
 
   font-size: 12px;
 
@@ -338,15 +360,9 @@
 
   letter-spacing: 1px;
 
-  margin-bottom: 10px;
+  color: var(--primary);
 
-}
-
-.ruleArticle h3 {
-
-  margin-top: 0;
-
-  margin-bottom: 15px;
+  margin-bottom: 8px;
 
 }
 
@@ -605,70 +621,96 @@
       </button>
     
     </div>
-      <div class="section" id="rulesContainer">
-      <h2>Règlements du pool LNH</h2>
-        <h4>1. Bref rappel sur les séries dans la LNH</h4>
-          <h5>Les séries éliminatoires sont composés de quatres rondes: la première ronde, la deuxième ronde, les finales de conférences et la finale de la Coupe Stanley </p>
-          <h5>Le gagnant d’un affrontement est la première équipe à remporter quatre matchs dans une série pouvant comporter jusqu’à sept matchs.</p>
-          <h5>La LNH est divisé entre deux conférences: l'Est et l'Ouest et chacune des conférences est divisée de la manière suivante:</h5>
-            <h6>Conférence Est: Division Metropolitaine (MET) et Atlantique (ATL)</h6>
-            <h6>Conférence Ouest: Division Pacifique (PAC) et Centrale (CEN) </h6>
-          <h5>Le trophée Conn Smythe est remis au joueur par excellence des séries éliminatoires dans la LNH. </h5>
-        <h4>2. Définitions et règles du pool</h4>
-          <h5>Une personne est considérée comme participante lorsqu’elle verse le montant de participation de <span class="rulesEntryFee"></span> $ $ et soumet sa prédiction de première ronde avant la date limite prévue.
-            Ce montant doit être envoyer à Charles Brosseau (via virement interac à charles.brosseau@hotmail.com).</h5>
-          <h5>Pour chaque affrontement, le participant doit sélectionner :</h5>
+
+    <div class="ruleArticle">
+        <div class="ruleNumber">
+          Article 1
+        </div>
+      
+        <h3>
+          Structure des séries éliminatoires
+        </h3>
+       <p>Les séries éliminatoires sont composés de quatres rondes: la première ronde, la deuxième ronde, les finales de conférences et la finale de la Coupe Stanley </p>
+          <p>Le gagnant d’un affrontement est la première équipe à remporter quatre matchs dans une série pouvant comporter jusqu’à sept matchs.</p>
+          <p>La LNH est divisé entre deux conférences: l'Est et l'Ouest et chacune des conférences est divisée de la manière suivante:</p>
           <ul>
-            <li>L’équipe gagnante.</li>
-            <li>Le nombre de matchs nécessaires pour remporter la série (4 à 7).</li>
+            <li>Conférence Est: Division Metropolitaine (MET) et Atlantique (ATL)</li>
+            <li>Conférence Ouest: Division Pacifique (PAC) et Centrale (CEN) </li>
           </ul>
-          <h5>La prédiction du participant comprend tous les choix décrits ci-haut, ainsi qu’un choix pour le récipiendaire du trophée Conn Smythe.</h5>
-          <h5>Les participants doivent effectuer jusqu’à quatre soumissions au cours des séries :</h5>
-            <li>
-            Choix des rondes 1 et 2, des finales de conférence, de la finale de la Coupe Stanley et du trophée Conn Smythe.
-            </li>
-            <li>
-            Choix de la ronde 2, des finales de conférence, de la finale de la Coupe Stanley et du trophée Conn Smythe.
-            </li>
-            <li>
-            Choix des finales de conférence, de la finale de la Coupe Stanley et du trophée Conn Smythe.
-            </li>
-            <li>
-            Choix de la finale de la Coupe Stanley du trophée Conn Smythe.
-            </li>
+          <p>Le trophée Conn Smythe est remis au joueur par excellence des séries éliminatoires dans la LNH. </p>
+    </div>
+    <div class="ruleArticle">
+        <div class="ruleNumber">
+          Article 2
+        </div>
+          <h3>
+            Définitions et règles du pool
+          </h3>
+        
+            <p>Une personne est considérée comme participante lorsqu’elle verse le montant de participation de <span class="rulesEntryFee"></span> $ $ et soumet sa prédiction de première ronde avant la date limite prévue.
+              Ce montant doit être envoyer à Charles Brosseau (via virement interac à charles.brosseau@hotmail.com).</p>
+            <p>Pour chaque affrontement, le participant doit sélectionner :</p>
+            <ul>
+              <li>L’équipe gagnante.</li>
+              <li>Le nombre de matchs nécessaires pour remporter la série (4 à 7).</li>
             </ul>
-          <h5>Une soumission est considérée valide uniquement si elle est enregistrée avant le début du premier match de la ronde concernée:</h5>
+            <p>La prédiction du participant comprend tous les choix décrits ci-haut, ainsi qu’un choix pour le récipiendaire du trophée Conn Smythe.</p>
+            <p>Les participants doivent effectuer jusqu’à quatre soumissions au cours des séries :</p>
             <ul>
               <li>
-                <strong>1re prédiction :</strong>
-                <span id="round1Deadline"></span>
+              Choix des rondes 1 et 2, des finales de conférence, de la finale de la Coupe Stanley et du trophée Conn Smythe.
               </li>
-            
               <li>
-                <strong>2e prédiction :</strong>
-                <span id="round2Deadline"></span>
+              Choix de la ronde 2, des finales de conférence, de la finale de la Coupe Stanley et du trophée Conn Smythe.
               </li>
-            
               <li>
-                <strong>3e prédiction :</strong>
-                <span id="round3Deadline"></span>
+              Choix des finales de conférence, de la finale de la Coupe Stanley et du trophée Conn Smythe.
               </li>
-            
               <li>
-                <strong>4e prédiction :</strong>
-                <span id="round4Deadline"></span>
+              Choix de la finale de la Coupe Stanley du trophée Conn Smythe.
               </li>
             </ul>
-          <h5>Si un participant n'effectue pas une prédiction valide, ses choix précédents seront reconduits à la prochaine ronde. S'il s'agit de la première ronde, le participant est de facto éliminé.</h5>
-        <h4>3. Système de pointage</h4>
-          <h5>Le système de pointage est illustré dans le tableau sous l'onglet système de pointage.</h5> 
-          <h5>Pour obtenir les points associés au nombre de matchs, le participant doit également avoir correctement identifié l’équipe gagnante..</h5> 
-          <h5>Les trois participants ayant accumulé le plus de points au terme des séries éliminatoires sont déclarés gagnants du pool.</h5>
-          <h5>Le montant attribué aux 3 gagnants est calculé de la manière suivante:
-            <h6>1ere place: Nombre de participants*<span class="rulesEntryFee"></span>$*4/7</h6>
-            <h6>2e place: Nombre de participants*<span class="rulesEntryFee"></span>$*2/7</h6>
-            <h6>3e place: Nombre de participants*<span class="rulesEntryFee"></span>$*1/7</h6>
+            <p>Une soumission est considérée valide uniquement si elle est enregistrée avant le début du premier match de la ronde concernée:</p>
+              <ul>
+                <li>
+                  <strong>1re prédiction :</strong>
+                  <span id="round1Deadline"></span>
+                </li>
+              
+                <li>
+                  <strong>2e prédiction :</strong>
+                  <span id="round2Deadline"></span>
+                </li>
+              
+                <li>
+                  <strong>3e prédiction :</strong>
+                  <span id="round3Deadline"></span>
+                </li>
+              
+                <li>
+                  <strong>4e prédiction :</strong>
+                  <span id="round4Deadline"></span>
+                </li>
+              </ul>
+            <p>Si un participant n'effectue pas une prédiction valide, ses choix précédents seront reconduits à la prochaine ronde.
+                S'il s'agit de la première ronde, le participant est de facto éliminé.</p>
+     </div>
+    <div class="ruleArticle">  
+    <div class="ruleNumber">
+      Article 3
     </div>
+      <h3>
+        Système de pointage
+      </h3>
+        <p>Le système de pointage est illustré dans le tableau sous l'onglet système de pointage.</p> 
+        <p>Pour obtenir les points associés au nombre de matchs, le participant doit également avoir correctement identifié l’équipe gagnante..</p> 
+        <p>Les trois participants ayant accumulé le plus de points au terme des séries éliminatoires sont déclarés gagnants du pool.</p>
+        <p>Le montant attribué aux 3 gagnants est calculé de la manière suivante:
+        <ul> 
+          <li>1ere place: Nombre de participants*<span class="rulesEntryFee"></span>$*4/7</li>
+          <li>2e place: Nombre de participants*<span class="rulesEntryFee"></span>$*2/7</li>
+          <li>3e place: Nombre de participants*<span class="rulesEntryFee"></span>$*1/7</li>
+        </ul>
   </div>
 <script type="module" src="js/main.js"></script>
 
