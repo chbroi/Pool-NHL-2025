@@ -533,7 +533,7 @@ container.innerHTML += `
     </div>
     
     <div class="homeAction" onclick="showTab('profile')">
-      <strong>Profile</strong>
+      <strong>Profil</strong>
       <span>Consulter votre profil de pooler</span>
     </div>
   </div>
