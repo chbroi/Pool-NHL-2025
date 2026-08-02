@@ -1160,7 +1160,7 @@ const container =
 <h3>📋 État actuel</h3>
 
 <p>
-<strong>Ronde active :</strong>
+<strong>Soumission active :</strong>
 ${appState.submission}
 </p>
 
@@ -1174,7 +1174,7 @@ ${
 </p>
 
 <p>
-<strong>Ronde 1 :</strong>
+<strong>Date limte soumission 1 :</strong>
 ${
   appState.round1Deadline
   ? new Date(
@@ -1185,7 +1185,7 @@ ${
 </p>
 
 <p>
-<strong>Ronde 2 :</strong>
+<strong>Date limte soumission 2 :</strong>
 ${
   appState.round2Deadline
   ? new Date(
@@ -1196,7 +1196,7 @@ ${
 </p>
 
 <p>
-<strong>Ronde 3 :</strong>
+<strong> Date limte soumission 3 :</strong>
 ${
   appState.round3Deadline
   ? new Date(
@@ -1221,31 +1221,7 @@ ${
 <div class="card">
 
 <h3>
-🏒 Modifier la ronde active
-</h3>
-
-<select id="adminSubmission">
-
-  <option value="1">Ronde 1</option>
-  <option value="2">Ronde 2</option>
-  <option value="3">Ronde 3</option>
-  <option value="4">Ronde 4</option>
-
-</select>
-
-<button
-class="actionBtn"
-onclick="updateSubmissionRound()">
-
-Mettre à jour
-
-</button>
-
-</div>
-<div class="card">
-
-<h3>
-⏱  Modifier les dates limites
+⏱  Gestion des dates limites
 </h3>
 <label>
 Soumission 1
@@ -1260,6 +1236,7 @@ Soumission 2
 <input
 type="datetime-local"
 id="round2Deadline">
+ <br><br>
 
 <label>
 Soumission 3
@@ -1275,6 +1252,8 @@ Soumission 4
 type="datetime-local"
 id="round4Deadline">
 
+<br><br>
+
 <button
 class="actionBtn"
 onclick="updateDeadline()">
@@ -1289,6 +1268,27 @@ Mettre à jour
 <h3>
 🔒 Gestion des Soumissions
 </h3>
+<label>
+Modifier la soumission actuelle
+</label>
+
+<select id="adminSubmission">
+
+  <option value="1">Soumission 1</option>
+  <option value="2">Soumission 2</option>
+  <option value="3">Soumission 3</option>
+  <option value="4">Souimssion 4</option>
+
+</select>
+
+ <br><br>
+<button
+class="actionBtn"
+onclick="updateSubmissionRound()">
+
+Mettre à jour
+
+</button>
 
 <button
 class="actionBtn"
@@ -1352,56 +1352,66 @@ setTimeout(() => {
   if (appState.round1Deadline) {
 
     document.getElementById(
-      "round1Deadline"
-    ).value =
-      new Date(
-        appState.round1Deadline
-      )
-      .toISOString()
-      .slice(0,16);
-
+        "round1Deadline"
+      ).value =
+        formatDateTimeLocal(
+          appState.round1Deadline
+        );
   }
 
   if (appState.round2Deadline) {
 
     document.getElementById(
-      "round2Deadline"
-    ).value =
-      new Date(
-        appState.round2Deadline
-      )
-      .toISOString()
-      .slice(0,16);
+        "round2Deadline"
+      ).value =
+        formatDateTimeLocal(
+          appState.round1Deadline
+        );
 
   }
 
   if (appState.round3Deadline) {
 
     document.getElementById(
-      "round3Deadline"
-    ).value =
-      new Date(
-        appState.round3Deadline
-      )
-      .toISOString()
-      .slice(0,16);
+        "round3Deadline"
+      ).value =
+        formatDateTimeLocal(
+          appState.round1Deadline
+        );
 
   }
 
   if (appState.round4Deadline) {
 
     document.getElementById(
-      "round4Deadline"
-    ).value =
-      new Date(
-        appState.round4Deadline
-      )
-      .toISOString()
-      .slice(0,16);
-
+        "round4Deadline"
+      ).value =
+        formatDateTimeLocal(
+          appState.round1Deadline
+        );
   }
 
 }, 0);
   
 }
 
+
+
+function formatDateTimeLocal(timestamp) {
+
+  const d = new Date(timestamp);
+
+  const pad = n => String(n).padStart(2,"0");
+
+  return `${d.getFullYear()}-${
+    pad(d.getMonth()+1)
+  }-${
+    pad(d.getDate())
+  }T${
+    pad(d.getHours())
+  }:${
+    pad(d.getMinutes())
+  }`;
+
+}
+``
