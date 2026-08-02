@@ -96,7 +96,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
-
+await loadPlayers()
+console.log(appState.players);
 onAuthStateChanged(auth, async (user) => {
 
   const loginBtn = document.getElementById("loginBtn");
