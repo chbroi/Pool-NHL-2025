@@ -333,9 +333,10 @@ const predictions = await getAllPredictions();
 const participants = new Set(
   predictions.map(p => p.userId)
   );
+const allParticipants =  await getAllParticipants();  
 const participantCount = participants.size;
 const prizePool = participantCount * POOL_CONFIG.entryFee;
-const paidCount =  participants.filter(p => p.paid).length;
+const paidCount =  allparticipants.filter(p => p.paid).length;
 const actualPrize =  paidCount *POOL_CONFIG.entryFee
 const firstPlace = (prizePool * POOL_CONFIG.payout.first).toFixed(2);
 const secondPlace =  (prizePool * POOL_CONFIG.payout.second).toFixed(2);
@@ -1314,7 +1315,9 @@ Mettre à jour
 </button>
 
 <br><br>
-
+<label>
+Soumission à supprimer
+</label>
  <select id="deletePredictionSelect">
     <option>
       Chargement...
@@ -1380,8 +1383,7 @@ predictions.forEach(p => {
 
 });
 
-  const participants =
-  await getAllParticipants();
+const participants =await getAllParticipants();
 
 const paymentsContainer =
   document.getElementById(
@@ -1439,12 +1441,20 @@ feedbacks.forEach(f => {
       <strong>
 
         ${f.userName}
-
-      </strong>
+      <strong>
+        
+      <br>
+      <a
+        href="mailto:${f.email}?subject=Réponse au commentaire Pool LNH"
+        style="color:#4da3ff; text-decoration:none;">
+      
+        📧 ${f.email}
+      
+      </a>
 
       <br><br>
 
-      ${f.comment}
+      ${f.message}
 
       <br><br>
 
