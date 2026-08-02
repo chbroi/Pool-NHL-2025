@@ -69,17 +69,9 @@ export function attachRound3Listeners() {
     el.addEventListener('change', async () => {
 
       await generateRound(4);
-
       attachConnSmytheListeners();
-
-      funcs.updateConnSmytheField(
-        playersByTeam
-      );
-
-      funcs.checkIfReadyToSubmit(
-        appState.submission
-      );
-
+      funcs.updateConnSmytheField(appState.players, appState.submission);
+      funcs.checkIfReadyToSubmit(appState.submission);
     });
 
   });
@@ -92,22 +84,47 @@ export function attachConnSmytheListeners() {
   const est = document.getElementById('R3_EST_1_team');
   const west = document.getElementById('R3_WEST_1_team');
 
-  if (est) est.addEventListener('change', () => {
-    funcs.updateConnSmytheField(playersByTeam);
-    funcs.checkIfReadyToSubmit(appState.submission); 
-  });
+  if (est) {
+    est.addEventListener('change', () => {
 
-  if (west) west.addEventListener('change', () => {
-    funcs.updateConnSmytheField(playersByTeam);
-    funcs.checkIfReadyToSubmit(appState.submission); 
-  });
+      funcs.updateConnSmytheField(
+        appState.players,
+        appState.submission
+      );
 
-  //  AJOUT CRITIQUE
-  const conn = document.getElementById("Conn_Smythe");
+      funcs.checkIfReadyToSubmit(
+        appState.submission
+      );
+
+    });
+  }
+
+  if (west) {
+    west.addEventListener('change', () => {
+
+      funcs.updateConnSmytheField(
+        appState.players,
+        appState.submission
+      );
+
+      funcs.checkIfReadyToSubmit(
+        appState.submission
+      );
+
+    });
+  }
+
+  const conn = document.getElementById('Conn_Smythe');
 
   if (conn) {
+
     conn.addEventListener('change', () => {
-      funcs.checkIfReadyToSubmit(appState.submission); 
+
+      funcs.checkIfReadyToSubmit(
+        appState.submission
+      );
+
     });
+
   }
 }
