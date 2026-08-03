@@ -125,13 +125,15 @@ export function updateConnSmytheList(team1,team2, players,submissionNumber) {
 
     defaultOption.textContent =
         "-- Choisissez un joueur --";
+    
+    option.textContent = label;
 
     connSmytheSelect.appendChild(
         defaultOption
     );
 
     list.forEach(player => {
-
+      let label = "";
         const option =
             document.createElement(
                 "option"
