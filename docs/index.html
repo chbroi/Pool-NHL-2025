@@ -271,10 +271,7 @@
         left: 0;
         z-index: 3;
     }
-    body[data-theme="light"] .resultsTable th:first-child,
-    body[data-theme="light"] .resultsTable td:first-child {
-      background: inherit;
-    }
+    
     body[data-theme="dark"] .myColumnCell {
       background: rgba(255, 215, 0, 0.18);
     }
@@ -424,13 +421,11 @@
     }
 
     body[data-theme="light"]
-    .resultsTable tr:nth-child(even),
-    body[data-theme="light"]
-    .leaderboardTable tr:nth-child(even) {
-    
-      background: #fafafa;
-    
-    }
+.resultsTable tbody tr:nth-child(even):not(.roundHeader):not(.totalGlobalRow):not(.totalSubmissionRow) {
+
+  background: #fafafa;
+
+}
     select {
     
       padding: 10px 14px;
