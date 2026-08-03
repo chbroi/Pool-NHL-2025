@@ -125,8 +125,6 @@ export function updateConnSmytheList(team1,team2, players,submissionNumber) {
 
     defaultOption.textContent =
         "-- Choisissez un joueur --";
-    
-    option.textContent = label;
 
     connSmytheSelect.appendChild(
         defaultOption
@@ -186,7 +184,7 @@ export function updateConnSmytheList(team1,team2, players,submissionNumber) {
         
             }
         }
-
+         option.textContent = label;
         connSmytheSelect.appendChild(
             option
         );
