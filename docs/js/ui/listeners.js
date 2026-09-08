@@ -1,4 +1,4 @@
-import { round1Ids, playersByTeam } from "../constants.js";
+import { round1Ids} from "../constants.js";
 import { appState } from "../app/state.js";
 
 import { generateRound } from "./render.js"; // ou renderRounds.js
