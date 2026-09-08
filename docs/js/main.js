@@ -100,8 +100,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 await loadPlayers()
 
-setupRealtimeListeners();
-
 const snapshot = await getDocs(
     collection(db, "players")
 );
@@ -123,6 +121,7 @@ onAuthStateChanged(auth, async (user) => {
       appState.acceptedRules = await hasAcceptedRules(user.uid);
       const participantDoc = await getDoc(doc(db, "participants", user.uid));
       appState.isAdmin = participantDoc.exists() && participantDoc.data().isAdmin === true;
+      setupRealtimeListeners();
   
       
   
