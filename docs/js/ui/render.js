@@ -1720,7 +1720,23 @@ Soumission à supprimer
 
 </div>
 `
-const logs = await getAdminLogs();
+ console.log(
+  "Lecture adminLogs..."
+); 
+try {
+
+  const logs =
+    await getAdminLogs();
+
+}
+catch(err) {
+
+  console.error(
+    "ADMIN LOGS ERROR",
+    err
+  );
+
+}
 
 const historyContainer =
   document.getElementById(
