@@ -45,7 +45,6 @@ export function setupRealtimeListeners() {
   );
 
   // Results
-
   onSnapshot(
     doc(db, "results", "Current"),
     (snap) => {
@@ -57,53 +56,33 @@ export function setupRealtimeListeners() {
       appState.results = data;
 
       renderHome();
-
       renderFullLeaderboard();
-
       loadPredictionsDetails();
 
     }
   );
- if (appState.isAdmin) {
 
-  onSnapshot(
-    collection(db, "feedback"),
+  if (appState.isAdmin) {
 
-    (snapshot) => {
+    onSnapshot(
+      collection(db, "feedback"),
 
-      reloadFeedbackSection(
-        snapshot
-      );
+      (snapshot) => {
 
-    },
+        reloadFeedbackSection(snapshot);
 
-    (error) => {
+      },
 
-      console.error(
-        "Feedback listener ERROR",
-        error
-      );
+      (error) => {
 
-    }
-  );
+        console.error(
+          "Feedback listener ERROR",
+          error
+        );
 
-}
-      reloadFeedbackSection(snapshot);
-  
-      const count = snapshot.size;
-  
-      if (
-        window.lastFeedbackCount !== undefined &&
-        count > window.lastFeedbackCount
-      ) {
-  
-        alert("💬 Nouveau commentaire reçu");
-  
       }
-  
-      window.lastFeedbackCount = count;
-  
-    }
-  );
+    );
+
+  }
 
 }
