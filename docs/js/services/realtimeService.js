@@ -62,5 +62,25 @@ export function setupRealtimeListeners() {
 
     }
   );
+  onSnapshot(
+  collection(db, "feedback"),
+  (snapshot) => {
+
+    const count = snapshot.size;
+
+    if (
+      appState.isAdmin &&
+      window.lastFeedbackCount !== undefined &&
+      count > window.lastFeedbackCount
+    ) {
+
+      alert("💬 Nouveau commentaire reçu");
+
+    }
+
+    window.lastFeedbackCount = count;
+
+  }
+);
 
 }
