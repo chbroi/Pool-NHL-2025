@@ -1807,7 +1807,19 @@ https://chbroi.github.io/Pool-NHL-2025/
     </button>
 
   </div>
+<div class="card">
+
+  <h3>
+    📜 Historique admin
+  </h3>
+
+  <div id="adminHistoryContainer">
+
+  </div>
+
+</div>
 `;
+  
 });
   
 setTimeout(() => {
