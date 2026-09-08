@@ -1823,7 +1823,7 @@ https://chbroi.github.io/Pool-NHL-2025/
 </a>`
   );
 
-  feedbackContainer.innerHTML += `
+ feedbackContainer.innerHTML += `
   <div class="card">
 
     <strong>${f.userName}</strong>
@@ -1832,7 +1832,13 @@ https://chbroi.github.io/Pool-NHL-2025/
 
     <a
       href="mailto:${f.email}?subject=Réponse au commentaire Pool LNH&body=${body}"
-      style="color:#4da3ff; text-decoration:nonebr>
+      style="color:#4da3ff; text-decoration:nonestrong>
+
+    <br>
+
+    ${f.message}
+
+    <br><br>
 
     <button
       class="actionBtn"
@@ -1842,6 +1848,7 @@ https://chbroi.github.io/Pool-NHL-2025/
     </button>
 
   </div>
+  
 <div class="card">
 
   <h3>
