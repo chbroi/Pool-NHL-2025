@@ -67,6 +67,23 @@ export function setupRealtimeListeners() {
   onSnapshot(
     collection(db, "feedback"),
     (snapshot) => {
+
+     
+    console.log(
+      "Feedback listener OK"
+    );
+
+  },
+
+  (error) => {
+
+    console.error(
+      "Feedback listener ERROR",
+      error
+    );
+
+  }
+);
   
       reloadFeedbackSection(snapshot);
   
