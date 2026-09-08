@@ -29,37 +29,43 @@ Insérer réponse.
 
 Merci.
 
-Charles Brosseau`
+Charles Brosseau
+Gestionnaire du Pool NHL
+https://chbroi.github.io/Pool-NHL-2025/`
 
       );
 
-    container.innerHTML += `
-      <div class="card">
+   container.innerHTML += `
+  <div class="card">
 
-        <strong>
-          ${f.userName}
-        </strong>
+    <strong>
+      ${f.userName}
+    </strong>
 
-        <br>
+    <br>
+    <p>
+      <small>
+        ${new Date(f.timestamp).toLocaleString("fr-CA")}
+      </small>
+    </p>
 
-        <a
-          href="mailto:${f.email}?subject=Réponse au commentaire Pool LNH&body=${body        </a>
+    <a
+      href="mailto:${f.email}?subject=Réponse au commentaire Pool LNH&body=${body}"
+      style="color:#4da3ff; text>Commentaire :</strong>
 
-        <br><br>
+    <p>
+      ${f.message}
+    </p>
 
-        ${f.message}
+    <button
+      class="actionBtn"
+      onclick="deleteFeedback('${f.id}')"
+    >
+      Supprimer
+    </button>
 
-        <br><br>
-
-        <button
-          class="actionBtn"
-          onclick="deleteFeedback('${f.id}')"
-        >
-          Supprimer
-        </button>
-
-      </div>
-    `;
+  </div>
+`;
   });
 
 }
