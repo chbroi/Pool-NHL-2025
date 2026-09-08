@@ -1769,7 +1769,7 @@ const feedbackContainer =
     "feedbackContainer"
   );
 
-feedbacks.forEach(f => {feedbacks.forEach(f => {
+feedbacks.forEach(f => {
 
   const body = encodeURIComponent(
 `Bonjour ${f.userName},
@@ -1789,41 +1789,25 @@ https://chbroi.github.io/Pool-NHL-2025/
   );
 
   feedbackContainer.innerHTML += `
+  <div class="card">
 
-    <div class="card">
+    <strong>${f.userName}</strong>
 
-      <strong>
-        ${f.userName}
-      </strong>
+    <br>
 
-      <br>
+    <a
+      href="mailto:${f.email}?subject=Réponse au commentaire Pool LNH&body=${body}"
+      style="color:#4da3ff; text-decoration:nonebr>
 
-      subject=Réponse au commentaire Pool LNH&body=${body}"
-        style="color:#4da3ff; text-decoration:none;">
+    <button
+      class="actionBtn"
+      onclick="deleteFeedback('${f.id}')"
+    >
+      Supprimer
+    </button>
 
-        📧 ${f.email}
-
-      </a>
-
-      <br><br>
-
-      ${f.message}
-
-      <br><br>
-
-      <button
-        class="actionBtn"
-        onclick="
-          deleteFeedback('${f.id}')
-        ">
-
-        Supprimer
-
-      </button>
-
-    </div>
-
-  `;
+  </div>
+`;
 });
 
 });
