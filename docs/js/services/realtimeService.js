@@ -8,15 +8,26 @@ import * as funcs from "../functions.js";
 import {renderHome, renderAdmin, renderFullLeaderboard,loadPredictionsDetails} from "../ui/render.js";
 import { reloadFeedbackSection} from "../ui/adminFeedback.js";
 
-
+let listenersStarted = false;
 export function setupRealtimeListeners() {
 
+  if (listenersStarted) {
+    return;
+  }
+
+  listenersStarted = true;
   // Config
 
   onSnapshot(
     doc(db, "config", "ui"),
     (snap) => {
+     
+    console.log("CONFIG OK");
+  },
 
+  (error) => {
+    console.error("CONFIG ERROR", error);
+  }
       const config = snap.data();
 
       if (!config) return;
@@ -48,6 +59,12 @@ export function setupRealtimeListeners() {
   onSnapshot(
     doc(db, "results", "Current"),
     (snap) => {
+      console.log("RESULTS OK");
+  },
+
+  (error) => {
+    console.error("RESULTS ERROR", error);
+  }
 
       const data = snap.data();
 
@@ -68,7 +85,12 @@ export function setupRealtimeListeners() {
       collection(db, "feedback"),
 
       (snapshot) => {
+    console.log("FEEDBACK OK");
+  },
 
+  (error) => {
+    console.error("FEEDBACK ERROR", error);
+  }
         reloadFeedbackSection(snapshot);
 
       },
