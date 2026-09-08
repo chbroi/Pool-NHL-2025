@@ -1809,8 +1809,6 @@ https://chbroi.github.io/Pool-NHL-2025/
   </div>
 `;
 });
-
-});
   
 setTimeout(() => {
 
