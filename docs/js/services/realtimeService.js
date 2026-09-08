@@ -64,27 +64,30 @@ export function setupRealtimeListeners() {
 
     }
   );
+ if (appState.isAdmin) {
+
   onSnapshot(
     collection(db, "feedback"),
+
     (snapshot) => {
 
-     
-    console.log(
-      "Feedback listener OK"
-    );
+      reloadFeedbackSection(
+        snapshot
+      );
 
-  },
+    },
 
-  (error) => {
+    (error) => {
 
-    console.error(
-      "Feedback listener ERROR",
-      error
-    );
+      console.error(
+        "Feedback listener ERROR",
+        error
+      );
 
-  }
-);
-  
+    }
+  );
+
+}
       reloadFeedbackSection(snapshot);
   
       const count = snapshot.size;
