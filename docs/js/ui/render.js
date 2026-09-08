@@ -1,5 +1,5 @@
 import { appState } from "../app/state.js";
-import { getAllPredictions, getAllParticipants, getAllFeedback} from "../services/firestoreService.js";
+import { getAllPredictions, getAllParticipants, getAllFeedback,getAdminLogs} from "../services/firestoreService.js";
 import { SCORING, MATCH_ORDER, POOL_CONFIG } from "../constants.js";
 import { computeLeaderboard, getRoundFromKey} from "../logic/scoring.js";
 import { isResultAvailable, getParentMatch} from "../utils/helpers.js";
