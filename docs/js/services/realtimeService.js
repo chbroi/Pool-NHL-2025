@@ -6,6 +6,9 @@ import { appState } from "../app/state.js";
 import * as funcs from "../functions.js";
 
 import {renderHome, renderAdmin, renderFullLeaderboard,loadPredictionsDetails} from "../ui/render.js";
+import { reloadFeedbackSection} from "../ui/adminFeedback.js";
+`
+
 
 export function setupRealtimeListeners() {
 
@@ -63,24 +66,25 @@ export function setupRealtimeListeners() {
     }
   );
   onSnapshot(
-  collection(db, "feedback"),
-  (snapshot) => {
-
-    const count = snapshot.size;
-
-    if (
-      appState.isAdmin &&
-      window.lastFeedbackCount !== undefined &&
-      count > window.lastFeedbackCount
-    ) {
-
-      alert("💬 Nouveau commentaire reçu");
-
+    collection(db, "feedback"),
+    (snapshot) => {
+  
+      reloadFeedbackSection(snapshot);
+  
+      const count = snapshot.size;
+  
+      if (
+        window.lastFeedbackCount !== undefined &&
+        count > window.lastFeedbackCount
+      ) {
+  
+        alert("💬 Nouveau commentaire reçu");
+  
+      }
+  
+      window.lastFeedbackCount = count;
+  
     }
-
-    window.lastFeedbackCount = count;
-
-  }
-);
+  );
 
 }
