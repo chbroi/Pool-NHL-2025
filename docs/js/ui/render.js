@@ -1858,9 +1858,16 @@ https://chbroi.github.io/Pool-NHL-2025/`
     
     <br><br>
 
-   <a
+  <a
   href="mailto:${f.email}?subject=Réponse au commentaire Pool LNH&body=${body}"
-  style="color:#4da3ff; text-decoration:nonestrong>
+  style="color:#4da3ff; text-decoration:none;"
+>
+  📧 Répondre à ${f.userName}
+</a>
+
+<br><br>
+
+<strong>
 
     <br>
 
