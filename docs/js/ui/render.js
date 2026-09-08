@@ -1700,6 +1700,41 @@ Soumission à supprimer
 
 </div>
 `
+const logs = await getAdminLogs();
+
+const historyContainer =
+  document.getElementById(
+    "adminHistoryContainer"
+  );
+
+historyContainer.innerHTML = "";
+
+logs
+.sort(
+(a,b)=>
+b.timestamp-a.timestamp
+)
+.forEach(log => {
+
+historyContainer.innerHTML += `
+  <div>
+
+    ${new Date(
+      log.timestamp
+    ).toLocaleString()}
+
+    -
+
+    ${log.admin}
+
+    -
+
+    ${log.action}
+
+  </div>
+`;
+
+});
 const predictions = await getAllPredictions();
 const ddl = document.getElementById( "deletePredictionSelect");
 
@@ -1818,6 +1853,12 @@ https://chbroi.github.io/Pool-NHL-2025/
   </div>
 
 </div>
+<button
+  class="actionBtn"
+  onclick="clearAdminHistory()"
+>
+  Supprimer l'historique
+</button>
 `;
   
 });
