@@ -1,22 +1,11 @@
 import { db } from "../firebase.js";
 
-import {
-  doc,
-  collection,
-  onSnapshot
-}
-from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { doc,collection, onSnapshot }from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 import { appState } from "../app/state.js";
 import * as funcs from "../functions.js";
 
-import {
-  renderHome,
-  renderAdmin,
-  renderFullLeaderboard,
-  loadPredictionsDetails
-}
-from "../ui/render.js";
+import {renderHome, renderAdmin, renderFullLeaderboard,loadPredictionsDetails} from "../ui/render.js";
 
 export function setupRealtimeListeners() {
 
