@@ -4,12 +4,13 @@ import * as funcs from "./functions.js";
 import { auth, db, GoogleAuthProvider } from "./firebase.js";
 import {hasSubmitted, submitPrediction,loadPlayers} from "./services/firestoreService.js";
 import { signInWithPopup, onAuthStateChanged,signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { collection, query, where,doc, getDoc, getDocs, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { collection, query, where,doc, getDoc, getDocs, addDoc, updateDoc, deleteDoc,onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { round1Ids,SCORING, POOL_CONFIG} from "./constants.js";
 import { appState } from "./app/state.js"
 import { loadPredictionsDetails, renderHome, renderFullLeaderboard, renderScoring,generateRound,renderSubmissionStatus,renderProfile,renderStats,renderAdmin,renderNhlStats} from "./ui/render.js"
 import { checkEligibility, loadAppConfig,hasAcceptedRules, acceptRules} from "./services/userService.js";
 import { attachRound1Listeners, attachRound2Listeners, attachRound3Listeners, attachConnSmytheListeners} from "./ui/listeners.js";
+import {reloadFeedbackSection} from "./ui/adminFeedback.js";
 
 
 
@@ -97,7 +98,84 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 await loadPlayers()
-console.log("Loading players...");
+function setupRealtimeListeners() {
+
+  // ======================
+  // CONFIG
+  // ======================
+
+  onSnapshot(
+    doc(db, "config", "ui"),
+    (snap) => {
+
+      const config = snap.data();
+
+      if (!config) return;
+
+      appState.submission =
+        Number(config.currentSubmission);
+
+      appState.submissionOpen =
+        config.submissionOpen;
+
+      appState.round1Deadline =
+        config.round1Deadline;
+
+      appState.round2Deadline =
+        config.round2Deadline;
+
+      appState.round3Deadline =
+        config.round3Deadline;
+
+      appState.round4Deadline =
+        config.round4Deadline;
+
+      funcs.refreshHelperMessage();
+
+      const activeTab =
+        localStorage.getItem("activeTab");
+
+      if (activeTab === "home") {
+        renderHome();
+      }
+
+      if (activeTab === "admin") {
+        renderAdmin();
+      }
+
+    }
+  );
+
+  onSnapshot(
+  doc(db, "results", "current"),
+  (snap) => {
+
+    const data = snap.data();
+
+    if (!data) return;
+
+    appState.results = data;
+
+    const activeTab =
+      localStorage.getItem("activeTab");
+
+    if (activeTab === "home") {
+      renderHome();
+    }
+
+    if (activeTab === "leaderboard") {
+      renderFullLeaderboard();
+    }
+
+    if (activeTab === "results") {
+      loadPredictionsDetails();
+    }
+
+  }
+);
+
+}
+setupRealtimeListeners();
 
 const snapshot = await getDocs(
     collection(db, "players")
@@ -705,6 +783,20 @@ window.toggleSubmissionOpen = async function(status) {
       submissionOpen: status
     }
   );
+  await addDoc(
+  collection(db, "adminLogs"),
+  {
+    action: status
+      ? "Ouverture des soumissions"
+      : "Fermeture des soumissions",
+
+    admin:
+      appState.user.displayName,
+
+    timestamp:
+      Date.now()
+  }
+);
 
   appState.submissionOpen = status;
   renderAdmin();
@@ -761,6 +853,19 @@ async function() {
       currentSubmission: round
     }
   );
+  await addDoc(
+  collection(db, "adminLogs"),
+  {
+    action:
+      `Soumission active -> ${round}`,
+
+    admin:
+      appState.user.displayName,
+
+    timestamp:
+      Date.now()
+  }
+);
 
   appState.submission = round;
   renderAdmin();
@@ -772,9 +877,56 @@ async function() {
   
 };
 
+window.clearAdminHistory =
+async function() {
+
+  if (
+    !confirm(
+      "Supprimer tout l'historique ?"
+    )
+  ) {
+    return;
+  }
+
+  const snapshot =
+    await getDocs(
+      collection(
+        db,
+        "adminLogs"
+      )
+    );
+
+  await Promise.all(
+
+    snapshot.docs.map(
+      d =>
+        deleteDoc(d.ref)
+    )
+
+  );
+
+  renderAdmin();
+
+};
+
 
 window.updateDeadline =
 async function() {
+
+  await addDoc(
+  collection(db, "adminLogs"),
+  {
+    action:
+      "Modification des dates limites",
+
+    admin:
+      appState.user.displayName,
+
+    timestamp:
+      Date.now()
+  }
+);
+
 
   await updateDoc(
     doc(db, "config", "ui"),
