@@ -5,7 +5,7 @@ import { auth, db, GoogleAuthProvider } from "./firebase.js";
 import {hasSubmitted, submitPrediction,loadPlayers} from "./services/firestoreService.js";
 import { signInWithPopup, onAuthStateChanged,signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { collection, query, where,doc, getDoc, getDocs, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { playersByTeam, round1Ids,SCORING, POOL_CONFIG} from "./constants.js";
+import { round1Ids,SCORING, POOL_CONFIG} from "./constants.js";
 import { appState } from "./app/state.js"
 import { loadPredictionsDetails, renderHome, renderFullLeaderboard, renderScoring,generateRound,renderSubmissionStatus,renderProfile,renderStats,renderAdmin,renderNhlStats} from "./ui/render.js"
 import { checkEligibility, loadAppConfig,hasAcceptedRules, acceptRules} from "./services/userService.js";
