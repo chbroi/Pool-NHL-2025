@@ -1829,33 +1829,38 @@ const feedbackContainer =
 
 feedbacks.forEach(f => {
 
-  const body = encodeURIComponent(
+const body = encodeURIComponent(
 `Bonjour ${f.userName},
 
 Pour faire suite à votre commentaire :
 
 "${f.message}"
 
-"Insérer réponse"
+Insérer votre réponse ici.
 
 Merci pour votre commentaire.
 
-De la part du destionnaire du Pool
+Charles Brosseau
 
-https://chbroi.github.io/Pool-NHL-2025/
-</a>`
-  );
+https://chbroi.github.io/Pool-NHL-2025/`
+);
 
  feedbackContainer.innerHTML += `
   <div class="card">
 
-    <strong>${f.userName}</strong>
+   <strong>${f.userName}</strong>
 
     <br>
 
-    <a
-      href="mailto:${f.email}?subject=Réponse au commentaire Pool LNH&body=${body}"
-      style="color:#4da3ff; text-decoration:nonestrong>
+    <small>
+      ${new Date(f.timestamp).toLocaleString("fr-CA")}
+    </small>
+    
+    <br><br>
+
+   <a
+  href="mailto:${f.email}?subject=Réponse au commentaire Pool LNH&body=${body}"
+  style="color:#4da3ff; text-decoration:nonestrong>
 
     <br>
 
