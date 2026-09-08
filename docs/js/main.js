@@ -10,7 +10,8 @@ import { appState } from "./app/state.js"
 import { loadPredictionsDetails, renderHome, renderFullLeaderboard, renderScoring,generateRound,renderSubmissionStatus,renderProfile,renderStats,renderAdmin,renderNhlStats} from "./ui/render.js"
 import { checkEligibility, loadAppConfig,hasAcceptedRules, acceptRules} from "./services/userService.js";
 import { attachRound1Listeners, attachRound2Listeners, attachRound3Listeners, attachConnSmytheListeners} from "./ui/listeners.js";
-import {reloadFeedbackSection} from "./ui/adminFeedback.js";
+import { reloadFeedbackSection} from "./ui/adminFeedback.js";
+import { setupRealtimeListeners} from "./services/realtimeService.js";
 
 
 
@@ -98,83 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 await loadPlayers()
-function setupRealtimeListeners() {
 
-  // ======================
-  // CONFIG
-  // ======================
-
-  onSnapshot(
-    doc(db, "config", "ui"),
-    (snap) => {
-
-      const config = snap.data();
-
-      if (!config) return;
-
-      appState.submission =
-        Number(config.currentSubmission);
-
-      appState.submissionOpen =
-        config.submissionOpen;
-
-      appState.round1Deadline =
-        config.round1Deadline;
-
-      appState.round2Deadline =
-        config.round2Deadline;
-
-      appState.round3Deadline =
-        config.round3Deadline;
-
-      appState.round4Deadline =
-        config.round4Deadline;
-
-      funcs.refreshHelperMessage();
-
-      const activeTab =
-        localStorage.getItem("activeTab");
-
-      if (activeTab === "home") {
-        renderHome();
-      }
-
-      if (activeTab === "admin") {
-        renderAdmin();
-      }
-
-    }
-  );
-
-  onSnapshot(
-  doc(db, "results", "current"),
-  (snap) => {
-
-    const data = snap.data();
-
-    if (!data) return;
-
-    appState.results = data;
-
-    const activeTab =
-      localStorage.getItem("activeTab");
-
-    if (activeTab === "home") {
-      renderHome();
-    }
-
-    if (activeTab === "leaderboard") {
-      renderFullLeaderboard();
-    }
-
-    if (activeTab === "results") {
-      loadPredictionsDetails();
-    }
-
-  }
-);
-
-}
 setupRealtimeListeners();
 
 const snapshot = await getDocs(
