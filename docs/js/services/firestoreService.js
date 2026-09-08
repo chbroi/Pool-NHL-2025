@@ -104,3 +104,42 @@ export async function loadPlayers() {
     );
 }
 
+export async function getAdminLogs() {
+
+  const snapshot =
+    await getDocs(
+      collection(
+        db,
+        "adminLogs"
+      )
+    );
+
+  return snapshot.docs.map(
+    doc => ({
+      id: doc.id,
+      ...doc.data()
+    })
+  );
+
+}
+
+export async function addAdminLog(
+  action,
+  admin
+) {
+
+  return await addDoc(
+    collection(
+      db,
+      "adminLogs"
+    ),
+    {
+      action,
+      admin,
+      timestamp: Date.now()
+    }
+  );
+
+}
+
+
