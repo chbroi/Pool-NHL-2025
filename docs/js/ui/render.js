@@ -1697,6 +1697,26 @@ Soumission à supprimer
   </div>
 
 </div>
+<div class="card">
+
+  <h3>
+    📜 Historique admin
+  </h3>
+
+  <div id="adminHistoryContainer">
+
+  </div>
+
+  <br>
+
+  <button
+    class="actionBtn"
+    onclick="clearAdminHistory()"
+  >
+    Supprimer l'historique
+  </button>
+
+</div>
 
 </div>
 `
@@ -1848,27 +1868,10 @@ https://chbroi.github.io/Pool-NHL-2025/
     </button>
 
   </div>
-  
-<div class="card">
-
-  <h3>
-    📜 Historique admin
-  </h3>
-
-  <div id="adminHistoryContainer">
-
-  </div>
-
-</div>
-<button
-  class="actionBtn"
-  onclick="clearAdminHistory()"
->
-  Supprimer l'historique
-</button>
 `;
   
 });
+
   
 setTimeout(() => {
 
