@@ -1,5 +1,43 @@
 import { getAllFeedback } from "../../services/firestoreService.js";
 
+export function renderAdminFeedbackCard() {
+
+  return `
+
+    <div class="card">
+
+      <h3>
+        💬 Commentaires reçus
+      </h3>
+
+      <div id="feedbackContainer">
+
+      </div>
+
+    </div>
+
+  `;
+}
+
+export async function loadAdminFeedback() {
+
+  const feedbacks = await getAllFeedback();
+
+  const container = document.getElementById(
+      "feedbackContainer"
+    );
+
+  container.innerHTML = "";
+
+  feedbacks.forEach(f => {
+
+    ...
+
+  });
+
+}
+
+
 export function reloadFeedbackSection(snapshot) {
 
   const container =
