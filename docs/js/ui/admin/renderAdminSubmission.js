@@ -155,6 +155,31 @@ export function renderAdminSubmissionCard() {
   `;
 }
 
+export async function loadAdminSubmission() {
+
+  const ddl =
+    document.getElementById(
+      "deletePredictionSelect"
+    );
+
+  if (!ddl) return;
+
+  const predictions =
+    await getAllPredictions();
+
+  ddl.innerHTML = "";
+
+  predictions.forEach(p => {
+
+    ddl.innerHTML += `
+      <option value="${p.id}">
+        ${p.userName} - Ronde ${p.round}
+      </option>
+    `;
+
+  });
+
+}
 
 export function formatDateTimeLocal(timestamp) {
 
