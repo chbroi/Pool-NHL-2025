@@ -21,8 +21,7 @@ export function renderAdminFeedbackCard() {
 
 export function reloadFeedbackSection(snapshot) {
   console.log("feedback count", snapshot.size);
-   const feedbacks =
-  await getAllFeedback();
+   
 
 const feedbackContainer =
   document.getElementById(
