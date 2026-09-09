@@ -17,5 +17,6 @@ export async function renderAdmin() {
   `;
 
   await loadAdminPayments();
+  await loadAdminSubmission();
   await loadAdminHistory();
 }
