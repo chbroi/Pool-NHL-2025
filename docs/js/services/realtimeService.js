@@ -23,8 +23,6 @@ export function setupRealtimeListeners() {
 
   (snap) => {
 
-    console.log("CONFIG OK");
-
     const config = snap.data();
 
     if (!config) return;
@@ -50,15 +48,6 @@ export function setupRealtimeListeners() {
     funcs.refreshHelperMessage();
 
   },
-
-  (error) => {
-
-    console.error(
-      "CONFIG ERROR",
-      error
-    );
-
-  }
 );
 
   // Results
@@ -66,8 +55,6 @@ export function setupRealtimeListeners() {
   doc(db, "results", "Current"),
 
   (snap) => {
-
-    console.log("RESULTS OK");
 
     const data = snap.data();
 
@@ -81,15 +68,6 @@ export function setupRealtimeListeners() {
 
   },
 
-  (error) => {
-
-    console.error(
-      "RESULTS ERROR",
-      error
-    );
-
-  }
-
 );
 
   if (appState.isAdmin) {
@@ -99,11 +77,7 @@ export function setupRealtimeListeners() {
 
     (snapshot) => {
 
-      console.log(
-        "FEEDBACK OK"
-      );
-
-      reloadFeedbackSection(
+         reloadFeedbackSection(
         snapshot
       );
 
@@ -127,15 +101,6 @@ export function setupRealtimeListeners() {
         count;
 
     },
-
-    (error) => {
-
-      console.error(
-        "FEEDBACK ERROR",
-        error
-      );
-
-    }
 
   );
 
