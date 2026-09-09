@@ -44,11 +44,25 @@ export async function loadAdminHistory() {
     )
     .forEach(log => {
 
-      container.innerHTML += `
-        <div>
-          ${log.action}
-        </div>
-      `;
+     container.innerHTML += `
+  <div>
 
+    ${new Date(
+      log.timestamp
+    ).toLocaleString("fr-CA")}
+
+    -
+
+    ${log.admin}
+
+    -
+
+    ${log.action}
+
+  </div>
+`;
+
+      
+      
     });
 }
