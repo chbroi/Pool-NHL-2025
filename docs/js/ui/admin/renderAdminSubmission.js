@@ -1,4 +1,5 @@
 import { appState } from "../../app/state.js";
+import { getAllPredictions } from "../../services/firestoreService.js";
 export function renderAdminSubmissionCard() {
 
   return `
