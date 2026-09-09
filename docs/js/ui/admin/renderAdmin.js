@@ -1,3 +1,8 @@
+import { appState } from "../../app/state.js";
+import { renderAdminSubmissionCard } from "./renderAdminSubmission.js";
+import { renderAdminPaymentsCard, loadAdminPayments } from "./renderAdminPayments.js";
+import { renderAdminFeedbackCard, loadAdminFeedback } from "./renderAdminFeedback.js";
+import { renderAdminHistoryCard, loadAdminHistory } from "./renderAdminHistory.js";
 
 export async function renderAdmin() {
 
