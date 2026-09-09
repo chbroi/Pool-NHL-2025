@@ -1,3 +1,5 @@
+import { getAllParticipants } from "../../services/firestoreService.js";
+
 export function renderAdminPaymentsCard() {
 
   return `
@@ -21,17 +23,10 @@ export async function loadAdminPayments() {
 
   const participants =
     await getAllParticipants();
-
-  const container =
-    document.getElementById(
-      "paymentsContainer"
-    );
-
-  container.innerHTML = "";
-
+  
   participants.forEach(p => {
   
-  paymentsContainer.innerHTML += `
+  container.innerHTML += `
   
     <div>
   
