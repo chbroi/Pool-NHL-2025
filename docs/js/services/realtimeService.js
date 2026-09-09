@@ -69,7 +69,11 @@ export function setupRealtimeListeners() {
   },
 
 );
-
+console.log(
+  "ADMIN?",
+  appState.isAdmin
+);
+  
   if (appState.isAdmin) {
 
   onSnapshot(
