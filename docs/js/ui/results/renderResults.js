@@ -28,4 +28,5 @@ export async function loadPredictionsDetails() {
   `;
 
   return;
+  }
 }
