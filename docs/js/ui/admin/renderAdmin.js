@@ -1,5 +1,5 @@
 import { appState } from "../../app/state.js";
-import { renderAdminSubmissionCard, loadDeadlineFields } from "./renderAdminSubmission.js";
+import { renderAdminSubmissionCard, loadDeadlineFields, loadAdminSubmission } from "./renderAdminSubmission.js";
 import { renderAdminPaymentsCard, loadAdminPayments } from "./renderAdminPayments.js";
 import { renderAdminFeedbackCard } from "./renderAdminFeedback.js";
 import { renderAdminHistoryCard,loadAdminHistory} from "./renderAdminHistory.js";
