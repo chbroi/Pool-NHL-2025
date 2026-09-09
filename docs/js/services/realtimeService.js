@@ -6,7 +6,7 @@ import { appState } from "../app/state.js";
 import * as funcs from "../functions.js";
 
 import {renderHome, renderAdmin, renderFullLeaderboard,loadPredictionsDetails} from "../ui/render.js";
-import { reloadFeedbackSection} from "../ui/adminFeedback.js";
+import { reloadFeedbackSection} from "../ui/render.js";
 
 let listenersStarted = false;
 export function setupRealtimeListeners() {
