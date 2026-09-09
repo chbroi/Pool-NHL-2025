@@ -9,8 +9,7 @@ import { round1Ids,SCORING, POOL_CONFIG} from "./constants.js";
 import { appState } from "./app/state.js"
 import { checkEligibility, loadAppConfig,hasAcceptedRules, acceptRules} from "./services/userService.js";
 import { attachRound1Listeners, attachRound2Listeners, attachRound3Listeners, attachConnSmytheListeners} from "./ui/listeners.js";
-import { loadPredictionsDetails, renderHome, renderFullLeaderboard, renderScoring, generateRound, renderSubmissionStatus, renderProfile, renderStats, renderAdmin, renderNhlStats, reloadFeedbackSection,
-generateRound} from "./ui/render.js";
+import { loadPredictionsDetails, renderHome, renderFullLeaderboard, renderScoring, generateRound, renderSubmissionStatus, renderProfile, renderStats, renderAdmin, renderNhlStats, reloadFeedbackSection } from "./ui/render.js";
 import { setupRealtimeListeners} from "./services/realtimeService.js";
 
 
@@ -19,7 +18,7 @@ import { setupRealtimeListeners} from "./services/realtimeService.js";
 // LOGIN
 document.getElementById("loginBtn").addEventListener("click", async () => {
   const provider = new GoogleAuthProvider();
-  const result = await signInWithPopup(auth, provider);
+  const result = await signInWithPopup(auth, provider); 
   appState.user = result.user;
 });
 // LOGOUT
