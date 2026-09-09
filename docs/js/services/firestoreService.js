@@ -98,10 +98,6 @@ export async function loadPlayers() {
         snapshot.docs.map(
             doc => doc.data()
         );
-
-    console.log(
-        `${appState.players.length} joueurs chargés`
-    );
 }
 
 export async function getAdminLogs() {
