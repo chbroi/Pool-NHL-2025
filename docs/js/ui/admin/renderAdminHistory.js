@@ -1,4 +1,4 @@
-
+import { getAdminLogs } from "../services/firestoreService.js";
 export function renderAdminHistoryCard() {
 
   return `
