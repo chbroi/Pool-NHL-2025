@@ -21,62 +21,61 @@ export function renderAdminFeedbackCard() {
 
 export function reloadFeedbackSection(snapshot) {
   console.log("feedback count", snapshot.size);
-  const container =
-    document.getElementById(
-      "feedbackContainer"
-    );
+   const feedbacks =
+  await getAllFeedback();
 
-  if (!container) return;
+const feedbackContainer =
+  document.getElementById(
+    "feedbackContainer"
+  );
 
-  container.innerHTML = "";
+feedbacks.forEach(f => {
 
-  snapshot.forEach(doc => {
-
-    const f = {
-      id: doc.id,
-      ...doc.data()
-    };
-
-    const body =
-      encodeURIComponent(
-
+const body = encodeURIComponent(
 `Bonjour ${f.userName},
 
 Pour faire suite à votre commentaire :
 
 "${f.message}"
 
-Insérer réponse.
+Insérer votre réponse ici.
 
-Merci.
+Merci pour votre commentaire.
 
 Charles Brosseau
-Gestionnaire du Pool NHL
+
 https://chbroi.github.io/Pool-NHL-2025/`
+);
 
-      );
-
-   container.innerHTML += `
+ feedbackContainer.innerHTML += `
   <div class="card">
 
-    <strong>
-      ${f.userName}
-    </strong>
+   <strong>${f.userName}</strong>
 
     <br>
-    <p>
-      <small>
-        ${new Date(f.timestamp).toLocaleString("fr-CA")}
-      </small>
-    </p>
 
-    <a
-      href="mailto:${f.email}?subject=Réponse au commentaire Pool LNH&body=${body}"
-      style="color:#4da3ff; text>Commentaire :</strong>
+    <small>
+      ${new Date(f.timestamp).toLocaleString("fr-CA")}
+    </small>
+    
+    <br><br>
 
-    <p>
-      ${f.message}
-    </p>
+  <a
+  href="mailto:${f.email}?subject=Réponse au commentaire Pool LNH&body=${body}"
+  style="color:#4da3ff; text-decoration:none;"
+>
+  📧 Répondre à ${f.userName}
+</a>
+
+<br><br>
+
+<strong>
+
+    <br>
+
+    ${f.message}
+
+    <br><br>
 
     <button
       class="actionBtn"
@@ -87,6 +86,8 @@ https://chbroi.github.io/Pool-NHL-2025/`
 
   </div>
 `;
-  });
+  
+})
+  
 
 }
