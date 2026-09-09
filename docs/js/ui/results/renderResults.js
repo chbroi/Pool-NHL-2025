@@ -118,3 +118,26 @@ export async function generateRound(roundNumber) {
   container.innerHTML = html;
   container.style.display = "block";
 }
+
+export function renderScoring() {
+
+  const container = document.getElementById("scoringTab");
+
+  container.innerHTML = `<h2>📊 Système de pointage</h2>`;
+
+  Object.entries(SCORING.submissions).forEach(([sub, config]) => {
+
+    let html = `<div class="card"> <h3>Soumission ${sub}</h3>`;
+    html += `<ul>`;
+
+    Object.entries(config.rounds).forEach(([round, pts]) => {
+      html += `<li>Ronde ${round} : ${pts.team} pts (équipe) + ${pts.games} pts (# matchs)</li>`;
+    });
+
+    html += `<li>Conn Smythe : ${config.connSmythe} pts</li>`;
+    html += `</ul> </div>`;
+
+    container.innerHTML += html;
+
+  });
+}
