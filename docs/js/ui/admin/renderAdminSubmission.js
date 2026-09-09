@@ -181,6 +181,30 @@ export async function loadAdminSubmission() {
 
 }
 
+export function loadDeadlineFields() {
+
+  if (appState.round1Deadline) {
+    document.getElementById("round1Deadline").value =
+      formatDateTimeLocal(appState.round1Deadline);
+  }
+
+  if (appState.round2Deadline) {
+    document.getElementById("round2Deadline").value =
+      formatDateTimeLocal(appState.round2Deadline);
+  }
+
+  if (appState.round3Deadline) {
+    document.getElementById("round3Deadline").value =
+      formatDateTimeLocal(appState.round3Deadline);
+  }
+
+  if (appState.round4Deadline) {
+    document.getElementById("round4Deadline").value =
+      formatDateTimeLocal(appState.round4Deadline);
+  }
+
+}
+
 export function formatDateTimeLocal(timestamp) {
 
   const d = new Date(timestamp);
