@@ -21,9 +21,9 @@ export function renderAdminPaymentsCard() {
 
 export async function loadAdminPayments() {
 
-  const participants =
-    await getAllParticipants();
-  
+  const participants = await getAllParticipants();
+  const container = document.getElementById("paymentsContainer");
+if (!container) return;
   participants.forEach(p => {
   
   container.innerHTML += `
