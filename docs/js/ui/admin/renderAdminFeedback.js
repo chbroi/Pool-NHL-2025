@@ -19,25 +19,6 @@ export function renderAdminFeedbackCard() {
   `;
 }
 
-export async function loadAdminFeedback() {
-
-  const feedbacks = await getAllFeedback();
-
-  const container = document.getElementById(
-      "feedbackContainer"
-    );
-
-  container.innerHTML = "";
-
-  feedbacks.forEach(f => {
-
-    ...
-
-  });
-
-}
-
-
 export function reloadFeedbackSection(snapshot) {
 
   const container =
