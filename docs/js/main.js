@@ -103,7 +103,6 @@ const snapshot = await getDocs(
     collection(db, "players")
 );
 
-console.log(snapshot.size);
 onAuthStateChanged(auth, async (user) => {
 
   const loginBtn = document.getElementById("loginBtn");
