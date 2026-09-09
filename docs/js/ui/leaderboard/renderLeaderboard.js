@@ -1,3 +1,7 @@
+import { appState } from "../../app/state.js";
+import { getAllPredictions } from "../../services/firestoreService.js";
+import { computeLeaderboard } from "../../logic/scoring.js";
+
 
 export async function renderFullLeaderboard() {
   const container = document.getElementById("leaderboardTab");
