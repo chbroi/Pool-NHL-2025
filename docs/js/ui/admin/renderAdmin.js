@@ -2,7 +2,7 @@ import { appState } from "../../app/state.js";
 import { renderAdminSubmissionCard } from "./renderAdminSubmission.js";
 import { renderAdminPaymentsCard, loadAdminPayments } from "./renderAdminPayments.js";
 import { renderAdminFeedbackCard, loadAdminFeedback } from "./renderAdminFeedback.js";
-import { renderAdminHistoryCard, loadAdminHistory } from "./renderAdminHistory.js";
+import { renderAdminHistoryCard} from "./renderAdminHistory.js";
 
 export async function renderAdmin() {
 
@@ -10,14 +10,12 @@ export async function renderAdmin() {
     document.getElementById("adminTab");
 
   container.innerHTML = `
-    ${renderAdminStatus()}
-    ${renderAdminSubmissions()}
+    ${renderAdminSubmissionCard()}
     ${renderAdminPaymentsCard()}
     ${renderAdminFeedbackCard()}
     ${renderAdminHistoryCard()}
   `;
 
   await loadAdminPayments();
-  await loadAdminFeedback();
   await loadAdminHistory();
 }
