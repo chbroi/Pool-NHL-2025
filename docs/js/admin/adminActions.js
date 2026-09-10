@@ -1,4 +1,11 @@
-window.toggleSubmissionOpen = async function(status) {
+import * as funcs from "../functions.js";
+import { db } from "../firebase.js";
+import { appState } from "../app/state.js";
+import { showTab } from "../app/tabs.js";
+import { renderAdmin } from "../ui/render.js";
+import {collection, doc, addDoc, updateDoc, deleteDoc,getDocs} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+export async function toggleSubmissionOpen(status) {
   
   await updateDoc(
     doc(db, "config", "ui"),
@@ -60,8 +67,7 @@ if (helper) {
 funcs.refreshHelperMessage();
 };
 
-window.updateSubmissionRound =
-async function() {
+export async function updateSubmissionRound() {
 
   const round = Number(
     document.getElementById(
@@ -99,8 +105,7 @@ async function() {
   
 };
 
-window.clearAdminHistory =
-async function() {
+export async function clearAdminHistory(){
 
   if (
     !confirm(
@@ -132,8 +137,7 @@ async function() {
 };
 
 
-window.updateDeadline =
-async function() {
+export async function updateDeadline() {
 
   await addDoc(
   collection(db, "adminLogs"),
@@ -192,8 +196,7 @@ funcs.refreshHelperMessage();
 };
 
 
-window.deletePredictionAdmin =
-async function() {
+export async function deletePredictionAdmin() {
 
   const id =
     document.getElementById(
@@ -224,11 +227,7 @@ async function() {
 
 };
 
-window.togglePayment =
-async function(
-  uid,
-  paid
-) {
+export async function togglePayment(uid, paid){
 
   await updateDoc(
     doc(
@@ -243,8 +242,7 @@ async function(
 
 };
 
-window.deleteFeedback =
-async function(id) {
+export async function deleteFeedback(id) {
 
   if (
     !confirm(
