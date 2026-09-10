@@ -15,6 +15,12 @@ export async function renderAdmin() {
     ${renderAdminFeedbackCard()}
     ${renderAdminHistoryCard()}
   `;
+  console.log(
+  "feedback div exists?",
+  document.getElementById(
+    "feedbackContainer"
+  )
+);
 
   await loadAdminPayments();
   await loadAdminSubmission();
