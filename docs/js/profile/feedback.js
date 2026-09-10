@@ -1,3 +1,7 @@
+import { appState } from "../app/state.js";
+import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { db } from "../firebase.js";
+
 export async function submitFeedback() {
 
   const message =
