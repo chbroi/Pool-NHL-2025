@@ -147,16 +147,15 @@ export async function showTab(tabName) {
   }
   const helper = document.getElementById("helperMessage");
   
-  if (["home", "submit","scoring", "results", "leaderboard","stats","statsNHL", "rules","profile"].includes(tabName)) {
+  if (TABS.includes(tabName)) {
     helper.style.display = "block";
   } else {
     helper.style.display = "none";
   }
 
 
-  const tabs = ["home", "submit","scoring", "results", "leaderboard","stats","statsNHL", "rules","admin","profile"];
-
-  tabs.forEach(t => {
+ 
+  TABS.forEach(t => {
 
   const tab =
     document.getElementById(t + "Tab");
