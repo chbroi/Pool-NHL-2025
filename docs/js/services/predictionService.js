@@ -1,4 +1,8 @@
-  export async function submitPredictions() {
+import { appState } from "../app/state.js";
+import { showTab } from "../app/tabs.js";
+import { hasSubmitted,submitPrediction} from "./firestoreService.js";
+
+export async function submitPredictions() {
 
   if (!appState.user) {
     alert("Tu dois être connecté.");
