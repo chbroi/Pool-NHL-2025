@@ -34,6 +34,44 @@
     
     }
 
+body[data-theme="light"] .leaderboardTable td {
+    background: white;
+  }
+  
+  body[data-theme="light"] .leaderboardTable th:first-child,
+  body[data-theme="light"] .leaderboardTable td:first-child {
+    background: white;
+  }
+    .resultsTable,
+    .leaderboardTable {
+    
+      width: 100%;
+    
+      border-collapse: collapse;
+    
+    }
+
+    .resultsTable th,
+    .leaderboardTable th {
+    
+      background: var(--primary);
+    
+      color: white;
+    
+      padding: 12px;
+    
+    }
+
+    .resultsTable td,
+    .leaderboardTable td {
+    
+      padding: 10px;
+    
+      border-bottom: 1px solid rgba(0,0,0,.08);
+    
+    }
+
+
  body[data-theme="light"] .roundHeader td {
     
       background: #dbeafe;
