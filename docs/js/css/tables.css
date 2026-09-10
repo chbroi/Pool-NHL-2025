@@ -1,21 +1,4 @@
  /* ===== TABLE ===== */
-    .resultsTable {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-  .resultsTable th {
-      background: var(--primary);
-      color: white;
-      padding: 10px;
-    }
-
-    .resultsTable td {
-      padding: 8px;
-      border-bottom: 1px solid #eee;
-      text-align: center;
-    }
-
     .resultsTable tr:hover {
       background: rgba(0,0,0,0.05);
     }
@@ -83,13 +66,6 @@ body[data-theme="light"] .leaderboardTable td {
       font-weight: 700;
     
     }
-    body[data-theme="dark"] .roundHeader td {
-
-  background: #202020;
-
-  color: white;
-
-}
         
     .myColumnHeader {
       background: #ffd700;
