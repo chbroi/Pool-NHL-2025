@@ -9,7 +9,7 @@ export async function submitPredictions() {
     return;
   }
 
-  const alreadyDone = await alreadySubmitted();
+  const alreadyDone = await hasSubmitted ( appState.user.uid, appState.submission);
 
   if (alreadyDone) {
     alert("Tu as déjà soumis pour cette ronde.");
