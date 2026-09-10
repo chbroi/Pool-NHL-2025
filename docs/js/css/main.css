@@ -4,66 +4,19 @@
 @import "./tables.css";
 @import "./forms.css";
 @import "./modal.css";
-<style>
 
-       body[data-theme="dark"] {
-      --bg: #121212;
-      --text: #e0e0e0;
-      --card: #1e1e1e;
-      --primary: #4dabf7;
-    }
+/* ===== GLOBAL STYLES ===== */
+button {
+cursor: pointer;
+transition: 0.2s;
+}
 
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-    }
-    
-    @media (max-width: 768px) {
-  
-    /* ===== DARK BUTTON ===== */
-    #themeToggle {
-      border: none;
-      padding: 6px 12px;
-      border-radius: 20px;
-      cursor: pointer;
-      background: var(--card);
-      border: 1px solid rgba(0,0,0,0.1);
-    }
+button:hover {
+transform: translateY(-1px);
+}
 
-    #themeToggle:hover {
-      background: var(--primary);
-      color: white;
-    }
-
-    /* ===== CONTENT ===== */
-    
-    #homeTab, #submitTab, #resultsTab, #leaderboardTab,
-    #rulesTab, #scoringTab {
-      max-width: 1000px;
-      margin: 20px auto;
-      padding: 10px;
-    }
-    
-    #nhlSeasonType,
-    #nhlMetricSelect,
-    #nhlGoalieSort {
-    
-      min-width: 180px;
-    
-      margin-right: 12px;
-    
-    }
-
-    /* ===== BUTTON ===== */
-    button {
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    button:hover {
-      transform: translateY(-1px);
-    }
-
-  </style>
+.page {
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 10px;
+}
