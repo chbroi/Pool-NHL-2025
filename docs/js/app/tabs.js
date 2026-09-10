@@ -1,6 +1,89 @@
 import { appState } from "./state.js";
 import { renderHome, renderScoring, renderProfile, renderStats, renderAdmin, renderNhlStats, loadPredictionsDetails, renderFullLeaderboard, renderSubmissionStatus} from "../ui/render.js";
 
+const tabRenderers = { 
+  home: () => renderHome(),
+  results: () => loadPredictionsDetails(),
+  leaderboard: () => renderFullLeaderboard(),
+  scoring: () => renderScoring(),
+  stats: () => renderStats(),
+  statsNHL: () => renderNhlStats(),
+  profile: () => renderProfile(),
+  admin: () => renderAdmin()
+};
+
+async function handleSubmitTab() {
+   console.log(
+    "acceptedRules",
+    appState.acceptedRules
+  );
+    if (!appState.acceptedRules) {
+        showRulesModal();
+        return;
+      }
+  
+    const form = document.getElementById("predictionForm");
+    const tab = document.getElementById("submitTab");
+  
+    if (!form || !tab) return;
+const currentDeadline = appState[`round${appState.submission}Deadline`];
+const deadlinePassed = currentDeadline && Date.now() > currentDeadline;
+if ( !appState.submissionOpen ||  deadlinePassed) {
+  tab.innerHTML = `
+    <div class="card">
+
+      <h3>
+        🔒 Soumissions fermées
+      </h3>
+
+      <p>
+        Les prédictions pour cette ronde sont terminées.
+      </p>
+
+    </div>
+  `;
+
+  return;
+}
+    if (appState.hasSubmitted) {
+  
+      form.style.display = "none";
+  
+      tab.innerHTML = `
+        <div class="card">
+          <h3>✅ Déjà soumis</h3>
+          <p>Reviens à la prochaine ronde</p>
+        </div>
+      `;
+  
+    } else {
+  
+      // IMPORTANT → remettre le form si effacé
+      if (!tab.querySelector("#predictionForm")) {
+        tab.appendChild(form);
+      }
+      for (let i = 1; i <= 4; i++) {
+        const roundDiv =
+          document.getElementById(`round${i}`);
+        if (!roundDiv) continue;
+        if (i < appState.submission) {
+          roundDiv.style.display = "none";
+        } else {
+          roundDiv.style.display = "block";
+        }
+      }
+      await renderSubmissionStatus();
+      form.style.display = "block";
+    }  
+}
+
+function handleRulesTab() {
+
+ document
+   .getElementById("rulesTab")
+   .style.display = "block";
+
+}
 
 function updateActiveTab(tabName) {
 
@@ -92,86 +175,4 @@ if (rules) rules.style.display = "none";
   document.getElementById(tabName + "Tab").style.display = "block";
   document.getElementById("predictionForm").style.display = "none";
 
-  if (tabName === "rules") {
-    document.getElementById("rulesTab").style.display = "block";
-
-  }
-
-  if (tabName === "home") renderHome();
-  if (tabName === "results") loadPredictionsDetails();
-  if (tabName === "leaderboard") renderFullLeaderboard(); 
-  if (tabName === "scoring") renderScoring();
-  if (tabName === "stats") renderStats();
-  if (tabName === "statsNHL") renderNhlStats();
-  if (tabName === "profile") renderProfile();
-  if (tabName === "admin") renderAdmin();
-  if (tabName === "submit") {
-      console.log(
-    "acceptedRules",
-    appState.acceptedRules
-  );
-    if (!appState.acceptedRules) {
-        showRulesModal();
-        return;
-      }
-  
-    const form = document.getElementById("predictionForm");
-    const tab = document.getElementById("submitTab");
-  
-    if (!form || !tab) return;
-const currentDeadline = appState[`round${appState.submission}Deadline`];
-const deadlinePassed = currentDeadline && Date.now() > currentDeadline;
-if ( !appState.submissionOpen ||  deadlinePassed) {
-  tab.innerHTML = `
-    <div class="card">
-
-      <h3>
-        🔒 Soumissions fermées
-      </h3>
-
-      <p>
-        Les prédictions pour cette ronde sont terminées.
-      </p>
-
-    </div>
-  `;
-
-  return;
-}
-    if (appState.hasSubmitted) {
-  
-      form.style.display = "none";
-  
-      tab.innerHTML = `
-        <div class="card">
-          <h3>✅ Déjà soumis</h3>
-          <p>Reviens à la prochaine ronde</p>
-        </div>
-      `;
-  
-    } else {
-  
-      // IMPORTANT → remettre le form si effacé
-      if (!tab.querySelector("#predictionForm")) {
-        tab.appendChild(form);
-      }
-      for (let i = 1; i <= 4; i++) {
-        const roundDiv =
-          document.getElementById(`round${i}`);
-        if (!roundDiv) continue;
-        if (i < appState.submission) {
-          roundDiv.style.display = "none";
-        } else {
-          roundDiv.style.display = "block";
-        }
-      }
-      await renderSubmissionStatus();
-      form.style.display = "block";
-    }
-  }
-
-if (tabName === "rules") {
-    document.getElementById("rulesTab").style.display = "block";
-  }
-    
-};
+ await tabRenderers[tabName]?.();
