@@ -120,3 +120,18 @@
       font-weight: 500;
       opacity: 0.9;
     }
+
+/* ===== DARK BUTTON ===== */
+    #themeToggle {
+      border: none;
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      background: var(--card);
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+
+    #themeToggle:hover {
+      background: var(--primary);
+      color: white;
+    }
