@@ -11,8 +11,8 @@ import { checkEligibility, loadAppConfig,hasAcceptedRules, acceptRules} from "./
 import { attachRound1Listeners, attachRound2Listeners, attachRound3Listeners, attachConnSmytheListeners} from "./ui/listeners.js";
 import { loadPredictionsDetails, renderHome, renderFullLeaderboard, renderScoring, generateRound, renderSubmissionStatus, renderProfile, renderStats, renderAdmin, renderNhlStats, reloadFeedbackSection } from "./ui/render.js";
 import { setupRealtimeListeners} from "./services/realtimeService.js";
-
 import { toggleSubmissionOpen, updateSubmissionRound, clearAdminHistory, updateDeadline, deletePredictionAdmin, togglePayment, deleteFeedback} from "./admin/adminActions.js";
+import { showRulesModal } from "./app/rulesModal.js";
 
 
 
@@ -349,88 +349,7 @@ onAuthStateChanged(auth, async (user) => {
 })
                   
 
-
-
-
-
-window.showRulesModal = function() {
-
-  const modal =
-  document.getElementById("rulesModal");
-
-if (!modal) {
-
-  console.error(
-    "rulesModal introuvable"
-  );
-
-  return;
-}
-
-modal.style.display = "flex";
-
-  const checkbox =
-    document.getElementById(
-      "rulesAcceptedCheckbox"
-    );
-
-  const btn =
-    document.getElementById(
-      "acceptModalBtn"
-    );
-  const closeBtn =
-    document.getElementById(
-      "closeRulesModal"
-    );
-  closeBtn.onclick = () => {
-    modal.style.display = "none";
-    showTab("home");
-  };
-  const viewRulesBtn =
-    document.getElementById(
-      "viewRulesBtn"
-    );
-  
-    viewRulesBtn.onclick = () => {
-      modal.style.display = "none";
-      const backContainer =
-        document.getElementById(
-          "rulesBackContainer"
-        );
-    
-      if (backContainer) {
-        backContainer.style.display =
-          "block";
-      }
-      showTab("rules");
-    };
-
-  checkbox.onchange = () => {
-    btn.disabled = !checkbox.checked;
-  };
-
-  btn.onclick = async () => {
-
-    await acceptRules(appState.user);
-    const backContainer =
-      document.getElementById(
-        "rulesBackContainer"
-      );
-    
-    if (backContainer) {
-      backContainer.style.display =
-        "none";
-    }
-
-    appState.acceptedRules = true;
-
-    modal.style.display = "none";
-
-    showTab("submit");
-  };
-};
-
-
+window.showRulesModal = showRulesModal;
 
 window.showTab = async function(tabName) {
   
