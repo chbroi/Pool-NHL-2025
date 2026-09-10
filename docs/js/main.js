@@ -79,7 +79,11 @@ const snapshot = await getDocs(
 
                 
 
-
+import { appState } from "./state.js";
+import { acceptRules }
+from "../services/userService.js";
+import { showTab }
+from "./tabs.js";
 
 
 window.showTab = showTab;
