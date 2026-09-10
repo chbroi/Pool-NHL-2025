@@ -1,3 +1,4 @@
+import { appState } from "../../app/state.js";
 import { getAllFeedback } from "../../services/firestoreService.js";
 
 export function renderAdminFeedbackCard() {
@@ -20,8 +21,8 @@ export function renderAdminFeedbackCard() {
 }
 
 export function reloadFeedbackSection(snapshot) {
-  console.log("feedback count", snapshot.size);
-   
+
+  appState.feedbackSnapshot = snapshot;   
 
 const feedbackContainer =
   document.getElementById(
