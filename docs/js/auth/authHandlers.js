@@ -57,6 +57,9 @@ export function initializeAuth() {
 }
 
 function handleLoggedOutUser() {
+const loginBtn = document.getElementById("loginBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+const userInfo = document.getElementById("userInfo");
   
     // ======================
     // Déconnexion
@@ -152,6 +155,9 @@ function handleLoggedOutUser() {
   }
 
 async function handleLoggedInUser( user, config, results) {
+      const loginBtn = document.getElementById("loginBtn");
+      const logoutBtn = document.getElementById("logoutBtn");
+      const userInfo = document.getElementById("userInfo");
       appState.user = user;
       appState.acceptedRules = await hasAcceptedRules(user.uid);
       const participantDoc = await getDoc(doc(db, "participants", user.uid));
@@ -162,7 +168,7 @@ async function handleLoggedInUser( user, config, results) {
       appState.results = results;
       appState.deadline = config.deadline;
       appState.submissionOpen = config.submissionOpen;
-      appState.hasSubmitted = await alreadySubmitted();
+      appState.hasSubmitted = await hasSubmitted( user.uid, appState.submission);
       appState.round1Deadline = config.round1Deadline;
       appState.round2Deadline = config.round2Deadline;
       appState.round3Deadline = config.round3Deadline;
