@@ -65,5 +65,18 @@ export const SCORING = {
 
   }
 
+ export const TABS = [
+  "home",
+  "submit",
+  "scoring",
+  "results",
+  "leaderboard",
+  "stats",
+  "statsNHL",
+  "rules",
+  "admin",
+  "profile"
+];
+
 };
 
