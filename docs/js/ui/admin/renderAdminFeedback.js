@@ -32,13 +32,14 @@ const feedbackContainer =
   feedbackContainer
 );
 if (!feedbackContainer) return;
-
+feedbackContainer.innerHTML = "";
 snapshot.forEach(doc => {
 
   const f = {
     id: doc.id,
     ...doc.data()
   };
+  console.log("feedback", f);
 
 const body = encodeURIComponent(
 `Bonjour ${f.userName},
@@ -77,14 +78,15 @@ https://chbroi.github.io/Pool-NHL-2025/`
 </a>
 
 <br><br>
-
 <strong>
+  Commentaire :
+</strong>
 
-    <br>
+<br>
 
-    ${f.message}
+${f.message}
 
-    <br><br>
+<br><br>
 
     <button
       class="actionBtn"
