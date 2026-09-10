@@ -14,6 +14,7 @@ import { setupRealtimeListeners} from "./services/realtimeService.js";
 import { toggleSubmissionOpen, updateSubmissionRound, clearAdminHistory, updateDeadline, deletePredictionAdmin, togglePayment, deleteFeedback} from "./admin/adminActions.js";
 import { showRulesModal } from "./app/rulesModal.js";
 import { submitPredictions } from "./services/predictionService.js";
+import { initializeTheme} from "./app/theme.js";
 
 
 
@@ -70,33 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
   }
 
-  const btn = document.getElementById("themeToggle");
-
-  // restore thème
-  const savedTheme = localStorage.getItem("theme");
-
-  if (savedTheme) {
-    document.body.setAttribute("data-theme", savedTheme);
-
-    // mettre le bon icône au chargement
-    if (btn) {
-      btn.innerText = savedTheme === "dark" ? "☀️" : "🌙";
-    }
-  }
-
-  if (btn) {
-    btn.addEventListener("click", () => {
-
-      const current = document.body.getAttribute("data-theme");
-      const next = current === "dark" ? "light" : "dark";
-
-      document.body.setAttribute("data-theme", next);
-      localStorage.setItem("theme", next);
-
-      btn.innerText = next === "dark" ? "☀️" : "🌙";
-
-    });
-  }
+initializeTheme();
 
 });
 
