@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
   }
 
-
+initializeAuth();
 
 await loadPlayers()
 
