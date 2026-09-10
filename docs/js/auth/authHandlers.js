@@ -1,25 +1,163 @@
+import * as funcs from "../functions.js";
+import { auth, db } from "../firebase.js";
+import { appState } from "../app/state.js";
+import { showTab } from "../app/tabs.js";
+import { loadAppConfig, hasAcceptedRules } from "../services/userService.js";
+import { hasSubmitted } from "../services/firestoreService.js";
+import { setupRealtimeListeners }from "../services/realtimeService.js";
+import { attachRound1Listeners, attachRound2Listeners, attachRound3Listeners, attachConnSmytheListeners} from "../ui/listeners.js";
+import { generateRound }from "../ui/render.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+
 export function initializeAuth() {
 
- onAuthStateChanged(auth, async (user) => {
+  onAuthStateChanged(
+    auth,
 
-  const loginBtn = document.getElementById("loginBtn");
-  const logoutBtn = document.getElementById("logoutBtn");
-  const userInfo = document.getElementById("userInfo");
-  const profileTab = document.getElementById("profileTab");
-  const { config, results } = await loadAppConfig();
-  if (user) {
+    async user => {
 
-  try {
+      const {
+        config,
+        results
+      } = await loadAppConfig();
 
-      appState.user = user;
+      if (user) {
+
+        try {
+
+          await handleLoggedInUser(
+            user,
+            config,
+            results
+          );
+
+        } catch (err) {
+
+          console.error(err);
+
+          alert(
+            "Erreur d'initialisation : " +
+            err.message
+          );
+
+        }
+
+      } else {
+
+        handleLoggedOutUser();
+
+      }
+
+    }
+
+  );
+
+}
+
+function handleLoggedOutUser() {
   
+    // ======================
+    // Déconnexion
+    // ======================
+    const profileTab =
+    document.getElementById("profileTab");
+  
+    if (profileTab) {
+      profileTab.style.display = "none";
+      profileTab.innerHTML = "";
+    }
+
+    const adminBtn =
+    document.getElementById(
+      "adminTabButton"
+    );
+  
+    if (adminBtn) {
+      adminBtn.style.display = "none";
+    }
+  
+    appState.user = null;
+  
+    if (loginBtn) {
+      loginBtn.style.display =
+        "inline-block";
+    }
+  
+    if (logoutBtn) {
+      logoutBtn.style.display =
+        "none";
+    }
+  
+    if (userInfo) {
+      userInfo.innerText = "";
+      userInfo.style.display ="none";
+    }
+  
+    const profileBtn =
+      document.getElementById(
+        "profileTabButton"
+      );
+  
+    if (profileBtn) {
+      profileBtn.style.display =
+        "none";
+    }
+  
+    if (profileTab) {
+      profileTab.innerHTML = "";
+    }
+  
+    // Retour automatique à la page actuelle
+  
+    const lastTab =localStorage.getItem( "activeTab") || "home";
+    showTab(lastTab);
+  
+    // Page d'accueil visiteur
+  
+    const home =
+      document.getElementById(
+        "homeTab"
+      );
+  
+    if (home) {
+  
+      home.innerHTML = `
+        <div class="card">
+  
+          <h2>
+            🏒 Pool des séries éliminatoires
+          </h2>
+  
+          <p>
+            Consultez les résultats
+            et le classement gratuitement.
+          </p>
+  
+          <p>
+            Connectez-vous pour participer.
+          </p>
+  
+          <button
+            onclick="document.getElementById('loginBtn').click()">
+  
+            Connexion pour participer
+  
+          </button>
+  
+        </div>
+      `;
+    }
+  }
+
+async function handleLoggedInUser( user, config, results) {
+      appState.user = user;
       appState.acceptedRules = await hasAcceptedRules(user.uid);
       const participantDoc = await getDoc(doc(db, "participants", user.uid));
       appState.isAdmin = participantDoc.exists() && participantDoc.data().isAdmin === true;
       setupRealtimeListeners();
-  
-      
-  
+ 
       appState.submission = Number(config.currentSubmission);
       appState.results = results;
       appState.deadline = config.deadline;
@@ -128,8 +266,59 @@ export function initializeAuth() {
   
         form.hasListener = true;
       }
-  }
-  }
- }
+  
+      // ======================
+      // Accueil
+      // ======================
+  
+      const lastTab = localStorage.getItem("activeTab") || "home";
+      showTab(lastTab);
+  
+}
+
+
+export function initializeAuth() {
+
+  onAuthStateChanged(
+    auth,
+
+    async user => {
+
+      const {
+        config,
+        results
+      } = await loadAppConfig();
+
+      if (user) {
+
+        try {
+
+          await handleLoggedInUser(
+            user,
+            config,
+            results
+          );
+
+        } catch (err) {
+
+          console.error(err);
+
+          alert(
+            "Erreur d'initialisation : " +
+            err.message
+          );
+
+        }
+
+      } else {
+
+        handleLoggedOutUser();
+
+      }
+
+    }
+
+  );
+
 }
 
