@@ -28,7 +28,12 @@ const feedbackContainer =
     "feedbackContainer"
   );
 
-feedbacks.forEach(f => {
+snapshot.forEach(doc => {
+
+  const f = {
+    id: doc.id,
+    ...doc.data()
+  };
 
 const body = encodeURIComponent(
 `Bonjour ${f.userName},
