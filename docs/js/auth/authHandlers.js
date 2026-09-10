@@ -1,4 +1,6 @@
-onAuthStateChanged(auth, async (user) => {
+export function initializeAuth() {
+
+ onAuthStateChanged(auth, async (user) => {
 
   const loginBtn = document.getElementById("loginBtn");
   const logoutBtn = document.getElementById("logoutBtn");
@@ -126,5 +128,8 @@ onAuthStateChanged(auth, async (user) => {
   
         form.hasListener = true;
       }
+  }
+  }
+ }
+}
 
-  
