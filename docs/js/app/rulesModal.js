@@ -1,3 +1,7 @@
+import { appState } from "./state.js";
+import { acceptRules } from "../services/userService.js";
+import { showTab } from "./tabs.js";
+
 export function showRulesModal() {
 
   const modal =
