@@ -53,21 +53,7 @@
       padding: 10px;
     }
 
-    /* ===== CARDS ===== */
-    .section, .card {
-      background: var(--card);
-      padding: 16px;
-      border-radius: 12px;
-      margin-bottom: 16px;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.05);
-    }
-
-    .matchup {
-      background: var(--card);
-      padding: 12px;
-      margin: 10px 0;
-      border-radius: 8px;
-    }
+   
     .submissionBadge {
       padding: 8px 16px;
       border-radius: 8px;
@@ -75,178 +61,6 @@
       border: 1px solid rgba(0,0,0,.15);
       font-weight: 600;
     }
-
-    /* ===== TABLE ===== */
-    .resultsTable {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .resultsTable th {
-      background: var(--primary);
-      color: white;
-      padding: 10px;
-    }
-
-    .resultsTable td {
-      padding: 8px;
-      border-bottom: 1px solid #eee;
-      text-align: center;
-    }
-
-    .resultsTable tr:hover {
-      background: rgba(0,0,0,0.05);
-    }
-    
-    .roundHeader td {
-    
-      text-align: left;
-    
-      padding: 14px 18px;
-    
-      font-weight: 700;
-    
-      font-size: 15px;
-    
-      letter-spacing: .5px;
-    
-    }
-    body[data-theme="light"] .roundHeader td {
-    
-      background: #dbeafe;
-    
-      color: #1e3a8a;
-    
-      border-left: 4px solid var(--primary);
-    
-      font-weight: 700;
-    
-    }
-    body[data-theme="dark"] .roundHeader td {
-
-  background: #202020;
-
-  color: white;
-
-}
-        
-    .myColumnHeader {
-      background: #ffd700;
-      color: black;
-      position: sticky;
-        left: 0;
-        z-index: 3;
-    }
-    
-    body[data-theme="dark"] .myColumnCell {
-      background: rgba(255, 215, 0, 0.18);
-    }
-    
-    body[data-theme="dark"] .myColumnHeader {
-      background: #ffca28;
-      color: black;
-    }
-    body[data-theme="light"] .myColumnHeader {
-      background: #f7c825;
-      color: black;
-    }
-    
-    body[data-theme="light"] .myColumnCell {
-      background: #f5edd0;
-    }
-    .myColumnCell {
-      background: #fff8d6;
-      position: sticky;
-        left: 0;
-        z-index: 3;
-
-    }
-    
-    body[data-theme="dark"]
-    .roundHeader td {
-    
-      background: #242424;
-    
-      color: white;
-    
-    }
-    .connSmytheRow {
-      background: rgba(0, 123, 255, 0.15);
-      font-weight: bold;
-    }
-    
-    .totalSubmissionRow {
-      background: rgba(0, 123, 255, 0.25);
-      text-align: center;
-      font-weight: bold;
-    }
-    
-    .totalGlobalRow {
-      background: #ffe58a;
-      text-align: center;
-      font-weight: bold;
-      font-size: 16px;
-      color: #222;
-    }
-    
-  
-.ruleArticle {
-
-  background: var(--card);
-
-  border-left: 5px solid var(--primary);
-
-  padding: 20px;
-
-  border-radius: 12px;
-
-  margin-bottom: 20px;
-
-}
-
-.ruleArticle h3 {
-
-  margin-top: 0;
-
-  color: var(--primary);
-
-}
-
-.ruleArticle p {
-
-  line-height: 1.6;
-
-  margin: 12px 0;
-
-}
-
-.ruleArticle ul {
-
-  padding-left: 25px;
-
-}
-
-.ruleArticle li {
-
-  margin-bottom: 8px;
-
-}
-
-.ruleNumber {
-
-  font-size: 12px;
-
-  font-weight: 700;
-
-  text-transform: uppercase;
-
-  letter-spacing: 1px;
-
-  color: var(--primary);
-
-  margin-bottom: 8px;
-
-}
 
     
   body[data-theme="light"] .leaderboardTable td {
@@ -286,12 +100,7 @@
     
     }
 
-    body[data-theme="light"]
-.resultsTable tbody tr:nth-child(even):not(.roundHeader):not(.totalGlobalRow):not(.totalSubmissionRow) {
-
-  background: #fafafa;
-
-}
+   
     select {
     
       padding: 10px 14px;
@@ -341,59 +150,7 @@
     }
     
       
-    .homeActions {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    
-    .homeAction {
-      display: flex;
-      align-items: baseline;
-      gap: 12px;
-      padding: 10px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.2s;
-      border-left: 3px solid transparent;
-    }
-    
-    .homeAction:hover {
-      background: rgba(255, 255, 255, 0.06);
-      border-left-color: var(--primary);
-    }
-    
-    .homeAction strong {
-      min-width: 140px; /* aligne les descriptions */
-      color: var(--text);
-    }
-    
-    .homeAction span {
-      color: var(--text);
-      font-size: 14px;
-    }
-    .actionBtn {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 10px 16px;
-      border-radius: 8px;
-      margin-right: 10px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    
-    .actionBtn:hover {
-      opacity: 0.9;
-      transform: translateY(-1px);
-    }
-    
-    .actionBtn.secondary {
-      background: transparent;
-      border: 1px solid var(--primary);
-      color: var(--primary);
-    }
+   
     .modal {
     position: fixed;
     top: 0;
