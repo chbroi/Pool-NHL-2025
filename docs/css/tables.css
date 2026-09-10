@@ -8,7 +8,7 @@
       text-align: left;
     
       padding: 14px 18px;
-    
+    text-align: center;
       font-weight: 700;
     
       font-size: 15px;
@@ -21,15 +21,11 @@ body[data-theme="light"] .leaderboardTable td {
     background: white;
   }
   
-  body[data-theme="light"] .leaderboardTable th:first-child,
-  body[data-theme="light"] .leaderboardTable td:first-child {
-    background: white;
-  }
     .resultsTable,
     .leaderboardTable {
     
       width: 100%;
-    
+    text-align: center;
       border-collapse: collapse;
     
     }
@@ -38,7 +34,7 @@ body[data-theme="light"] .leaderboardTable td {
     .leaderboardTable th {
     
       background: var(--primary);
-    
+    text-align: center;
       color: white;
     
       padding: 12px;
@@ -49,7 +45,7 @@ body[data-theme="light"] .leaderboardTable td {
     .leaderboardTable td {
     
       padding: 10px;
-    
+    text-align: center;
       border-bottom: 1px solid rgba(0,0,0,.08);
     
     }
@@ -70,6 +66,7 @@ body[data-theme="light"] .leaderboardTable td {
     .myColumnHeader {
       background: #ffd700;
       color: black;
+     text-align: center;
       position: sticky;
         left: 0;
         z-index: 3;
@@ -93,6 +90,7 @@ body[data-theme="light"] .leaderboardTable td {
     }
     .myColumnCell {
       background: #fff8d6;
+     text-align: center;
       position: sticky;
         left: 0;
         z-index: 3;
@@ -109,6 +107,7 @@ body[data-theme="light"] .leaderboardTable td {
     }
     .connSmytheRow {
       background: rgba(0, 123, 255, 0.15);
+     text-align: center;
       font-weight: bold;
     }
     
