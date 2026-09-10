@@ -11,5 +11,6 @@ export const appState = {
   round4Deadline: null,
   isAdmin: false,
   submissionOpen: false,
-  paid:false
+  paid:false,
+  feedbackSnapshot: null
 };
