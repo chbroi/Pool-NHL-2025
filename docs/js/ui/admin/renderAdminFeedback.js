@@ -27,6 +27,7 @@ const feedbackContainer =
   document.getElementById(
     "feedbackContainer"
   );
+if (!feedbackContainer) return;
 
 snapshot.forEach(doc => {
 
