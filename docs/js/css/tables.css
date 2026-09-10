@@ -1,0 +1,121 @@
+ /* ===== TABLE ===== */
+    .resultsTable {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+  .resultsTable th {
+      background: var(--primary);
+      color: white;
+      padding: 10px;
+    }
+
+    .resultsTable td {
+      padding: 8px;
+      border-bottom: 1px solid #eee;
+      text-align: center;
+    }
+
+    .resultsTable tr:hover {
+      background: rgba(0,0,0,0.05);
+    }
+    
+    .roundHeader td {
+    
+      text-align: left;
+    
+      padding: 14px 18px;
+    
+      font-weight: 700;
+    
+      font-size: 15px;
+    
+      letter-spacing: .5px;
+    
+    }
+
+ body[data-theme="light"] .roundHeader td {
+    
+      background: #dbeafe;
+    
+      color: #1e3a8a;
+    
+      border-left: 4px solid var(--primary);
+    
+      font-weight: 700;
+    
+    }
+    body[data-theme="dark"] .roundHeader td {
+
+  background: #202020;
+
+  color: white;
+
+}
+        
+    .myColumnHeader {
+      background: #ffd700;
+      color: black;
+      position: sticky;
+        left: 0;
+        z-index: 3;
+    }
+    
+    body[data-theme="dark"] .myColumnCell {
+      background: rgba(255, 215, 0, 0.18);
+    }
+    
+    body[data-theme="dark"] .myColumnHeader {
+      background: #ffca28;
+      color: black;
+    }
+    body[data-theme="light"] .myColumnHeader {
+      background: #f7c825;
+      color: black;
+    }
+    
+    body[data-theme="light"] .myColumnCell {
+      background: #f5edd0;
+    }
+    .myColumnCell {
+      background: #fff8d6;
+      position: sticky;
+        left: 0;
+        z-index: 3;
+
+    }
+    
+    body[data-theme="dark"]
+    .roundHeader td {
+    
+      background: #242424;
+    
+      color: white;
+    
+    }
+    .connSmytheRow {
+      background: rgba(0, 123, 255, 0.15);
+      font-weight: bold;
+    }
+    
+    .totalSubmissionRow {
+      background: rgba(0, 123, 255, 0.25);
+      text-align: center;
+      font-weight: bold;
+    }
+    
+    .totalGlobalRow {
+      background: #ffe58a;
+      text-align: center;
+      font-weight: bold;
+      font-size: 16px;
+      color: #222;
+    }
+
+ body[data-theme="light"]
+.resultsTable tbody tr:nth-child(even):not(.roundHeader):not(.totalGlobalRow):not(.totalSubmissionRow) {
+
+  background: #fafafa;
+
+}
+
