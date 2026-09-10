@@ -10,7 +10,9 @@ const tabRenderers = {
   stats: () => renderStats(),
   statsNHL: () => renderNhlStats(),
   profile: () => renderProfile(),
-  admin: () => renderAdmin()
+  admin: () => renderAdmin(),
+  rules: () => handleRulesTab(),
+  submit: () => handleSubmitTab()
 };
 
 async function handleSubmitTab() {
@@ -136,23 +138,8 @@ export async function showTab(tabName) {
   }
   
   // mise en valeur de l'onglet actif
-  document.querySelectorAll("#tabs button").forEach(btn => {
-    btn.classList.remove("activeTab");
-  });
-  
-
-  // trouver le bouton cliqué
-  const clickedButton = document.querySelector(`#tabs button[onclick="showTab('${tabName}')"]`);
-  if (clickedButton) {
-    clickedButton.classList.add("activeTab");
-  }
-  const helper = document.getElementById("helperMessage");
-  
-  if (TABS.includes(tabName)) {
-    helper.style.display = "block";
-  } else {
-    helper.style.display = "none";
-  }
+updateActiveTab(tabName);
+toggleHelperMessage(tabName);
 
 
  
