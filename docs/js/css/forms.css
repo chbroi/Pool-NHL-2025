@@ -43,3 +43,13 @@
       border: 1px solid rgba(0,0,0,.15);
       font-weight: 600;
     }
+
+#nhlSeasonType,
+    #nhlMetricSelect,
+    #nhlGoalieSort {
+    
+      min-width: 180px;
+    
+      margin-right: 12px;
+    
+    }
