@@ -98,72 +98,9 @@ function isResultAvailable(key) {
 window.submitPredictions = submitPredictions;
 
 
-window.submitFeedback = async function () {
-
-  const message =
-    document
-      .getElementById(
-        "profileComment"
-      )
-      ?.value
-      ?.trim();
-
-  if (!message) {
-
-    alert(
-      "Veuillez entrer un commentaire."
-    );
-
-    return;
-  }
-
-  try {
-
-    await addDoc(
-      collection(db, "feedback"),
-      {
-        userId: appState.user.uid,
-        userName: appState.user.displayName,
-        email: appState.user.email,
-        message,
-        timestamp: Date.now()
-      }
-    );
-
-    alert(
-      "Merci pour votre commentaire !"
-    );
-
-    document.getElementById(
-      "profileComment"
-    ).value = "";
-
-  } catch (err) {
-
-    console.error(err);
-
-    alert(
-      "Erreur lors de l'envoi du commentaire."
-    );
-
-  }
-
-};
 
 
 
 
 
 
-window.updateConnSmythePlayers =
-async function() {
-
-  const response = await fetch(
-    "https://api-web.nhle.com/v1/skater-stats-leaders/current"
-  );
-
-  const data = await response.json();
-
-  console.log(data);
-
-};
