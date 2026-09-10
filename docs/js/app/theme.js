@@ -1,5 +1,7 @@
 // app/theme.js
 
+// app/theme.js
+
 export function initializeTheme() {
 
   const btn =
@@ -25,6 +27,7 @@ export function initializeTheme() {
         savedTheme === "dark"
           ? "☀️"
           : "🌙";
+
     }
 
   }
@@ -33,7 +36,6 @@ export function initializeTheme() {
 
     btn.addEventListener(
       "click",
-
       () => {
 
         const current =
@@ -62,12 +64,8 @@ export function initializeTheme() {
             : "🌙";
 
       }
-
     );
 
   }
 
 }
-    }
-  }
-})
