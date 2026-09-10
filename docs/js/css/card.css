@@ -1,0 +1,126 @@
+ /* ===== CARDS ===== */
+    .section, .card {
+      background: var(--card);
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+    }
+
+    .matchup {
+      background: var(--card);
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+    }
+
+.ruleArticle {
+
+  background: var(--card);
+
+  border-left: 5px solid var(--primary);
+
+  padding: 20px;
+
+  border-radius: 12px;
+
+  margin-bottom: 20px;
+
+}
+
+.ruleArticle h3 {
+
+  margin-top: 0;
+
+  color: var(--primary);
+
+}
+
+.ruleArticle p {
+
+  line-height: 1.6;
+
+  margin: 12px 0;
+
+}
+
+.ruleArticle ul {
+
+  padding-left: 25px;
+
+}
+
+.ruleArticle li {
+
+  margin-bottom: 8px;
+
+}
+
+.ruleNumber {
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  text-transform: uppercase;
+
+  letter-spacing: 1px;
+
+  color: var(--primary);
+
+  margin-bottom: 8px;
+
+}
+ .homeActions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .homeAction {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+      border-left: 3px solid transparent;
+    }
+    
+    .homeAction:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-left-color: var(--primary);
+    }
+    
+    .homeAction strong {
+      min-width: 140px; /* aligne les descriptions */
+      color: var(--text);
+    }
+    
+    .homeAction span {
+      color: var(--text);
+      font-size: 14px;
+    }
+    .actionBtn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin-right: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    
+    .actionBtn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+    
+    .actionBtn.secondary {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
