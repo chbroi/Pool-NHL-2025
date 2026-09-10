@@ -1,5 +1,4 @@
-window.updateConnSmythePlayers =
-async function() {
+export async function updateConnSmythePlayers() {
 
   const response = await fetch(
     "https://api-web.nhle.com/v1/skater-stats-leaders/current"
@@ -9,4 +8,4 @@ async function() {
 
   console.log(data);
 
-};
+}
