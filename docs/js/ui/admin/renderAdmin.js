@@ -1,7 +1,7 @@
 import { appState } from "../../app/state.js";
 import { renderAdminSubmissionCard, loadDeadlineFields, loadAdminSubmission } from "./renderAdminSubmission.js";
 import { renderAdminPaymentsCard, loadAdminPayments } from "./renderAdminPayments.js";
-import { renderAdminFeedbackCard } from "./renderAdminFeedback.js";
+import { renderAdminFeedbackCard, reloadFeedbackSection } from "./renderAdminFeedback.js";
 import { renderAdminHistoryCard,loadAdminHistory} from "./renderAdminHistory.js";
 
 export async function renderAdmin() {
@@ -21,6 +21,9 @@ export async function renderAdmin() {
     "feedbackContainer"
   )
 );
+  if (appState.feedbackSnapshot) { 
+    reloadFeedbackSection(appState.feedbackSnapshot);
+}
 
   await loadAdminPayments();
   await loadAdminSubmission();
