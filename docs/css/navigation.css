@@ -1,51 +1,56 @@
- @media (max-width: 768px) {
-    
-      #topBar {
-        flex-direction: column;
-        align-items: stretch; 
-        position: sticky;
-          top: 0;
-          z-index: 1000;
-        backdrop-filter: blur(10px);
-      }
-    
-      
-      #tabs {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap; /* important mobile */
-      }
-      
-      #tabs button {
-        border: none;
-        background: var(--card);
-        padding: 8px 14px;
-        border-radius: 8px;
-        cursor: pointer;
-        color: var(--text);
-        font-weight: 500;
-        transition: 0.2s;
-      }
-      
-      #tabs button:hover {
-        background: rgba(0,0,0,0.1);
-      }
-      
-      #tabs button.activeTab {
-        background: var(--primary);
-        color: white;
-      }
+/* ===== NAVBAR ===== */
 
-      
-      #mainHeader {
-        position: sticky;
-        top: 50px; 
-        z-index: 999;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-      }
-    
-    }
-    
+#topBar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background: var(--card);
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+#tabs {
+  display: flex;
+  gap: 8px;
+}
+
+#tabs button {
+  border: none;
+  background: transparent;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--text);
+  font-weight: 500;
+}
+
+#tabs button:hover {
+  background: rgba(0,0,0,0.05);
+}
+
+#tabs button.activeTab {
+  background: var(--primary);
+  color: white;
+}
+#mainHeader {
+  position: sticky;
+  top: 50px;
+  z-index: 999;
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 26px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #1e1e1e, #2c3e50);
+  color: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+    #tabs button.activeTab {
+  background: var(--primary);
+  color: white;
+  } 
     
     #rightControls {
       display: flex;
@@ -95,4 +100,53 @@
     #themeToggle:hover {
       background: var(--primary);
       color: white;
+    }
+
+
+ @media (max-width: 768px) {
+    
+      #topBar {
+        flex-direction: column;
+        align-items: stretch; 
+        position: sticky;
+          top: 0;
+          z-index: 1000;
+        backdrop-filter: blur(10px);
+      }
+    
+      
+      #tabs {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap; /* important mobile */
+      }
+      
+      #tabs button {
+        border: none;
+        background: var(--card);
+        padding: 8px 14px;
+        border-radius: 8px;
+        cursor: pointer;
+        color: var(--text);
+        font-weight: 500;
+        transition: 0.2s;
+      }
+      
+      #tabs button:hover {
+        background: rgba(0,0,0,0.1);
+      }
+      
+      #tabs button.activeTab {
+        background: var(--primary);
+        color: white;
+      }
+
+      
+      #mainHeader {
+        position: sticky;
+        top: 50px; 
+        z-index: 999;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      }
+    
     }
