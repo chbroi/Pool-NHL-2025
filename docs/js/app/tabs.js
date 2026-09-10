@@ -1,4 +1,5 @@
 import { appState } from "./state.js";
+import { TABS } from "../constants.js";
 import { showRulesModal } from "./rulesModal.js";
 import { renderHome, renderScoring, renderProfile, renderStats, renderAdmin, renderNhlStats, loadPredictionsDetails, renderFullLeaderboard, renderSubmissionStatus} from "../ui/render.js";
 
@@ -163,3 +164,4 @@ if (rules) rules.style.display = "none";
   document.getElementById("predictionForm").style.display = "none";
 
  await tabRenderers[tabName]?.();
+}
