@@ -1,0 +1,7 @@
+ /* ===== THEME ===== */
+    :root{
+      --bg: #f5f7fb;
+      --text: #333;
+      --card: white;
+      --primary: #007BFF;
+    }
