@@ -28,8 +28,301 @@ export async function loadPredictionsDetails() {
   `;
 
   return;
-  }
 }
+  const leaderboard = await computeLeaderboard(predictions, appState.results);
+  
+  
+  container.innerHTML = `<h2>📊 Résultats</h2>`;
+
+  const submissions = {};
+
+  // Regrouper
+  predictions.forEach(data => {
+    
+    if (!submissions[data.round]) {
+      submissions[data.round] = {};
+    }
+
+    submissions[data.round][data.userId] = {
+      name: data.userName,
+      picks: data.picks
+    };
+  });
+  const sortedRounds = Object.keys(submissions)
+    .map(Number)
+    .sort((a,b)=>a-b);
+  
+  const lastSubmission = sortedRounds[sortedRounds.length - 1];
+
+  // Tous les users
+  
+  const orderedUsers = leaderboard.map(u => ({
+    id: u.id,
+    name: u.name,
+    score: u.score
+  }));
+
+
+  Object.values(submissions).forEach(roundUsers => {
+    Object.entries(roundUsers).forEach(([id, user]) => {
+      orderedUsers[id] = user.name;
+    });
+  });
+
+  const rounds = {
+    1: MATCH_ORDER.filter(k => k.startsWith("R1")),
+    2: MATCH_ORDER.filter(k => k.startsWith("R2")),
+    3: MATCH_ORDER.filter(k => k.startsWith("R3")),
+    4: MATCH_ORDER.filter(k => k.startsWith("R4"))
+  };
+
+  const globalScores = {};
+
+  Object.keys(submissions).map(Number).sort((a,b)=>a-b).forEach(round => {
+
+    let html = `<h3>Soumission ${round}</h3>`;
+    html += `<div style="overflow-x:auto;">`;
+    html += `<table class="resultsTable">`;
+
+    // HEADER
+    html += `<tr>
+      <th>Match</th>
+      <th>Résultat</th>
+    `;
+
+    
+    orderedUsers.forEach(u => {
+    
+      const isMe = appState.user && u.id === appState.user.uid;
+      html += `<th class="${isMe ? 'myColumnHeader' : ''}">
+        ${isMe ? "👤 " : ""}${u.name}
+      </th>`;
+    });
+
+
+    html += `</tr>`;
+
+    const submissionScores = {};
+
+    // Rounds
+    Object.keys(rounds).forEach(r => {
+
+      if (Number(r) < Number(round)) return;
+      html += `<tr class="roundHeader">
+        <td colspan="${orderedUsers.length + 2}">Ronde ${r}</td>
+      </tr>`;
+
+      rounds[r].forEach(matchKey => {
+
+        const teamKey = matchKey + "_team";
+        const gamesKey = matchKey + "_games";
+
+        // ✅ RÉSULTAT (gagnant seulement, jamais de "vs")
+        let resultTeam = appState.results[teamKey];
+        let resultDisplay = resultTeam ? resultTeam : "-";
+        
+        const resultGames = appState.results[gamesKey];
+        
+        if (resultTeam && isResultAvailable(gamesKey)) {
+          resultDisplay += ` (${resultGames})`;
+        }
+        
+        // ✅ MATCH NAME (affrontement seulement ici)
+        let displayName = "";
+        
+        // ✅ RONDE 1 → matchup réel
+        if (matchKey.startsWith("R1")) {
+          const m = round1Map[matchKey];
+        
+          if (m && m !== "") {
+            displayName = m;
+          } else {
+            displayName = matchKey;
+          }
+        }
+        
+        // ✅ RONDE 2+
+        else {
+        
+          const p1 = getParentMatch(matchKey, 1);
+          const p2 = getParentMatch(matchKey, 2);
+        
+          const t1 = p1 ? appState.results[p1] : null;
+          const t2 = p2 ? appState.results[p2] : null;
+        
+          if (t1 && t2) {
+            displayName = `${t1} vs ${t2}`; // ✅ ICI SEULEMENT
+          } else {
+            // ✅ fallback selon ta logique
+            if (matchKey.startsWith("R2")) {
+              displayName = matchKey.includes("EST")
+                ? "Gagnant Est X vs Gagnant Est Y"
+                : "Gagnant Ouest X vs Gagnant Ouest Y";
+            }
+            else if (matchKey.startsWith("R3")) {
+              displayName = matchKey.includes("EST")
+                ? "Finale Est"
+                : "Finale Ouest";
+            }
+            else if (matchKey.startsWith("R4")) {
+              displayName = "Finale Coupe Stanley";
+            }
+            else {
+              displayName = "Match à déterminer";
+            }
+          }
+        }
+
+      
+
+        html += `<tr><td>${displayName}</td>`;
+
+        html += `<td>${resultDisplay}</td>`;
+
+        orderedUsers.forEach(user => {
+          const userData = submissions[round]?.[user.id];
+          const pickTeam = userData?.picks?.[teamKey];
+          const pickGames = userData?.picks?.[gamesKey];
+
+          let cell = pickTeam ? `${pickTeam} (${pickGames})` : "-";
+
+          let points = 0;
+          
+          const submission = round;
+          const roundNum = getRoundFromKey(teamKey);
+          const submissionConfig = SCORING.submissions[submission];
+          const roundConfig = submissionConfig?.rounds[roundNum];
+          const isMe = appState.user && user.id === appState.user.uid;
+          
+
+          if (pickTeam && isResultAvailable(teamKey)) {
+
+            if (pickTeam === resultTeam) {
+
+              
+                if (roundConfig) {
+                
+                  points += roundConfig.team;
+                
+                  if (
+                    isResultAvailable(gamesKey) &&
+                    Number(pickGames) === Number(resultGames)
+                  ) {
+                    points += roundConfig.games;
+                  }
+                
+                }
+                if (
+                  isResultAvailable(gamesKey) &&
+                  Number(pickGames) === Number(resultGames)
+                ) {
+                  cell += " ✅✅";
+                } else {
+                  cell += " ✅";
+                }
+
+
+            } else {
+              cell += " ❌";
+            }
+
+            if (points > 0) {
+              cell += ` (+${points})`;
+            }
+          }
+
+          submissionScores[user.id] = (submissionScores[user.id] || 0) + points;
+          globalScores[user.id] = (globalScores[user.id] || 0) + points;
+          
+
+          html += `
+          <td class="${isMe ? 'myColumnCell' : ''}">
+            ${cell}
+          </td>
+        `;
+        });
+
+        html += `</tr>`;
+      });
+      
+    });
+    // ✅ Conn Smythe
+    html += `<tr>
+      <td>🏆 Conn Smythe</td>
+      <td>${appState.results["Conn_Smythe"] || "-"}</td>
+    `;
+
+    orderedUsers.forEach(user => {
+
+      const userData = submissions[round]?.[user.id];
+      const pick = userData?.picks?.["Conn_Smythe"];
+
+      let cell = pick || "-";
+      let points = 0;
+
+      const submission = Number(round);
+      const submissionConfig = SCORING.submissions[submission];
+
+      if (pick && appState.results["Conn_Smythe"]) {
+
+        if (pick === appState.results["Conn_Smythe"]) {
+          cell += ` ✅✅ (+${submissionConfig.connSmythe})`;
+          points += submissionConfig.connSmythe;
+        } else {
+          cell += " ❌";
+        }
+      }
+
+      submissionScores[user.id] = (submissionScores[user.id] || 0) + points;
+      globalScores[user.id] = (globalScores[user.id] || 0) + points;
+
+      
+      const isMe = appState.user && user.id === appState.user.uid;
+      
+      html += `
+        <td class="${isMe ? 'myColumnCell' : ''}">
+          ${cell}
+        </td>
+      `;
+
+    });
+
+    html += `</tr>`;
+
+    // ✅ Total soumission
+    html += `<tr class="scoreRow">
+      <td colspan="2"><strong>Total Soumission</strong></td>`;
+
+    orderedUsers.forEach(user => {
+      html += `<td><strong>${submissionScores[user.id] || 0}</strong></td>`;
+    });
+
+    html += `</tr>`;
+
+    // ✅ Total global
+    
+    if (round === lastSubmission) {
+    
+      html += `<tr class="totalGlobalRow">
+        <td colspan="2"><strong>Total Global</strong></td>`;
+    
+      orderedUsers.forEach(user => {
+        html += `<td><strong>${globalScores[user.id] || 0}</strong></td>`;
+      });
+    
+      html += `</tr>`;
+    }
+
+    html += `</table></div><br>`;
+    container.innerHTML += html;
+    
+orderedUsers.sort((a, b) => {
+  return (globalScores[b.id] || 0) - (globalScores[a.id] || 0);
+});
+
+  });
+}
+
 
 export async function generateRound(roundNumber) {
 
