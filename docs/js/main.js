@@ -13,6 +13,7 @@ import { loadPredictionsDetails, renderHome, renderFullLeaderboard, renderScorin
 import { setupRealtimeListeners} from "./services/realtimeService.js";
 import { toggleSubmissionOpen, updateSubmissionRound, clearAdminHistory, updateDeadline, deletePredictionAdmin, togglePayment, deleteFeedback} from "./admin/adminActions.js";
 import { showRulesModal } from "./app/rulesModal.js";
+import { submitPredictions } from "./services/predictionService.js";
 
 
 
@@ -497,73 +498,11 @@ async function alreadySubmitted() {
 }
 
 
-    
-    
-
-  async function submitPredictions() {
-
-  if (!appState.user) {
-    alert("Tu dois être connecté.");
-    return;
-  }
-
-  const alreadyDone = await alreadySubmitted();
-
-  if (alreadyDone) {
-    alert("Tu as déjà soumis pour cette ronde.");
-    return;
-  }
-
-  if (!confirm("Confirmer la soumission?")) return;
-
-  const form = document.getElementById("predictionForm");
-  const formData = new FormData(form);
-
-  const data = {};
-  formData.forEach((value, key) => {
-    data[key] = value;
-  });
-
-  try {
-
-    // 1. FIRESTORE (SEULEMENT DATA)
-    await submitPrediction( {
-      userId: appState.user.uid,
-      userName: appState.user.displayName,
-      round: appState.submission,
-      picks: data,
-      timestamp: Date.now()
-    });
-
-    // 2. UI UPDATE (APRÈS)
-    alert("Prédictions soumises !");
-
-    appState.hasSubmitted = true;
-
-    document.getElementById("submitBtn").disabled = true;
-
-    document.querySelectorAll("#predictionForm select, #predictionForm input")
-      .forEach(el => el.disabled = true);
-
-    const tabs = document.getElementById("tabs");
-    if (tabs) tabs.style.display = "block";
-
-    showTab("home");
-
-  } catch (err) {
-    console.error(err);
-    alert("Erreur: " + err.message);
-  }
-};
-
-
-
-
+window.submitPredictions =  submitPredictions;
 
 function isResultAvailable(key) {
   return appState.results[key] && appState.results[key] !== "";
 }
-window.submitPredictions = submitPredictions;
 
 
 window.submitFeedback = async function () {
